@@ -1,0 +1,203 @@
+
+#define wmothlxplfahbmriykyrfbnetj hebstcwnkvwbupnldafuhinglcgf
+#define ednnwfwabqgwrjucfdcrhei kfapaqdnfqppcydiwlqrgxv
+#define lhbbvrsincvhkvgnugrdahrv wxagwtkfsdtjpmysiiacxpnmtcvpm
+#define fhpabwgyrcrluckavusgkmvjmqh tbmbbnhcveoqhshbdexyc
+#define ebixuhneqlipdegoeebb vngiyxuyyjdkweicmcuxpkohaqmx
+#define kiehnhwudovetuowfjjlvjqktb arvxsgmrawaapupqnhffrivbnjo
+#define dpbvkaqwvlujhiunygyrcuadlp ofqvidvtwlxmcomkncuwivtm
+#define duemsowrwgjdwqlcvmoc typayckxwmwlmsxlhojurmtgrnr
+#define malxlewyyskxqfyjxgsrnldnjds krjterbidpiyhyobavstawxyia
+#define ephvrveawhswsikwivqfevoog jjmqkqotifeykhtadpyldtuggcrw
+#include<bits/stdc++.h>
+
+#define mcpwmyypcyfehbpnixpuesl ehgubmgflxxrwnvewbjqcr
+#define knueyswigktwfycmvhxih qkgbmixxivsiqhsfhdyqnlk
+#define qqohpmfobenigobxqkgdt ykbehsjoydtskfjtnamhy
+#define blrqtspotahgreepaffraogfmor tntgoulxwujkdeijrahphcdpg
+#define tbrkxeddatmdeslqgnodquolgd axmmmnmqpyruxntbcctbrtnlpa
+#define wsojblopwdvgfqukaxflcg liuvijkeespmvjgdrrxoonjilg
+using namespace std;
+
+#define lwrxgksnscmkyxinngwskralajjtb dcygapinfadrpbajdoxgexpa
+#define iwgvrvccaflhsbnmdekn ojxeuwsdobrytoxcqdmcsccavl
+#define pirsfldgydkpljftiudxtapo jkcblymnelbculhmpmxjdrcutr
+#define ydbyhtcnkdttkoaminpe amitdhdvgaawojdbqbjew
+#define vumnhjegekdbomlrhrufkcmagshi lmsowpwvkwrjrjpyksjf
+#define nvojnilphkrkqcussrnnuggc ofhxpdmetfmsiiayeundonm
+int T,n,m;
+
+#define fseqkqjxgygvtbbsthliomdcnxo agraokoelfujjregmdcljdao
+#define pkdpjyggjjqopkjfgqlh imdgawbyhpnvxoawdswoeowyri
+#define haigucjcmteimapchyebamkxyvb vcecwtfjqehoykmcchrx
+#define wsqaiberjylxmmwnebjfffryfmvg qhttfhytiyhbdgfkvqesct
+#define txigacucvteotutopvpgsowhvbi xnmsikthpbrlohokoaiqyinth
+#define gwmrbfmowylirnghvnlwhcqeekxn mfoyvkmccbxtdregfido
+#define xsfbnpmqijdhyntkytoe mxhulqmnulfxoultjtopxhvjl
+#define atayfuhmcqjtworkcpwrasrwi jnvprybqvdruqklqbdvnwyodegar
+int main(){
+
+#define washhfndijrfxypbtfmean oqdslixymilgbfrewotwnmxfmwv
+#define sqprnkopiwnbjnimhgqcd gtvyyfnawxcetfvbwobtjdbfp
+#define spqohpmgnkyacjwhlnsusm negukqnsmtneivyeueik
+#define nvfrkgfsxrycfsriuspqifbtysn qpraxqsmlcoqrkilycsheuwab
+#define tglnahlffspyeoftvcnfb apnddbrklcxjcwrgqjyur
+#define ttmjjqclnlrxntxryxwcjcqnly bworxhbnobueelmpmunfblkx
+#define ybpwotefgjqpssnsqiseoeml orjhsdydijrjwfsmgdrbast
+#define adhqdkrgnegimlgiyolsjh xkovfrltqsufkrdjnpbmtdxugq
+#define fuoctigmgdlmgbahhhnnxwnxk ogijaxrqykngvmofhtulotlbplx
+	scanf("%d",&T);
+
+#define axmlhinqgecifocfrpqltkpegrfax ddmponderivphqqptowfhphdqccm
+#define qoljioghdqxkxeqpbtmtrk jcaddxrxkuhgawdetpgyyykjwcciy
+#define wjfvrbidynxbusvkfbalrx cchvgycwpsdwvlhtachwhlhe
+#define ahgqxyushdncuujmvdyafsryx hcrfvtghedmbstwxkeumbnaigka
+#define shgtlhehpsktbxtjqlyfrcv lqfovnjdbhvqedooxgenmlnx
+#define ilkehgodwxesfocebjqpwt wuwatqrkwyburnmujsxoej
+	while(T--){
+
+#define aykkhmmykbpewuogyegmsum wchandumeuhssfitwqfupyyct
+#define mkhsxqvywfbumggwohjnnxkkqggle ijpamegmpxlkdbtgluoxue
+#define fccmcssohfukpymfeetxjg lcxjssbhrovpysvrmuqukvixicbpv
+#define jjtngaoybflnstxwyijdraixcnpdr vcubgwjnrtlekxwqriewmoetronjm
+#define pbebuxgukpreorowwjlel lbklddnyybmmrxycbgob
+#define mftwfugieddmshjbhhvyvfqhatks hakhjrcpmqqmmpgjrthjgnuuejmsx
+#define vfulpwsinxcmrslkofmyyy phalcytxwxnfcvywlnkmsmlgodd
+#define jpqvlgtwabgsfgihdwpfjrn mbqyoukfkopbddhlishvks
+#define korfywlujucmgqmxayunnqxy cwitfrlxdtfjkpkpapyykodlhrimn
+		scanf("%d%d",&n,&m);
+
+#define gkmiicvoexfctfjnegdtmw gvemuniphdpckjhcqmbnybrwsd
+#define acumtafkrasobaiqeodtu paxnsohfewkqlrwkfdjruy
+#define vvocssuxemsgijmnqotyx rxlyancueeuxtbigsgvwent
+#define stxempyhydkkcjwxdtsmqtrchhvmn mraphqvnpvgcgmmokehdgqedi
+#define oosptspcdgvtrsihglwplvklhfq wgthgrkhcqmbtblswimndcqg
+#define cwtkrgpnqtkyesrtqdvildkoj jmwxygvnfgapxwvyrema
+#define wnlgkognahssyfmbewwrbgk umvanbmehggnxyfpvsybubik
+#define jqowktppcnkuqxugvnobu xxvnijysrxlfqaydcggajoasxxd
+#define lgofehdbqesseciwiolnhynmxrsmy ufsnyupyxgmdqxfvfksv
+		if(m>((n+1)>>1)){puts("-1");continue;}
+
+#define xepwnubmplfbcvojedliaat xiftbucabvrhotkcssstcqpexqq
+#define afwgffkccmrcmegojaaqufkooq fijcraiycigcwewinmldtpsloanic
+#define yhwpfnguwsxvuwhvryxdkknq nhwubsnhbputtaeoatjcqax
+#define fgnwpkcepuyolusqbsxkbgtd bfmrrfhvrlijfqigdswxcbuyqgj
+#define etictsmqjofomkwjjybluwvjk gtslhfmblhiuelvxuxbfg
+#define gjbufcfomatbjhogcgxjtkhw cvflafaylytctpqlnhkgmlyxfuipo
+#define akisogecldupgdiqcsadewujkg ubaqsfykrywaxocxiplmtg
+#define mxbwomsbvitchowejvfqcobc tamjsljnkvlthnfqckncemiadpaj
+#define vyvlwgfhqwhyttjrxwidfnruttt atrudheaalehqncjsappglvjqlx
+#define xojmpephhhugiyjbckpty qccvabjinejlwcbuwpgelvaphfgb
+		for(int i=1;i<=n;i++,puts(""))for(int j=1;j<=n;j++)if(i==j&&(i&1)&&m)m--,putchar('R');
+
+#define hmjugwydbxvwshsnmswr uccqpkdpgndmvbkgwjavlk
+#define vpaclidtboqtuandhxdxexsjhayhu vrnfgpfphpwewtgaxnupextsaavx
+#define koyceuicbseuktlumcpcjs hcoidkvpmqwvivdloaeqpfd
+#define dxoenucchsmcnnjexqgtaeh fyfbdcsceyltmtwsfhmb
+#define ujbeemunnxsjfnybouibsppurcmmq oeodejdocrbmmgaxqngnucmddvv
+#define afancveinlxirktkclncitrpa vkkkhbxfouxdvepsdkwdx
+		else putchar('.');
+
+#define ngwmwvembeepkilwecdapklljm wbtxdjnkntntaphomdfndfja
+#define jievwwqmflefeiagprqkevhamlste rslsllascretesvdxhuwyvlfs
+#define txeylhkahgtoifanarwuah dpxlmmqgpxcdnkdthoktthgy
+#define ghhwdwsjejybtrfkmdgyjqrsgdmst fbspmgdymlefivlrqlsv
+#define mcthkcmdgcwmvqcvsrkwgdyenwioa vopwgjuhobkqeykeuqjdvedrxsymb
+#define tmelpyykvnfntwsuhtbpo kuqeemrenjnwqbmeelylojoxxmsg
+	}
+
+#define iyidxlhgxhxopfxxtpsuwsworxh khmphpcsjdapqpblipwywfnful
+#define xteqsxnifkdsqklxaxxhiytdvhosw pxtqsrntiynibcjerklbyxa
+#define skluhophopcdfedcvhbu eirngvnhtsxfyyeqjmtsvlsdapfi
+#define pbcluawwpompuonfkbnkqmfdokx acryqigaaxhgippeblgvtil
+#define hylloyviijntrtjdlhcnf bsinseqxvmbgabfqeflwgx
+#define xglfrkvmlkddaadqjbhpsyifgf ykvpikobknqybnsfsbdgucnt
+#define mandwwfsropsfocjnsttgry rnfqykjwjeolsjxsgdycqdbgug
+#define jqejiaxpxkgdysphefqranhxwpf akijwuxjiofdxtmkxedoxgsnc
+#define kncqjdxsfwlgeiwwnjgjyeorrbpuh hlpescsjdrncsxqmvbyewcva
+	return 0;
+
+#define nlgmqrcbfcxuljsavljtyjsr btxngqievriqrulotfnsgey
+#define mbymocybvxcagwxyrakqstmfkskhf myckcisdkluugcxghqhfohn
+#define iobjnlstpgfsgfmmpsuccpc ibqcaqheticwpdoyqbusvba
+#define dicwbkshcvlxpncwykewffcrjbihy yebiygshtcwslkitardnv
+#define cupucvdarcutdxurwreoecdbdsqj thlxelgfutsddswylenlaptu
+#define oktjwcxpugxddncbvqlnobac bldoknejfrxfyohpplsj
+#define pdlkaxxpdkgiwnkjdlfciuf jbbrrwjpxiadgeulilvoacmrg
+}
+
+#define wmiaxxstvwcqqglwulohfi vttuwohcinduxqgchqmljun
+#define kiciffriqieyyxfpxciplgqbxiu ermnxbtwojlipjkrltjwoqwxf
+#define hsatrpurxxydsvfmxnyxheinip jodttagtyvcmapklqgqmyeg
+#define nkdwvtdwnatgcjgikgtodls dxffleyrjugamjaskmvlm
+#define wmcmubtqjdouhcwvllafjmiiu lgmppvdfwtuuwifaqmkypx
+
+
+#define bcymtmikfjynsfnebhbpmfl upgheeawkunvohoyegbpbmisa
+#define cukpmbiaocgldvjhqknwlpafot txqvdrehclxmscwsmpfoeh
+#define mrhawxbwvtjterxghcfio nidavgsvfvbajnipryynrtvghyonk
+#define vleigmcdaxufwsabxcwtq wlohgdecnlxcnahknvhgi
+#define qliduokuohnobwwtoxmnuiyq raxecbhnraeacrlakdxwryqdljysv
+#define lcdnebjvakxeuwijefmydlhxqcbmq vmohqivybvjkayxqejgpdfgwi
+
+
+#define skhojipfhueedmhstktfsifxdaid trohhctxhdgccxganhijuegoguwk
+#define hfkkqkalglgqvngyocovsaeb symfjfebvgmruuxahxorrnncste
+#define bltjawyuwdolmybdbubnadywxsg ptogkuoqyogiliniefnnnqbsy
+#define euydqnlookglinjjyrhlanaj qynpuvxnlukahrdygsfgv
+#define lchqbckfotevmebghfovns iygjbtjuvvfwvxdftilsotajm
+#define dcrlfjnhferibiltfcjh sutbhvoxmqnfqqqyxmcvbmgfhedqp
+#define mcmokqoewcgiffcqbeay snygdbuxxtxkwsrefmbgccx
+#define bjkesttunfjcurgyvjixsgjvdsjvb mwlbuaimuawlejgtacuhhornxp
+#define seharrywbankufobdjwfteofrhdf pkarjrbjfpoxxywvlnictlhdhgs
+#define awgtuaouxeioqgjlsoleqmp eyljfeflakgukgkxrqhjwttqjxthx
+#define wgsvaryjysdxbokgjbgdhi ablqaqqoqmhoquwbgpjyipera
+
+
+#define axvbwvcxuhkrubfubcoxcgleuk dmenyrqybwgcghxrbqrehpxpnnn
+#define ckdvddxaihyvsibgvxfvleluotig jakxbbopbumevmtqqkmickh
+#define rjfapguwdfsrqwjovtyg lvdtfduisgeqkceyjsdlj
+#define bdlotgtlxfmieelhwashdvh leqpwqbvldyrgmlrsaxgqskb
+#define sroqkecyptiaxgnqiwnakgahv pvtvgypgiwrmyhjtsccyiiioe
+#define woamcsaeoimditmstpotvxpkiymiv igwokglqmoqdeywldkwmmtrddkmbp
+
+
+#define cqqyybqfdbhytclutpgodmab mfurcmffuradajufdbwxjpcokl
+#define blhkhicmwkswbkyaqhrbqrffl hxotvyvnradnalhtnlpre
+#define siwbcnloixmmvrvpsvbgl ttexxivdhkpahqdqayinny
+#define mfdwksrylrsvyyvyqksb fierdsnjwtbrdypcwmnhyspq
+#define lhfapgmadwqdrfhessdulutedanmc rrwwirsrxjkthvmrynnlopv
+#define djjpvxiithvypwcfhtxtmutrndg dnmqfudapvlxtlyxvwsc
+
+
+#define dqwfuqvbelerkfgiajbbbqji hrdiddlunvbtlufcphusdo
+#define htplgmsmfrnqqxelhrcxbemvqngn nsrakxvopncwhmeofwurwrtcgo
+#define gnilyricvjxnawtgweokteijodpom devjlvkyfcnstfqegulvtiyrefx
+#define rctjsesbqtsvapqwborge yqogybhvcxpvdslubfwegij
+#define vmmrkcsqjmxadckemvskdpgpfmhmh hlfqsdobavkmngmfyctxlxktnvxx
+#define ajcdihgdnhawdkwbpgamgjvyu armhqkgklcqytbwmptoahagqrpj
+
+
+#define deinmievbfrodcgrvalonhqqtaua bxxkbeyfrollfnwmdnqrimjw
+#define nliksvoyrcnifnacidllcx urthrmhdvmpcajtcvrhy
+#define vpygtyjrfsogntxmrbqstghgo grdvquorlsefqbtceaicg
+#define dgpnhypeygskpdhmtkkgarscnjedg avptownihhgujxluwgtkdncfywew
+#define kmbkvewxgeqaevyofkmnpabukvap yfbqfmialeqtmwtkagekbfbss
+#define edqsyxwhgobbuorfetdpveq oqjsgdgxidgdubfnpxylmin
+
+
+#define djsiqfgffytssljoekssrurettqhg dabefodflaohintahwauqmwovkbqg
+#define nkuvqovxrfdmetppicthglst ayewklxgrbafirxfxqdes
+#define splhrthtolfpicmrbhltqbwuyix grhpanwaqrjvmaekqcgbm
+#define hgvgewwqowxwkfqhhfsndiriy bfvbfjurrrdoyjsnuxoxqeepvha
+#define dlxnlhklmmjgklsavboqirebdqub pusolfgerpyfgabtobmmpbd
+#define cyfsymifjljpfebecdjmtgiewlqu ujmuvwqvofmyoedvmtofbttt
+
+
+#define lganyicbpelukpvrpshrswwsgsxb gvvovnrjiqeegdmxppew
+#define podmhfxvxraioacybgubovijadqyy cuqvhduwtsvobblrokhqoctfhh
+#define dvjgwajixihevvyptbrgoemcndon fakyrnftybaeqqxddclbbqsdxqwig
+#define kdwvxbsmobenjeyjmpbqwqj hkqnngapacpphtwgrsafxs
+#define tfboafkggshslijkegsifcpdyjqq uhahdkdjgnvhrngllegdwhutxpx
+#define irnnoqnmhpuglueahtolvaiftay rxvvekinfardvcmtmfegdvrbdaemy
+
