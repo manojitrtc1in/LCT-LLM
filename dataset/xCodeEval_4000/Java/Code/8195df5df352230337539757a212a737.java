@@ -1,0 +1,696 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.StringTokenizer;
+import java.util.stream.Stream;
+
+public class Solution implements Runnable {
+
+	static final double time = 1e9;
+	static final int MOD = (int) 1e9 + 7;
+	static final long mh = Long.MAX_VALUE;
+	static final Reader in = new Reader();
+	static final PrintWriter out = new PrintWriter(System.out);
+	StringBuilder answer = new StringBuilder();
+
+	public static void main(String[] args) {
+		new Thread(null, new Solution(), "persefone", 1 << 28).start();
+	}
+
+	@Override
+	public void run() {
+		long start = System.nanoTime();
+		solve();
+		printf();
+		long elapsed = System.nanoTime() - start;
+		
+
+		
+
+		
+
+		close();
+	}
+
+	void solve() {
+		
+		
+		int n = in.nextInt();
+		int[][] info = new int[n][3];
+		for (int i = 0; i < n; i++) {
+			info[i][0] = in.nextInt();
+			info[i][1] = in.nextInt();
+			info[i][2] = in.nextInt();
+		}
+		
+		Arrays.sort(info, (if1, if2) -> if2[1] - if1[1]);
+		
+		Ring[] ring = new Ring[n];
+		int t = 0;
+		for (int i = 0; i < n; i++) {
+			int inner = Integer.MAX_VALUE;
+			long height = 0;
+			for (int j = i; j < n; j++) {
+				if (info[j][1] != info[i][1]) break;
+				inner = Math.min(inner, info[j][0]);
+				height += info[j][2];
+				i = j;
+			}
+			ring[t++] = new Ring(inner, info[i][1], height);
+		}
+		ring = Arrays.copyOfRange(ring, 0, t);
+
+		int[] tmp = new int[t << 1];
+		for (int i = 0; i < t; i++) {
+			tmp[i] = ring[i].innerRadius;
+			tmp[i + t] = ring[i].outerRadius;
+		}
+		ArrayUtils.compressed(tmp, t << 1);
+		for (int i = 0; i < t; i++) {
+			ring[i].innerRadius = tmp[i];
+			ring[i].outerRadius = tmp[i + t];
+		}
+	
+		Fenwick fw = new Fenwick(t << 1);
+		long[] ans = new long[t];
+		for (int i = 0; i < t; i++) {
+			ans[i] = fw.get(ring[i].outerRadius - 1) + ring[i].height;
+			fw.update(ring[i].innerRadius, ans[i]);
+		}
+	
+		printf(Arrays.stream(ans).max().getAsLong());
+	}
+	
+	static class Fenwick {
+		int n;
+		long[] maxHeight;
+				
+		public Fenwick(int n) {
+			this.n = n;
+			this.maxHeight = new long[n + 1];
+		}
+		
+		void update(int i, long val) {
+			for (; i <= n; i += i & -i) {
+				maxHeight[i] = Math.max(maxHeight[i], val);
+			}
+		}
+		
+		long get(int i) {
+			long max = 0;
+			for (; i > 0; i -= i & -i) {
+				max = Math.max(maxHeight[i], max);
+			}
+			return max;
+		}
+		
+		void refresh() {
+			Arrays.fill(maxHeight, 0);
+		}
+	}
+	
+	
+	static class Ring implements Comparable<Ring> {
+		int innerRadius, outerRadius;
+		long height;
+		public Ring(int innerRadius, int outerRadius, long height) {
+			this.innerRadius = innerRadius;
+			this.outerRadius = outerRadius;
+			this.height = height;
+		}
+		
+		@Override
+		public int compareTo(Ring another) {
+			return another.outerRadius - this.outerRadius;
+		}
+		
+		@Override
+		public String toString() {
+			return "inner " + this.innerRadius + " - outer : " + this.outerRadius + " - height :" + this.height;
+		}
+	}
+	
+	static class ArrayUtils {
+		static void compressed(int[] a, int n) {
+			int[] b = a.clone();
+			Arrays.sort(b);
+			for (int i = 0; i < n; i++) 
+				a[i] = lw(b, 0, n, a[i]) + 1;
+		}
+		
+		static int lw(int[] b, int l, int r, int k) {
+			int R = r, m = 0;
+			while (l <= r) {
+				m = l + r >> 1;
+			    if (m == R) return m;
+			    if (b[m] >= k) 
+			    	r = m - 1;
+			    else 
+			    	l = m + 1;
+			}
+			return l;
+		}
+	}
+	
+	public static int[] shuffle(int[] a, Random gen) {
+		for (int i = 0, n = a.length; i < n; i++) {
+			int ind = gen.nextInt(n - i) + i;
+			int d = a[i];
+			a[i] = a[ind];
+			a[ind] = d;
+		}
+		return a;
+	}
+
+	public static int[] shrinkX(int[] a) {
+		int n = a.length;
+		long[] b = new long[n];
+		for (int i = 0; i < n; i++)
+			b[i] = (long) a[i] << 32 | i;
+		Arrays.sort(b);
+		int[] ret = new int[n];
+		int p = 0;
+		ret[0] = (int) (b[0] >> 32);
+		for (int i = 0; i < n; i++) {
+			if (i > 0 && (b[i] ^ b[i - 1]) >> 32 != 0) {
+				p++;
+				ret[p] = (int) (b[i] >> 32);
+			}
+			a[(int) b[i]] = p;
+		}
+		return Arrays.copyOf(ret, p + 1);
+	}
+
+	int pow(int a, int b, int p) {
+		long ans = 1, base = a;
+		while (b > 0) {
+			if ((b & 1) > 0) {
+				ans *= base %= p;
+			}
+			base *= base %= p;
+			b >>= 1;
+		}
+		return (int) ans;
+	}
+
+	public static int[] enumLowestPrimeFactors(int n) {
+		int tot = 0;
+		int[] lpf = new int[n + 1];
+		int u = n + 32;
+		double lu = Math.log(u);
+		int[] primes = new int[(int) (u / lu + u / lu / lu * 1.5)];
+		for (int i = 2; i <= n; i++)
+			lpf[i] = i;
+		for (int p = 2; p <= n; p++) {
+			if (lpf[p] == p)
+				primes[tot++] = p;
+			int tmp;
+			for (int i = 0; i < tot && primes[i] <= lpf[p] && (tmp = primes[i] * p) <= n; i++) {
+				lpf[tmp] = primes[i];
+			}
+		}
+		return lpf;
+	}
+
+	public static int[] enumNumDivisorsFast(int n, int[] lpf) {
+		int[] nd = new int[n + 1];
+		nd[1] = 1;
+		for (int i = 2; i <= n; i++) {
+			int j = i, e = 0;
+			while (j % lpf[i] == 0) {
+				j /= lpf[i];
+				e++;
+			}
+			nd[i] = nd[j] * (e + 1);
+		}
+		return nd;
+	}
+
+	boolean isPrime(long n) {
+
+		for (int i = 2; 1l * i * i <= n; i++)
+			if (n % i == 0)
+				return false;
+		return true;
+	}
+
+	void printf() {
+		out.print(answer);
+	}
+
+	void close() {
+		out.close();
+	}
+
+	void printf(Stream<?> str) {
+		str.forEach(o -> add(o, " "));
+		add("\n");
+	}
+
+	void printf(Object... obj) {
+		printf(false, obj);
+	}
+
+	void printfWithDescription(Object... obj) {
+		printf(true, obj);
+	}
+
+	private void printf(boolean b, Object... obj) {
+
+		if (obj.length > 1) {
+			for (int i = 0; i < obj.length; i++) {
+				if (b)
+					add(obj[i].getClass().getSimpleName(), " - ");
+				if (obj[i] instanceof Collection<?>) {
+					printf((Collection<?>) obj[i]);
+				} else if (obj[i] instanceof int[][]) {
+					printf((int[][]) obj[i]);
+				} else if (obj[i] instanceof long[][]) {
+					printf((long[][]) obj[i]);
+				} else if (obj[i] instanceof double[][]) {
+					printf((double[][]) obj[i]);
+				} else
+					printf(obj[i]);
+			}
+			return;
+		}
+
+		if (b)
+			add(obj[0].getClass().getSimpleName(), " - ");
+		printf(obj[0]);
+	}
+
+	void printf(Object o) {
+		if (o instanceof int[])
+			printf(Arrays.stream((int[]) o).boxed());
+		else if (o instanceof char[])
+			printf(new String((char[]) o));
+		else if (o instanceof long[])
+			printf(Arrays.stream((long[]) o).boxed());
+		else if (o instanceof double[])
+			printf(Arrays.stream((double[]) o).boxed());
+		else if (o instanceof boolean[]) {
+			for (boolean b : (boolean[]) o)
+				add(b, " ");
+			add("\n");
+		} else
+			add(o, "\n");
+	}
+
+	void printf(int[]... obj) {
+		for (int i = 0; i < obj.length; i++)
+			printf(obj[i]);
+	}
+
+	void printf(long[]... obj) {
+		for (int i = 0; i < obj.length; i++)
+			printf(obj[i]);
+	}
+
+	void printf(double[]... obj) {
+		for (int i = 0; i < obj.length; i++)
+			printf(obj[i]);
+	}
+
+	void printf(boolean[]... obj) {
+		for (int i = 0; i < obj.length; i++)
+			printf(obj[i]);
+	}
+
+	void printf(Collection<?> col) {
+		printf(col.stream());
+	}
+
+	<T, K> void add(T t, K k) {
+		if (t instanceof Collection<?>) {
+			((Collection<?>) t).forEach(i -> add(i, " "));
+		} else if (t instanceof Object[]) {
+			Arrays.stream((Object[]) t).forEach(i -> add(i, " "));
+		} else
+			add(t);
+		add(k);
+	}
+
+	<T> void add(T t) {
+		answer.append(t);
+	}
+
+	@SuppressWarnings("unchecked")
+	<T extends Comparable<? super T>> T min(T... t) {
+		if (t.length == 0)
+			return null;
+		T m = t[0];
+		for (int i = 1; i < t.length; i++)
+			if (t[i].compareTo(m) < 0)
+				m = t[i];
+		return m;
+	}
+
+	@SuppressWarnings("unchecked")
+	<T extends Comparable<? super T>> T max(T... t) {
+		if (t.length == 0)
+			return null;
+		T m = t[0];
+		for (int i = 1; i < t.length; i++)
+			if (t[i].compareTo(m) > 0)
+				m = t[i];
+		return m;
+	}
+
+	int gcd(int a, int b) {
+		return (b == 0) ? a : gcd(b, a % b);
+	}
+
+	long gcd(long a, long b) {
+		return (b == 0) ? a : gcd(b, a % b);
+	}
+
+	long lcm(int a, int b) {
+		return (1l * a * b / gcd(a, b));
+	}
+
+	long lcm(long a, long b) {
+		if (a > Long.MAX_VALUE / b)
+			throw new RuntimeException();
+		return a * b / gcd(a, b);
+	}
+
+	
+
+	int[] ext_gcd(int a, int b) {
+		if (b == 0)
+			return new int[] { a, 1, 0 };
+		int[] vals = ext_gcd(b, a % b);
+		int d = vals[0]; 
+
+		int p = vals[2]; 
+
+		int q = vals[1] - (a / b) * vals[2];
+		return new int[] { d, p, q };
+	}
+
+	
+
+	boolean find_any_solution(int a, int b, int c, int[] root) {
+		int[] vals = ext_gcd(Math.abs(a), Math.abs(b));
+		if (c % vals[0] != 0)
+			return false;
+		printf(vals);
+		root[0] = c * vals[1] / vals[0];
+		root[1] = c * vals[2] / vals[0];
+		if (a < 0)
+			root[0] *= -1;
+		if (b < 0)
+			root[1] *= -1;
+		return true;
+	}
+
+	int mod(int x) {
+		return x % MOD;
+	}
+
+	int mod(int x, int y) {
+		return mod(mod(x) + mod(y));
+	}
+
+	long mod(long x) {
+		return x % MOD;
+	}
+
+	long mod(long x, long y) {
+		return mod(mod(x) + mod(y));
+	}
+
+	int lw(long[] f, int l, int r, long k) {
+		int R = r, m = 0;
+		while (l <= r) {
+			m = l + r >> 1;
+			if (m == R)
+				return m;
+			if (f[m] >= k)
+				r = m - 1;
+			else
+				l = m + 1;
+		}
+		return l;
+	}
+
+	int up(long[] f, int l, int r, long k) {
+		int R = r, m = 0;
+		while (l <= r) {
+			m = l + r >> 1;
+			if (m == R)
+				return m;
+			if (f[m] > k)
+				r = m - 1;
+			else
+				l = m + 1;
+		}
+		return l;
+	}
+
+	int lw(int[] f, int l, int r, int k) {
+		int R = r, m = 0;
+		while (l <= r) {
+			m = l + r >> 1;
+			if (m == R)
+				return m;
+			if (f[m] >= k)
+				r = m - 1;
+			else
+				l = m + 1;
+		}
+		return l;
+	}
+
+	int up(int[] f, int l, int r, int k) {
+		int R = r, m = 0;
+		while (l <= r) {
+			m = l + r >> 1;
+			if (m == R)
+				return m;
+			if (f[m] > k)
+				r = m - 1;
+			else
+				l = m + 1;
+		}
+		return l;
+	}
+
+	<K extends Comparable<K>> int lw(List<K> li, int l, int r, K k) {
+		int R = r, m = 0;
+		while (l <= r) {
+			m = l + r >> 1;
+			if (m == R)
+				return m;
+			if (li.get(m).compareTo(k) >= 0)
+				r = m - 1;
+			else
+				l = m + 1;
+		}
+		return l;
+	}
+
+	<K extends Comparable<K>> int up(List<K> li, int l, int r, K k) {
+		int R = r, m = 0;
+		while (l <= r) {
+			m = l + r >> 1;
+			if (m == R)
+				return m;
+			if (li.get(m).compareTo(k) > 0)
+				r = m - 1;
+			else
+				l = m + 1;
+		}
+		return l;
+	}
+
+	<K extends Comparable<K>> int bs(List<K> li, int l, int r, K k) {
+		while (l <= r) {
+			int m = l + r >> 1;
+			if (li.get(m) == k)
+				return m;
+			else if (li.get(m).compareTo(k) < 0)
+				l = m + 1;
+			else
+				r = m - 1;
+		}
+		return -1;
+	}
+
+	long calc(int base, int exponent, int p) {
+		if (exponent == 0)
+			return 1;
+		if (exponent == 1)
+			return base % p;
+		long m = calc(base, exponent >> 1, p);
+		if (exponent % 2 == 0)
+			return (m * m) % p;
+		return 1l * base * m % p * m % p;
+	}
+
+	long calc(int base, long exponent, int p) {
+		if (exponent == 0)
+			return 1;
+		if (exponent == 1)
+			return base % p;
+		long m = calc(base, exponent >> 1, p);
+		if (exponent % 2 == 0)
+			return (m * m) % p;
+		return 1l * base * m % p * m % p;
+	}
+
+	long calc(long base, long exponent, int p) {
+		if (exponent == 0)
+			return 1;
+		if (exponent == 1)
+			return base % p;
+		long m = calc(base, exponent >> 1, p);
+		if (exponent % 2 == 0)
+			return (m * m) % p;
+		return base * m % p * m % p;
+	}
+
+	long power(int base, int exponent) {
+		if (exponent == 0)
+			return 1;
+		long m = power(base, exponent / 2);
+		if (exponent % 2 == 0)
+			return m * m;
+		return base * m * m;
+	}
+
+	void swap(int[] a, int i, int j) {
+		a[i] ^= a[j];
+		a[j] ^= a[i];
+		a[i] ^= a[j];
+	}
+
+	void swap(long[] a, int i, int j) {
+		long tmp = a[i];
+		a[i] = a[j];
+		a[j] = tmp;
+	}
+
+	static class Pair<K extends Comparable<? super K>, V extends Comparable<? super V>>
+			implements Comparable<Pair<K, V>> {
+		private K k;
+		private V v;
+
+		Pair() {
+		}
+
+		Pair(K k, V v) {
+			this.k = k;
+			this.v = v;
+		}
+
+		K getK() {
+			return k;
+		}
+
+		V getV() {
+			return v;
+		}
+
+		void setK(K k) {
+			this.k = k;
+		}
+
+		void setV(V v) {
+			this.v = v;
+		}
+
+		void setKV(K k, V v) {
+			this.k = k;
+			this.v = v;
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || !(o instanceof Pair))
+				return false;
+			Pair<K, V> p = (Pair<K, V>) o;
+			return k.compareTo(p.k) == 0 && v.compareTo(p.v) == 0;
+		}
+
+		@Override
+		public int hashCode() {
+			int hash = 31;
+			hash = hash * 89 + k.hashCode();
+			hash = hash * 89 + v.hashCode();
+			return hash;
+		}
+
+		@Override
+		public int compareTo(Pair<K, V> pair) {
+			return k.compareTo(pair.k) == 0 ? v.compareTo(pair.v) : k.compareTo(pair.k);
+		}
+
+		@Override
+		public Pair<K, V> clone() {
+			return new Pair<K, V>(this.k, this.v);
+		}
+
+		@Override
+		public String toString() {
+			return String.valueOf(k).concat(" ").concat(String.valueOf(v)).concat("\n");
+		}
+	}
+
+	static class Reader {
+		private BufferedReader br;
+		private StringTokenizer st;
+
+		Reader() {
+			br = new BufferedReader(new InputStreamReader(System.in));
+		}
+
+		String next() {
+			try {
+				while (st == null || !st.hasMoreTokens()) {
+					st = new StringTokenizer(br.readLine());
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return st.nextToken();
+		}
+
+		int nextInt() {
+			return Integer.parseInt(next());
+		}
+
+		int[] nextIntArray(int n) {
+			int[] arr = new int[n];
+			for (int i = 0; i < n; i++)
+				arr[i] = nextInt();
+			return arr;
+		}
+
+		long nextLong() {
+			return Long.parseLong(next());
+		}
+
+		String nextLine() {
+			String s = "";
+			try {
+				s = br.readLine();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return s;
+		}
+	}
+}

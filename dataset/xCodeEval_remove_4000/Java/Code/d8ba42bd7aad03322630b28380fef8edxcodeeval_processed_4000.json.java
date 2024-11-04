@@ -1,0 +1,640 @@
+    import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
+import java.util.TreeMap;
+import java.util.TreeSet;
+
+import java.util.*;
+import java.io.*;
+
+public class Main {
+	static ArrayList<Integer> adj[];
+	
+
+
+	static int[][] notmemo;
+	static int k;
+	static int[] a;
+	static int b[];
+	static int m;
+
+	static class Pair implements Comparable<Pair> {
+		int d;
+		int s;
+		int idx;
+
+		public Pair(int b, int l, int i) {
+			d = b;
+			s = l;
+			idx = i;
+		}
+
+		@Override
+		public int compareTo(Pair o) {
+			if (o.d - o.s > this.d - this.s) {
+				return 1;
+			} else if (o.d - o.s < this.d - this.s) {
+				return -1;
+			} else
+				return 0;
+
+		}
+
+	}
+
+	static Pair s1[];
+	static ArrayList<Pair> adjlist[];
+	
+
+	public static long mod = (long) (1e9 + 7);
+	static int V;
+	static long INF = (long) 1E16;
+	static int n;
+	static int c;
+	static int d[];
+	static int z;
+	static Pair p[];
+	static int h[];
+	static int count[][];
+
+	public static void main(String args[]) throws Exception {
+		Scanner sc = new Scanner(System.in);
+		PrintWriter out = new PrintWriter(System.out);
+		int n1=sc.nextInt();
+		adj=new ArrayList[n1];
+		for (int i = 0; i < n1; i++) {
+			adj[i]=new ArrayList<>();
+		}
+		int from[]=new int[n1];
+		int to[]=new int[n1];
+		for (int i = 0; i < to.length-1; i++) {
+			int u=sc.nextInt()-1;
+			int v=sc.nextInt()-1;
+			adj[u].add(v);
+			adj[v].add(u);
+			from[i]=u;
+			to[i]=v;
+		}
+		first=new int[n1]; 
+		vis=new boolean[n1];
+		height=new int[n1];
+        sum=new int[n1];
+		dfs(0,1);
+         int n=euler.size();
+		 eu=new int[n];
+		
+		for (int i = 0; i <n; i++) {
+			eu[i]=euler.get(i);
+		}	
+	 st=new SegmentTree(new int[euler.size()*4]);
+		int q=sc.nextInt();
+		while(q-->0) {
+			sum(sc.nextInt()-1,sc.nextInt()-1);
+		}
+		vis=new boolean[n1];
+		dfs(0,1);
+		for (int i = 0; i < to.length-1; i++) {
+			System.out.println(height[to[i]]>height[from[i]]?sum[to[i]]:sum[from[i]]);
+		}
+		out.flush();
+	}
+	static SegmentTree st;
+	static void sum(int a,int b) {
+		int lca=st.lca(a,b);
+		sum[a]++;
+		sum[b]++;
+		sum[lca]-=2;
+	}
+	static int eu[];
+	static int[] height,first;
+	static int sum[];
+	static ArrayList<Integer> euler=new ArrayList<>();
+	static int dfs(int u,int h) {
+		int ans=sum[u];
+		vis[u]=true;
+		height[u]=h;
+		first[u]=euler.size();
+		euler.add(u);
+		for(int v:adj[u]) {
+			if(!vis[v]) {
+				ans+=dfs(v,h+1);
+				euler.add(u);
+			}
+		}
+		return sum[u]=ans;
+	}
+
+	static class SegmentTree { 
+
+			int lca(int u, int v) {
+			 int left = first[u], right = first[v];
+	       int temp=left;
+	       if(left>right) {
+	    	   left=right;
+	    	   right=temp;
+	       }
+	       return query(1,0, euler.size()-1, left, right);
+	    }
+		int N; 			
+
+		int[] array, sTree, lazy;
+		
+		SegmentTree(int[] in)		
+		{
+			sTree = new int[in.length];		
+
+			build(1,0,euler.size()-1);
+		}
+		
+		void build(int node, int b, int e)	
+
+		{
+			if(b == e)		{			
+				sTree[node] = eu[b];
+			}
+				else						
+			{
+				int mid = b + e >> 1;
+				build(node<<1,b,mid);
+				build(node<<1|1,mid+1,e);
+			sTree[node]=  height[sTree[node<<1]] < height[sTree[node<<1|1]] ? sTree[node<<1] : sTree[node<<1|1];
+			}
+		}
+		
+		
+		
+		
+		
+		int query(int node, int b, int e, int i, int j)	
+
+		{
+			if(i>e || j <b)
+				return -1;		
+			if(b>= i && e <= j)
+				return sTree[node];
+			int mid = b + e >> 1;
+			int q1 = query(node<<1,b,mid,i,j);
+			int q2 = query(node<<1|1,mid+1,e,i,j);
+			if(q1==-1) {
+				return q2;
+			}
+			if(q2==-1) {
+				return q1;
+			}
+			 return height[q1] < height[q2] ? q1 :q2;		
+		}
+		
+		
+	}
+
+	static int dp(int idx, int rem) {
+		if (idx == n) {
+			return 0;
+		}
+		if (memo[idx][rem] != -1) {
+			return memo[idx][rem];
+		}
+		int ans = dp(idx + 1, rem);
+		if (rem >= Math.max(p[idx].d, p[idx].s)) {
+			ans = Math.max(ans, 1 + dp(idx + 1, rem - p[idx].s));
+		}
+		return memo[idx][rem] = ans;
+	}
+
+	static ArrayList<Integer> arr;
+
+	static void trace(int idx, int rem, int res) {
+		if (idx == n) {
+			return;
+		}
+		if (res == dp(idx + 1, rem)) {
+			trace(idx + 1, rem, res);
+		} else {
+			arr.add(p[idx].idx+1);
+			trace(idx + 1, rem - p[idx].s, res - 1);
+		}	
+      }
+static long total[];
+static TreeMap<Integer,Integer> map1;
+
+		static int zz;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+static HashMap<Integer,Integer> map;
+static int maxa=0;
+static int ff=123123;
+
+static long dist[][];
+static int[][] memo;
+
+
+	static long modmod=998244353;
+	static int dx[]= {1,-1,0,0};
+	 static int dy[]= {0,0,1,-1};	
+	static class BBOOK implements Comparable<BBOOK>{
+		int t;
+		int alice;
+		int bob;
+		public BBOOK(int x,int y,int z) {
+		t=x;
+		alice=y;
+		bob=z;
+		}
+		@Override
+		public int compareTo(BBOOK o) {
+			return this.t-o.t;
+		}
+	}
+	private static long lcm(long a2, long b2) {
+	return (a2*b2)/gcd(a2,b2);
+	}
+	static class Edge implements Comparable<Edge>
+	{
+		int node;long cost ; long time; 
+		
+		Edge(int a, long b,long c) { node = a;	cost = b; time=c; }
+		
+		public int compareTo(Edge e){ return Long.compare(time,e.time);	}
+	}
+	
+        static void sieve(int N)	
+
+	{
+		isComposite = new int[N+1];					
+		isComposite[0] = isComposite[1] = 1;			
+
+		primes = new ArrayList<Integer>();
+ 
+		for (int i = 2; i <= N; ++i) 					
+
+			if (isComposite[i] == 0) 					
+
+			{
+				primes.add(i);
+				if(1l * i * i <= N)
+					for (int j = i * i; j <= N; j += i)	
+
+						isComposite[j] = 1;
+			}   
+	}
+    static TreeSet<Integer> factors;
+    static ArrayList<Integer> primeFactors(int N)		
+
+	{
+		ArrayList<Integer> factors = new ArrayList<Integer>();		
+
+		int idx = 0, p = primes.get(idx);
+
+		while(1l*p * p <= N)
+		{
+			while(N % p == 0) { factors.add(p); N /= p; }
+			p = primes.get(++idx);
+		}
+
+		if(N != 1)						
+
+			factors.add(N);				
+
+		return factors;
+	}
+
+	static class UnionFind {
+		int[] p, rank, setSize;
+		int numSets;
+		int max[];
+
+		public UnionFind(int N) {
+			p = new int[numSets = N];
+			rank = new int[N];
+			setSize = new int[N];
+			for (int i = 0; i < N; i++) {
+				p[i] = i;
+				setSize[i] = 1;
+			}
+		}
+
+		public int findSet(int i) {
+			return p[i] == i ? i : (p[i] = findSet(p[i]));
+		}
+
+		public boolean id5(int i, int j) {
+			return findSet(i) == findSet(j);
+		}
+		public int chunion(int i,int j, int x2) {
+			if (id5(i, j))
+				return 0;
+			numSets--;
+			int x = findSet(i), y = findSet(j);
+			int z=findSet(x2);
+			p[x]=z;;
+			p[y]=z;
+		return x;
+		}
+
+		public void unionSet(int i, int j) {
+			if (id5(i, j))
+				return;
+			numSets--;
+			int x = findSet(i), y = findSet(j);
+			if (rank[x] > rank[y]) {
+				p[y] = x;
+				setSize[x] += setSize[y];
+
+
+			} else {
+				p[x] = y;
+				setSize[y] += setSize[x];
+				if (rank[x] == rank[y])
+					rank[y]++;
+
+
+			}
+		}
+
+		
+
+		public int id7() {
+			return numSets;
+		}
+
+		public int id2(int i) {
+			return setSize[findSet(i)];
+		}
+	}
+
+
+	static class Quad implements Comparable<Quad> {
+		int u;
+		int v;
+		char state;
+		int turns;
+
+		public Quad(int i, int j, char c, int k) {
+			u = i;
+			v = j;
+			state = c;
+			turns = k;
+		}
+
+		public int compareTo(Quad e) {
+			return (int) (turns - e.turns);
+		}
+
+	}
+
+	static long id0(long x, long x2, long y, long y2) {
+		return Math.abs(x - x2) + Math.abs(y - y2);
+	}
+
+	static long fib[];
+
+	static long fib(int n) {
+		if (n == 1 || n == 0) {
+			return 1;
+		}
+		if (fib[n] != -1) {
+			return fib[n];
+		} else
+			return fib[n] = ((fib(n - 2) % mod + fib(n - 1) % mod) % mod);
+	}
+
+	static class Point  implements Comparable<Point>{
+		long x, y;
+
+		Point(long id6, long counts) {
+			x = id6;
+			y = counts;
+		}
+
+		@Override
+		public int compareTo(Point p )
+		{
+			return Long.compare(p.y*1l*x, p.x*1l*y);
+		}
+	}
+
+	static TreeSet<Long> primeFactors(long N) 
+
+	{
+		TreeSet<Long> factors = new TreeSet<Long>(); 
+
+		int idx = 0, p = primes.get(idx);
+
+		while (p * p <= N) {
+			while (N % p == 0) {
+				factors.add((long) p);
+				N /= p;
+			}
+			if (primes.size() > idx + 1)
+				p = primes.get(++idx);
+			else
+				break;
+		}
+
+		if (N != 1) 
+
+			factors.add(N); 
+
+		return factors;
+	}
+
+	static boolean visited[];
+
+	
+
+	static boolean[] vis2;
+
+	static boolean f2 = false;
+
+	static long[][] matMul(long[][] a2, long[][] b, int p, int q, int r) 
+
+																			
+
+	{
+		long[][] C = new long[p][r];
+		for (int i = 0; i < p; ++i) {
+			for (int j = 0; j < r; ++j) {
+				for (int k = 0; k < q; ++k) {
+					C[i][j] = (C[i][j] + (a2[i][k] % mod * b[k][j] % mod)) % mod;
+					C[i][j] %= mod;
+				}
+
+			}
+		}
+		return C;
+	}
+	public static int[] schuffle(int[] a2) {
+		for (int i = 0; i < a2.length; i++) {
+			int x =  (int) (Math.random() * a2.length);
+			int temp = a2[x];
+			a2[x] = a2[i];
+			a2[i] = temp;
+		}
+		return a2;
+	}
+
+
+	static boolean vis[];
+	static HashSet<Integer> set = new HashSet<Integer>();
+
+	static long modPow(long ways, long count, long mod) 
+
+	{
+		ways %= mod;
+		long res = 1;
+		while (count > 0) {
+			if ((count & 1) == 1)
+				res = (res * ways) % mod;
+			ways = (ways * ways) % mod;
+			count >>= 1;
+		}
+		return res % mod;
+	}
+
+	static long gcd(long l, long o) {
+		if (o == 0) {
+			return l;
+		}
+		return gcd(o, l % o);
+	}
+
+	static int[] isComposite;
+	static int[] valid;
+
+	static ArrayList<Integer> primes;
+	static ArrayList<Integer> l1;
+
+	
+	static TreeSet<Integer> primus = new TreeSet<Integer>();
+	
+	static void id4(int N)
+	{
+		int[] lp = new int[N + 1];								
+
+		for(int i = 2; i <= N; ++i)
+		{
+			if(lp[i] == 0)
+			{
+				primus.add(i);
+				lp[i] = i;
+			}
+			int curLP = lp[i];
+			for(int p: primus)
+				if(p > curLP || p * i > N)
+					break;
+				else
+					lp[p * i] = i;
+		}
+	}
+	
+
+	public static long[] schuffle(long[] a2) {
+		for (int i = 0; i < a2.length; i++) {
+			int x =  (int) (Math.random() * a2.length);
+			long temp = a2[x];
+			a2[x] = a2[i];
+			a2[i] = temp;
+		}
+		return a2;
+	}
+
+	static class Scanner {
+		StringTokenizer st;
+		BufferedReader br;
+
+		public Scanner(InputStream system) {
+			br = new BufferedReader(new InputStreamReader(system));
+		}
+
+		public Scanner(String file) throws Exception {
+			br = new BufferedReader(new FileReader(file));
+		}
+
+		public String next() throws IOException {
+			while (st == null || !st.hasMoreTokens())
+				st = new StringTokenizer(br.readLine());
+			return st.nextToken();
+		}
+
+		public String nextLine() throws IOException {
+			return br.readLine();
+		}
+
+		public int nextInt() throws IOException {
+			return Integer.parseInt(next());
+		}
+
+		public double nextDouble() throws IOException {
+			return Double.parseDouble(next());
+		}
+
+		public char nextChar() throws IOException {
+			return next().charAt(0);
+		}
+
+		public Long nextLong() throws IOException {
+			return Long.parseLong(next());
+		}
+
+		public boolean ready() throws IOException {
+			return br.ready();
+		}
+
+		public void id1() throws InterruptedException {
+			Thread.sleep(3000);
+		}
+
+		public int[] id3(int n) throws IOException {
+			int[] ans = new int[n];
+			for (int i = 0; i < n; i++)
+				ans[i] = nextInt();
+			return ans;
+		}
+		
+	}
+	public static int[] sortarray(int a[]) {
+		schuffle(a);
+		Arrays.sort(a);
+		return a;
+		}
+		public static long[] sortarray(long a[]) {
+			schuffle(a);
+			Arrays.sort(a);
+			return a;
+		}
+}

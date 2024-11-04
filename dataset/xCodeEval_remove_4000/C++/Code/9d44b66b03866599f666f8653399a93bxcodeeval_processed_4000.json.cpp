@@ -1,0 +1,499 @@
+
+using namespace std ;
+
+
+
+
+
+
+
+
+typedef long long ll ;
+typedef long double ld ;
+typedef pair<ll,ll> P ;
+typedef tuple<ll,ll,ll> TP ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+template<typename T> struct SortedNode{
+
+    T value;
+    T total;
+    SortedNode *ROOT;
+    SortedNode *lef, *rig, *par;
+    SortedNode *next, *prev;
+    int sz;
+    bool is_virtual;
+
+    SortedNode(): lef(nullptr), rig(nullptr), par(nullptr), ROOT(this), next(nullptr), prev(nullptr), sz(0), is_virtual(true) {}
+    SortedNode(T x): lef(nullptr), rig(nullptr), par(nullptr), next(nullptr), prev(nullptr), sz(1), value(x), is_virtual(false) {}
+
+    int state(){
+        if(!this->par) return 0;
+        if(this->par->lef == this) return 1;
+        if(this->par->rig == this) return -1;
+        return 0;
+    }
+
+    void rotate(){
+        SortedNode *pp, *p, *c;
+        p = this->par;
+        pp = p->par;
+
+        if(p->lef == this){
+            c = this->rig;
+            this->rig = p;
+            p->lef = c;
+        }
+        else{
+            c = this->lef;
+            this->lef = p;
+            p->rig = c;
+        }
+        if(pp && pp->lef == p) pp->lef = this;
+        if(pp && pp->rig == p) pp->rig = this;
+        this->par = pp;
+        p->par = this;
+        if(c) c->par = p;
+        p->update();
+        this->update();
+    }
+
+    void splay(){
+        while(this->state() != 0){
+            if(this->par->state() == 0){
+                this->rotate();
+            }
+            else if(this->state() == this->par->state()){
+                this->par->rotate();
+                this->rotate();
+            }
+            else{
+                this->rotate();
+                this->rotate();
+            }
+        }
+    }
+
+    void update(){
+        this->sz = 1 ;
+        if(this->is_virtual) this->sz = 0;
+        else this->total = this->value;
+        if(this->lef){
+            this->sz += this->lef->sz;
+            this->total = this->total + this->lef->total;
+        }
+        if(this->rig){
+            this->sz += this->rig->sz;
+            this->total = this->total + this->rig->total;
+        }
+    }
+
+    SortedNode *get(int k, SortedNode *root){
+        if(root->sz < k) return nullptr;
+        SortedNode *now = root;
+        while(true){
+            int lsz = now->lef ? now->lef->sz : 0;
+            if(k < lsz){
+                now = now->lef;
+            }
+            if(k == lsz){
+                now->splay();
+                return now;
+            }
+            if(k > lsz){
+                now = now->rig;
+                k = k - lsz - 1;
+            }
+        }
+    }
+
+    SortedNode *merge(SortedNode *lef_root, SortedNode *rig_root){
+        if(!lef_root) return rig_root;
+        if(!rig_root) return lef_root;
+        lef_root = get(lef_root->sz-1, lef_root);
+        lef_root->rig = rig_root;
+        rig_root->par = lef_root;
+        lef_root->next = rig_root;
+        rig_root->prev = lef_root;
+        lef_root->update();
+        return lef_root;
+    }
+
+    
+
+    pair<SortedNode*,SortedNode*> split(int lef_cnt , SortedNode *root){
+        if(!root) return {nullptr,nullptr};
+        if(lef_cnt == 0) {
+            root = get(0,root);
+            return {nullptr, root};
+        }
+        
+
+        SortedNode *lef_root, *rig_root, *mid_root;
+        root = get(lef_cnt, root);
+        lef_root = root->lef;
+        rig_root = root;
+        rig_root->lef = nullptr;
+        lef_root->par = nullptr;
+        rig_root->prev = nullptr;
+        lef_root = get(lef_root->sz-1,lef_root);
+        lef_root->next = nullptr;
+        rig_root->update();
+        return {lef_root,rig_root};
+    }
+
+    
+
+    tuple<SortedNode*,SortedNode*,SortedNode*> split3(int first_cnt , int second_cnt , SortedNode *root){
+        auto[lef_root,rroot] = split(first_cnt,root);
+        auto[mid_root,rig_root] = split(second_cnt-first_cnt,rroot);
+        return {lef_root,mid_root,rig_root};
+    }
+
+
+    
+
+    pair<SortedNode*,bool> insert(SortedNode *node, SortedNode *root){
+        auto[rt,cnt] = less_count(node->value, root);
+        if(rt) root = rt;
+        auto[lef_root, rig_root] = split(cnt,root);
+        bool first = cnt == 0 ? true : false ;
+        return {merge(merge(lef_root,node),rig_root),first};
+    }
+
+    tuple<SortedNode*,SortedNode*,SortedNode*> remove(int k, SortedNode *root){
+        root = get(k,root);
+        SortedNode *lef_root = root->lef;
+        SortedNode *rig_root = root->rig;
+        if(lef_root) lef_root->par = nullptr;
+        if(rig_root) rig_root->par = nullptr;
+        root->lef = nullptr;
+        root->rig = nullptr;
+        root->prev = nullptr;
+        root->next = nullptr;
+        root->update();
+        SortedNode *nroot = merge(lef_root,rig_root);
+        if(nroot->sz == 0) return {nroot,root,nullptr};
+        if(k == 0) {
+            nroot = nroot->get(0,nroot);
+            return {nroot,root,nroot};
+        }
+        return {nroot, root, nullptr};
+    }
+
+    
+
+    tuple<SortedNode*,SortedNode*,SortedNode*> remove_section(int lef, int rig, SortedNode *root){
+        auto[lef_root,mid_root,rig_root] = split3(lef,rig,root);
+        root = merge(lef_root,rig_root);
+        if(root->sz == 0) return {root, mid_root, nullptr};
+        if(lef == 0){
+            root = get(0, root);
+            return {root, mid_root, root};
+        }
+        return {root, mid_root, nullptr};
+    }
+
+    SortedNode *find(T x, SortedNode *root){
+        SortedNode *res = nullptr;
+        SortedNode *now = root;
+        while(true){
+            if(!now) break;
+            if(now->is_virtual) {
+                now = now->lef;
+            }
+            else{
+                if(now->value < x){
+                    now = now->rig;
+                }
+                else if(now->value == x){
+                    res = now;
+                    break;
+                }
+                else{
+                    now = now->lef;
+                }
+            }
+        }
+        return res;
+    }
+
+    pair<SortedNode*,int> count(T x, SortedNode *root){
+        if(!find(x,root)) return {root, 0};
+        root = binary_search(x, root, true);
+        if(!root->prev) {
+            auto [rt, cnt] = less_count(root->value, root);
+            if(rt) root = rt;
+            return {root, cnt};
+        }
+        auto [rt1, lower] = less_count(root->prev->value, root);
+        if(rt1) root = rt1;
+        auto [rt2, upper] = less_count(x, root);
+        if(rt2) root = rt2;
+        return {root, upper-lower} ;
+    }
+
+    
+
+    SortedNode *binary_search(T x, SortedNode *root, bool lower){
+        SortedNode *res = nullptr;
+        SortedNode *now = root;
+        while(true){
+            if(!now) break;
+            if(now->is_virtual) {
+                res = now;
+                now = now->lef;
+            }
+            else{
+                T value = now->value;
+                if(lower){
+                    if(value < x) {
+                        now = now->rig;
+                    }
+                    else {
+                        res = now;
+                        now = now->lef;
+                    }
+                }
+                else{
+                    if(value <= x) {
+                        now = now->rig;
+                    }
+                    else {
+                        res = now;
+                        now = now->lef;
+                    }
+                }
+            }
+        }
+        res->splay();
+        return res;
+    }
+
+    
+
+    pair<SortedNode*,int> less_count(T x, SortedNode *root){
+        SortedNode *now = root, *res = nullptr;
+        int cnt = 0;
+        while(true){
+            if(!now) break;
+            if(now->is_virtual) {
+                now = now->lef;
+            }
+            else{
+                if(now->value <= x){
+                    int lsz = now->lef ? now->lef->sz : 0;
+                    cnt += lsz + 1;
+                    res = now;
+                    now = now->rig;
+                }
+                else{
+                    now = now->lef;
+                }
+            }
+        }
+        if(res) res->splay();
+        return {res,cnt};
+    }
+
+    
+
+    pair<SortedNode*,T> get_sum(int l, int r, SortedNode *root){
+        if(l == r) return {root, 0};
+        auto[lef_root, mid_root, rig_root] = split3(l,r,root);
+        T res = mid_root->total;
+        return {merge(merge(lef_root,mid_root),rig_root), res};
+    }
+
+    size_t size(SortedNode *root){
+        if(!root) return 0 ;
+        root->sz = 1 ;
+        if(root->is_virtual) root->sz = 0;
+        if(root->lef) root->sz += root->lef->sz;
+        if(root->rig) root->sz += root->rig->sz;
+        return root->sz;
+    }
+
+    void next_node(SortedNode*& iter){
+        iter = iter->next;
+    }
+
+    void prev_node(SortedNode*& iter){
+        iter = iter->prev;
+    }
+};
+
+template<typename T> struct SortedList{
+    private:
+        SortedNode<T> *root, *begin_node, *end_node;
+    public:
+        SortedList(){
+            root = new SortedNode<T>();
+            begin_node = new SortedNode<T>();
+            end_node = root;
+        }
+        T value;
+        size_t size() { return root->size(root) ; }
+        void insert(T x) { auto[rt,begin] = root->insert(new SortedNode(x),root) ; root = rt; if(begin) begin_node = rt; }
+        void erase(int k) { auto[rt,DEL,bt] = root->remove(k,root); root = rt; delete DEL; if(bt) begin_node = bt; }
+        void erase_section(int l, int r) { auto[rt,DEL,bt] = root->remove_section(l,r,root); root = rt; delete DEL; if(bt) begin_node = bt; }
+        T get(int k) { root = root->get(k,root); return root->value; }
+        int count(T x) { auto[rt, cnt] = root->count(x, root); root = rt; return cnt; }
+        int less_count(T x) { auto[rt,cnt] = root->less_count(x, root); if(rt) root = rt; return cnt; }
+        SortedNode<T> *lower_bound(T x) { return root = root->binary_search(x, root, true); }
+        SortedNode<T> *upper_bound(T x) { return root = root->binary_search(x, root, false); }
+        SortedNode<T> *find(T x) { return root->find(x,root); }
+        ll get_sum(int l, int r) { auto[rt, res] = root->get_sum(l,r,root); root = rt; return res; }
+        SortedNode<T> *begin() { return begin_node; }
+        SortedNode<T> *end() { return end_node; }
+};
+
+struct UnionFind {
+    vector<int> par ; 
+
+    vector<int> lank ; 
+
+    vector<int> volume ; 
+
+    vector<int> edge ;
+    vector<SortedList<ll>> vec;
+    ll score = 0;
+
+    UnionFind(int n, int range, vector<int> A){
+        
+
+        par.resize(n) ;
+        lank.resize(n) ;
+        volume.resize(n) ;
+        edge.resize(n) ;
+        vec.resize(n);
+        for(int i = 0 ; i < n ; i++){
+            par[i] = i ;
+            lank[i] = 0 ;
+            volume[i] = (i < range ? 1 : 0) ;
+            edge[i] = 0 ;
+            vec[i].insert(A[i]);
+            if(i < range) score += A[i];
+        }
+    }
+    
+
+    int root(int x){
+        if(par[x] == x){
+            return x ;
+        } else{
+            return par[x] = root(par[x]) ;
+        }
+    }
+
+    
+
+    void unite(int x , int y){
+        x = root(x);
+        y = root(y) ;
+        if(x == y) {
+            edge[x]++;
+            return ;
+        }
+        if(lank[x] < lank[y]){
+            score -= vec[x].get_sum(vec[x].size()-volume[x],vec[x].size());
+            score -= vec[y].get_sum(vec[y].size()-volume[y],vec[y].size());
+            par[x] = y ;
+            volume[y] += volume[x] ;
+            rep(i,vec[x].size()) vec[y].insert(vec[x].get(i));
+            rep(i,vec[x].size()) vec[x].erase(i);
+            score += vec[y].get_sum(vec[y].size()-volume[y],vec[y].size());
+        } else {
+            score -= vec[x].get_sum(vec[x].size()-volume[x],vec[x].size());
+            score -= vec[y].get_sum(vec[y].size()-volume[y],vec[y].size());
+            par[y] = x ;
+            volume[x] += volume[y] ;
+            rep(i,vec[y].size()) vec[x].insert(vec[y].get(i));
+            rep(i,vec[y].size()) vec[y].erase(i);
+            score += vec[x].get_sum(vec[x].size()-volume[x],vec[x].size());
+            if(lank[x] == lank[y]) lank[x]++ ;
+        }
+    }
+
+    bool same(int x , int y){
+        return root(x) == root(y) ;
+    }
+
+    int size(int x){
+        return volume[root(x)] ;
+    }
+
+    ll get_score(){
+        return score; 
+    }
+};
+
+vector<int> A, B, C;
+vector<P> D;
+set<TP> st;
+
+int z ;
+
+void solve(){
+    int n, m, q;
+    cin >> n >> m >> q;
+    A.resize(n);
+    B.resize(m);
+    rep(i,n) cin >> A[i];
+    rep(i,m) cin >> B[i];
+    rep(i,n) {
+        C.push_back(A[i]);
+        D.push_back({A[i],i});
+    }
+    rep(i,m) {
+        C.push_back(B[i]);
+        D.push_back({B[i],n+i});
+    }
+    sort(D.begin(),D.end());
+    rep(i,n+m-1){
+        auto[v,s] = D[i];
+        auto[u,t] = D[i+1];
+        st.insert({u-v,s,t});
+    }
+    UnionFind uf(n+m, n, C);
+    vector<P> qry;
+    rep(i,q){
+        int k;
+        cin >> k;
+        qry.push_back({k,i});
+    }
+    sort(qry.begin(),qry.end());
+    vector<ll> res(q);
+    rep(i,q){
+        auto [k,id] = qry[i];
+        while(!st.empty()){
+            auto it = st.begin();
+            auto[mag,s,t] = *it;
+            if(mag <= k){
+                st.erase(it++);
+                uf.unite(s,t);
+            }
+            else break;
+        }
+        res[id] = uf.get_score();
+    }
+    rep(i,q) cout << res[i] << endl;
+}
+
+int main(){
+    fast_input_output
+    solve();
+}

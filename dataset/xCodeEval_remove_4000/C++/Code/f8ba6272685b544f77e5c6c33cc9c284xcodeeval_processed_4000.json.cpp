@@ -1,0 +1,481 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+using namespace std;
+
+
+using ll = long long;
+using ld = long double;
+using pll = pair<ll, ll>;
+using pii = pair<int, int>;
+using vi = vector<int>;
+using vvi = vector<vi>;
+using vvvi = vector<vvi>;
+using vl = vector<ll>;
+using vvl = vector<vl>;
+using vvvl = vector<vvl>;
+using vpii = vector<pii>;
+using vpll = vector<pll>;
+using vs = vector<string>;
+template<class T> using pq = priority_queue<T, vector<T>, greater<T>>;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+template<class T> bool chmin(T &a, const T &b){ if(a > b){ a = b; return 1; } else return 0; }
+template<class T> bool chmax(T &a, const T &b){ if(a < b){ a = b; return 1; } else return 0; }
+template<class T> auto min(const T& a){ return *min_element(all(a)); }
+template<class T> auto max(const T& a){ return *max_element(all(a)); }
+template<class... Ts> void in(Ts&... t);
+
+
+
+
+
+
+
+
+ll intpow(ll a, ll b){ ll ans = 1; while(b){if(b & 1) ans *= a; a *= a; b /= 2;} return ans;}
+ll modpow(ll a, ll b, ll p){ ll ans = 1; a %= p;while(b){ if(b & 1) (ans *= a) %= p; (a *= a) %= p; b /= 2; } return ans; }
+ll GCD(ll a,ll b) { if(a == 0 || b == 0) return a + b; if(a % b == 0) return b; else return GCD(b,a%b);}
+ll LCM(ll a,ll b) { if(a == 0) return b; if(b == 0) return a;return a / GCD(a,b) * b;}
+namespace IO{
+
+struct setting{ setting(){cin.tie(nullptr); ios::sync_with_stdio(false);fixed(cout); cout.precision(12);}} setting;
+template<int I> struct P : P<I-1>{};
+template<> struct P<0>{};
+template<class T> void i(T& t){ i(t, P<3>{}); }
+void i(vector<bool>::reference t, P<3>){ int a; i(a); t = a; }
+template<class T> auto i(T& t, P<2>) -> VOID(cin >> t){ cin >> t; }
+template<class T> auto i(T& t, P<1>) -> VOID(begin(t)){ for(auto&& x : t) i(x); }
+template<class T, size_t... idx> void ituple(T& t, index_sequence<idx...>){
+    in(get<idx>(t)...);}
+template<class T> auto i(T& t, P<0>) -> VOID(tuple_size<T>{}){
+    ituple(t, make_index_sequence<tuple_size<T>::value>{});}
+
+}
+
+template<class... Ts> void in(Ts&... t){ unpack(IO :: i(t)); }
+
+
+
+constexpr int mod = 998244353;
+static const double PI = 3.1415926535897932;
+template <class F> struct REC {
+    F f;
+    REC(F &&f_) : f(forward<F>(f_)) {}
+    template <class... Args> auto operator()(Args &&...args) const { return f(*this, forward<Args>(args)...); }};
+
+template <int mod>
+struct Modint{
+    int x;
+    Modint():x(0) {}
+    Modint(long long y): x(y >= 0 ? y % mod : (mod - (-y) % mod) % mod) {}
+    Modint &operator += (const Modint &p) {
+        if((x += p.x) >= mod) x -= mod;
+        return *this;}
+    Modint &operator -= (const Modint &p) {
+        if ((x += mod - p.x) >= mod) x -= mod;
+        return *this;}
+    Modint &operator *= (const Modint &p) {
+        x = (int)(1LL * x * p.x % mod);
+        return *this;}
+    Modint &operator /= (const Modint &p) {
+        *this *= p.inverse();
+        return *this;}
+    Modint operator -() const{return Modint(-x);}
+    Modint operator +(const Modint &p) const {return Modint(*this) += p;}
+    Modint operator -(const Modint &p) const {return Modint(*this) -= p;}
+    Modint operator *(const Modint &p) const {return Modint(*this) *= p;}
+    Modint operator /(const Modint &p) const {return Modint(*this) /= p;}
+    Modint &operator ++() {if(x == mod - 1) x = 0; else x++; return *this;}
+    Modint &operator --() {if(x == 0) x = mod - 1; else x--; return *this;} 
+    bool operator == (const Modint &p) const {return x == p.x;}
+    bool operator != (const Modint &p) const {return x != p.x;}
+    Modint inverse() const {
+        int a = x, b = mod, u = 1, v = 0, t;
+        while (b > 0) {
+            t = a / b;
+            swap(a -= t * b, b);
+            swap(u -= t * v, v);
+        }
+        return Modint(u);}
+    Modint pow(long long n) const {
+        Modint ret(1), mul(x);
+        while (n > 0) {
+            if (n & 1) ret *= mul;
+            mul *= mul;
+            n >>= 1;
+        }
+        return ret;}
+    friend ostream &operator<<(ostream &os, const Modint &p) { return os << p.x; }
+    friend istream &operator>>(istream &is, Modint &a) {
+        long long t;
+        is >> t;
+        a = Modint<mod>(t);
+        return (is);
+    }
+    static constexpr int get_mod() {return mod;}
+};
+
+using mint = Modint<mod>;
+using vm = vector<mint>;
+using vvm = vector<vm>;
+using vvvm = vector<vvm>;
+
+using namespace std;
+template <class S,
+          S (*op)(S, S),
+          S (*e)(),
+          class F,
+          S (*mapping)(F, S),
+          F (*composition)(F, F),
+          F (*id)()>
+struct id0 {
+  public:
+    id0() : id0(0) {}
+    explicit id0(int n) : id0(vector<S>(n, e())) {}
+    explicit id0(const vector<S>& v) : _n(int(v.size())) {
+        log = 0;
+        while ((1U << log) < (unsigned int)(_n)) log++;
+        size = 1 << log;
+        d = vector<S>(2 * size, e());
+        lz = vector<F>(size, id());
+        for (int i = 0; i < _n; i++) d[size + i] = v[i];
+        for (int i = size - 1; i >= 1; i--) {
+            update(i);
+        }
+    }
+
+    void set(int p, S x) {
+        assert(0 <= p && p < _n);
+        p += size;
+        for (int i = log; i >= 1; i--) push(p >> i);
+        d[p] = x;
+        for (int i = 1; i <= log; i++) update(p >> i);
+    }
+
+    S get(int p) {
+        assert(0 <= p && p < _n);
+        p += size;
+        for (int i = log; i >= 1; i--) push(p >> i);
+        return d[p];
+    }
+
+    S prod(int l, int r) {
+        assert(0 <= l && l <= r && r <= _n);
+        if (l == r) return e();
+
+        l += size;
+        r += size;
+
+        for (int i = log; i >= 1; i--) {
+            if (((l >> i) << i) != l) push(l >> i);
+            if (((r >> i) << i) != r) push((r - 1) >> i);
+        }
+
+        S sml = e(), smr = e();
+        while (l < r) {
+            if (l & 1) sml = op(sml, d[l++]);
+            if (r & 1) smr = op(d[--r], smr);
+            l >>= 1;
+            r >>= 1;
+        }
+
+        return op(sml, smr);
+    }
+
+    S all_prod() { return d[1]; }
+
+    void apply(int p, F f) {
+        assert(0 <= p && p < _n);
+        p += size;
+        for (int i = log; i >= 1; i--) push(p >> i);
+        d[p] = mapping(f, d[p]);
+        for (int i = 1; i <= log; i++) update(p >> i);
+    }
+    void apply(int l, int r, F f) {
+        assert(0 <= l && l <= r && r <= _n);
+        if (l == r) return;
+
+        l += size;
+        r += size;
+
+        for (int i = log; i >= 1; i--) {
+            if (((l >> i) << i) != l) push(l >> i);
+            if (((r >> i) << i) != r) push((r - 1) >> i);
+        }
+
+        {
+            int l2 = l, r2 = r;
+            while (l < r) {
+                if (l & 1) all_apply(l++, f);
+                if (r & 1) all_apply(--r, f);
+                l >>= 1;
+                r >>= 1;
+            }
+            l = l2;
+            r = r2;
+        }
+
+        for (int i = 1; i <= log; i++) {
+            if (((l >> i) << i) != l) update(l >> i);
+            if (((r >> i) << i) != r) update((r - 1) >> i);
+        }
+    }
+
+    template <bool (*g)(S)> int max_right(int l) {
+        return max_right(l, [](S x) { return g(x); });
+    }
+    template <class G> int max_right(int l, G g) {
+        assert(0 <= l && l <= _n);
+        assert(g(e()));
+        if (l == _n) return _n;
+        l += size;
+        for (int i = log; i >= 1; i--) push(l >> i);
+        S sm = e();
+        do {
+            while (l % 2 == 0) l >>= 1;
+            if (!g(op(sm, d[l]))) {
+                while (l < size) {
+                    push(l);
+                    l = (2 * l);
+                    if (g(op(sm, d[l]))) {
+                        sm = op(sm, d[l]);
+                        l++;
+                    }
+                }
+                return l - size;
+            }
+            sm = op(sm, d[l]);
+            l++;
+        } while ((l & -l) != l);
+        return _n;
+    }
+
+    template <bool (*g)(S)> int min_left(int r) {
+        return min_left(r, [](S x) { return g(x); });
+    }
+    template <class G> int min_left(int r, G g) {
+        assert(0 <= r && r <= _n);
+        assert(g(e()));
+        if (r == 0) return 0;
+        r += size;
+        for (int i = log; i >= 1; i--) push((r - 1) >> i);
+        S sm = e();
+        do {
+            r--;
+            while (r > 1 && (r % 2)) r >>= 1;
+            if (!g(op(d[r], sm))) {
+                while (r < size) {
+                    push(r);
+                    r = (2 * r + 1);
+                    if (g(op(d[r], sm))) {
+                        sm = op(d[r], sm);
+                        r--;
+                    }
+                }
+                return r + 1 - size;
+            }
+            sm = op(d[r], sm);
+        } while ((r & -r) != r);
+        return 0;
+    }
+
+  private:
+    int _n, size, log;
+    vector<S> d;
+    vector<F> lz;
+
+    void update(int k) { d[k] = op(d[2 * k], d[2 * k + 1]); }
+    void all_apply(int k, F f) {
+        d[k] = mapping(f, d[k]);
+        if (k < size) lz[k] = composition(f, lz[k]);
+    }
+    void push(int k) {
+        all_apply(2 * k, lz[k]);
+        all_apply(2 * k + 1, lz[k]);
+        lz[k] = id();
+    }
+};
+
+int op(int x,int y) {return max(x,y);}
+int e() {return -1;}
+int mapping(int f,int x) { 
+    if (f == -1) return x;
+    return f;
+}
+int composition (int L,int R) {
+    if (L == -1) return R;
+    return L;
+}
+int id() {return -1;}
+
+using namespace std;
+template <class T>
+struct Matrix {
+    vector<vector<T>> A;
+    Matrix() = default;
+    Matrix(int n, int m) : A(n, vector<T>(m, T())) {}
+    Matrix(int n) : A(n, vector<T>(n, T())){};
+    int H() const { return A.size(); }
+    int W() const { return A[0].size(); }
+    int size() const { return A.size(); }
+    inline const vector<T> &operator[](int k) const { return A[k]; }
+    inline vector<T> &operator[](int k) { return A[k]; }
+    static Matrix I(int n) {
+        Matrix mat(n);
+        for (int i = 0; i < n; i++) mat[i][i] = 1;
+        return (mat);
+    }
+    Matrix &operator+=(const Matrix &B) {
+        int n = H(), m = W();
+        assert(n == B.H() && m == B.W());
+        for (int i = 0; i < n; i++) for (int j = 0; j < m; j++) (*this)[i][j] += B[i][j];
+        return (*this);
+    }
+    Matrix &operator-=(const Matrix &B) {
+        int n = H(), m = W();
+        assert(n == B.H() && m == B.W());
+        for (int i = 0; i < n; i++) for (int j = 0; j < m; j++) (*this)[i][j] -= B[i][j];
+        return (*this);
+    }
+    Matrix &operator*=(const Matrix &B) {
+        int n = H(), m = B.W(), p = W();
+        assert(p == B.H());
+        vector<vector<T>> C(n, vector<T>(m, T{}));
+        for (int i = 0; i < n; i++)
+            for (int k = 0; k < p; k++)
+                for (int j = 0; j < m; j++) C[i][j] += (*this)[i][k] * B[k][j];
+        A.swap(C);
+        return (*this);
+    }
+    Matrix &operator^=(long long k) {
+        Matrix B = Matrix::I(H());
+        while (k > 0) {
+            if (k & 1) B *= *this;
+            *this *= *this;
+            k >>= 1LL;
+        }
+        A.swap(B.A);
+        return (*this);
+    }
+    Matrix operator+(const Matrix &B) const { return (Matrix(*this) += B); }
+    Matrix operator-(const Matrix &B) const { return (Matrix(*this) -= B); }
+    Matrix operator*(const Matrix &B) const { return (Matrix(*this) *= B); }
+    Matrix operator^(const long long k) const { return (Matrix(*this) ^= k); }
+    bool operator==(const Matrix &B) const {
+        assert(H() == B.H() && W() == B.W());
+        for (int i = 0; i < H(); i++) for (int j = 0; j < W(); j++) {
+            if (A[i][j] != B[i][j]) return false;
+        }
+        return true;
+    }
+    bool operator!=(const Matrix &B) const {
+        assert(H() == B.H() && W() == B.W());
+        for (int i = 0; i < H(); i++) for (int j = 0; j < W(); j++) {
+            if (A[i][j] != B[i][j]) return true;
+        }
+        return false;
+    }
+    friend ostream &operator<<(ostream &os, const Matrix &p) {
+        int n = p.H(), m = p.W();
+        for (int i = 0; i < n; i++) {
+            os << (i ? "   " : "") << "[";
+            for (int j = 0; j < m; j++) {
+                os << p[i][j] << (j + 1 == m ? "]\n" : ",");
+            }
+        }
+        return (os);
+    }
+    T determinant() const {
+        Matrix B(*this);
+        assert(H() == W());
+        T ret = 1;
+        for (int i = 0; i < H(); i++) {
+            int idx = -1;
+            for (int j = i; j < W(); j++) {
+                if (B[j][i] != 0) {
+                    idx = j;
+                    break;
+                }
+            }
+            if (idx == -1) return 0;
+            if (i != idx) {
+                ret *= T(-1);
+                swap(B[i], B[idx]);
+            }
+            ret *= B[i][i];
+            T inv = T(1) / B[i][i];
+            for (int j = 0; j < W(); j++) {
+                B[i][j] *= inv;
+            }
+            for (int j = i + 1; j < H(); j++) {
+                T a = B[j][i];
+                if (a == 0) continue;
+                for (int k = i; k < W(); k++) {
+                    B[j][k] -= B[i][k] * a;
+                }
+            }
+        }
+    return ret;
+    }
+};
+
+int main() {
+    INT(n);
+    vi l(n),r(n);
+    rep(i,n) cin >> l[i] >> r[i];
+    id0<int,op,e,int,mapping,composition,id> seg(3e5+5);
+    rep(i,n) {
+        seg.apply(l[i],r[i]+1,i);
+    }
+    mint ans = 0;
+    Matrix<mint> m1(2);
+    rep(i,(int)3e5+5) {
+        int las = seg.get(i);
+        if(i < 10) debug(i,las);
+        if(las == -1) continue;
+        mint c0 = 0,c1 = 1;
+        if(las > 0) {
+            c0 = mint(3).pow(las-1);
+            c1 = c0 * 2;
+        }
+        m1[0][0] = 2;
+        m1[1][0] = 1;
+        m1[1][1] = 3;
+        m1 ^= n - las - 1;
+        ans += m1[0][0] * c1 + m1[0][1] * c0;
+    }
+    cout << ans << '\n';
+}

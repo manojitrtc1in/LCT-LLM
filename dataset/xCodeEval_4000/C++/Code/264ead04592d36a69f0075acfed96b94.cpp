@@ -1,0 +1,725 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#include<cstdio>
+#include<cstring>
+#include<cstdlib>
+#include<cctype>
+#include<cmath>
+#include<iostream>
+#include<fstream>
+#include<iomanip>
+#include<string>
+#include<vector>
+#include<queue>
+#include<map>
+#include<algorithm>
+#include<set>
+#include<sstream>
+#include<stack>
+#define maxim 100
+#define LLD long long int
+#define LLU long long unsigned
+#define HD short int
+#define HU short unsigned
+#define pi acos(-1.0)
+#define inf (1<<29)
+#define CLR(a) memset(a,0,sizeof(a))
+#define SET(a) memset(a,-1,sizeof(a))
+#define pb push_back
+#define sz(a) ((int)a.size())
+#define all(a) a.begin(),a.end()
+#define eps 1e-9
+#define rep(i,init,n) for(i=init;i<n;i++)
+#define rem(i,init,n) for(i=init;i>n;i--)
+#define area(x1,y1,x2,y2,x3,y3) ( x1*(y2-y3) + x2*(y3-y1) + x3*(y1-y2) )
+#define sqr(x) ((x)*(x))
+#define distSqr(x1,y1,x2,y2) ( sqr(x1-x2) + sqr(y1-y2) )
+#define spDist(lat1,long1,lat2,long2,r) ( r * acos( sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(long1-long2) ) )
+#define isEq(a,b) (fabs(a-b)<eps)
+#define STR string
+#define LF double
+#define IT iterator
+#define VI vector<int>
+#define VLLD vector<LLD>
+#define VS vector<STR>
+#define VLF vector<LF>
+#define MII map<int,int>
+#define MIB map<int,bool>
+#define MSI map<STR,int>
+#define MSB map<STR,bool>
+#define MSS map<STR,STR>
+#define M2dII map<int,map<int,int> >
+#define QI queue<int>
+#define SI stack<int>
+#define PII pair< int, int >
+#define PPI pair< PII, int >
+#define ff first
+#define ss second
+#define VPII vector<PII>
+#define MP make_pair
+
+#define chk(a,k) ((bool)(a&(1<<(k))))
+#define set0(a,k) (a&(~(1<<(k))))
+#define set1(a,k) (a|(1<<(k)))
+
+#define chkA(a,k) (bool)(a[(k)>>5] & (1<<((k)&31)))
+#define setA0(a,k) (a[(k)>>5] &= ~(1<<((k)&31)))
+#define setA1(a,k) (a[(k)>>5] |= (1<<((k)&31)))
+
+#define SD(a) scanf("%d",&a)
+#define SU(a) scanf("%u",&a)
+#define SHD(a) scanf("%hd",&a)
+#define SHU(a) scanf("%hu",&a)
+#define SF(a) scanf("%f",&a)
+#define SLF(a) scanf("%lf",&a)
+#define SC(a) scanf("%c",&a)
+#define SS(a) scanf("%s",a)
+
+#define foreach(i, c) for( __typeof( (c).begin() ) i = (c).begin(); i != (c).end(); ++i )
+
+int diru[] = {-1,-1,-1,0,0,1,1,1};
+int dirv[] = {-1,0,1,-1,1,-1,0,1};
+
+using namespace std;
+
+template< class T > T sq(T n) {
+    return n*n;
+}
+template< class T > T gcd(T a, T b) {
+    return (b != 0 ? gcd<T>(b, a%b) : a);
+}
+template< class T > T lcm(T a, T b) {
+    return (a / gcd<T>(a, b) * b);
+}
+template< class T > bool inside(T a, T b, T c) {
+    return a<=b && b<=c;
+}
+template< class T > void setmax(T &a, T b) {
+    if(a < b) a = b;
+}
+template< class T > void setmin(T &a, T b) {
+    if(b < a) a = b;
+}
+template< class T > T power(T N,T P) {
+    return (P==0)?  1: N*power(N,P-1);
+}
+
+struct point {
+    LLD x,y ;
+} C[100010], a, b, c ;
+
+LLD triArea2(const point &a, const point &b, const point &c) {
+    return (a.x*(b.y-c.y) + b.x*(c.y-a.y) + c.x*(a.y-b.y));
+}
+
+bool out = 1;
+
+bool inConvexPoly(int nc, const point &p) {
+    LLD st = 1, en = nc - 1, mid, c;
+    while(en - st > 1) {
+        mid = (st + en)>>1;
+        if(triArea2(C[0], C[mid], p) < 0) en = mid;
+        else st = mid;
+    }
+
+    LLD r0 = abs(triArea2(C[0], C[st], C[en]));
+    LLD r1 = abs(triArea2(C[0], C[st], p));
+    LLD r2 = abs(triArea2(C[0], C[en], p));
+    LLD r3 = abs(triArea2(C[st], C[en], p));
+    LLD r4 = triArea2(C[0], C[1], p);
+    LLD r5 = triArea2(C[0], C[nc-1], p);
+
+    if(r0 == (r1 + r2 + r3) && r3 != 0 && r4 != 0 && r5 != 0);
+    else
+        out = 0;
+}
+
+
+int main() {
+    int n,T,t=1,m,i,j,k;
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    scanf("%d",&n) ;
+
+    rep(i,0,n) {
+        scanf("%d",&m);
+        C[i].x = m ;
+        scanf("%d",&m);
+        C[i].y = m ;
+    }
+    reverse(C,C+n) ;
+    C[n] = C[0] ;
+    SD(k) ;
+    bool f = 1 ;
+    point p ;
+    while(k--) {
+        scanf("%d",&m);
+        p.x = m ;
+        scanf("%d",&m);
+        p.y = m ;
+        if(!inConvexPoly(n,p))
+            f = 0;
+    }
+
+    if(out)    puts("YES") ;
+    else  puts("NO") ;
+
+    return 0;
+}

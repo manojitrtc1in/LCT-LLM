@@ -1,0 +1,469 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#ifdef LOCAL
+#include "copypaste/debug.h"
+#else
+#define debug(...) 42
+#endif
+
+#define endl '\n'
+typedef long long ll;
+typedef pair<int, int> pii;
+typedef pair<ll, ll> pll;
+
+struct fast_ios {
+    fast_ios() {
+        cin.tie(nullptr);
+        ios::sync_with_stdio(false);
+        cout << fixed << setprecision(10);
+    };
+} fast_ios_;
+
+template <typename T>
+T inverse(T a, T m) {
+    T u = 0, v = 1;
+    while (a != 0) {
+        T t = m / a;
+        m -= t * a;
+        swap(a, m);
+        u -= t * v;
+        swap(u, v);
+    }
+    assert(m == 1);
+    return u;
+}
+
+template <typename T>
+class Modular {
+   public:
+    using Type = typename decay<decltype(T::value)>::type;
+
+    constexpr Modular() : value() {}
+    template <typename U>
+    Modular(const U& x) {
+        value = normalize(x);
+    }
+
+    template <typename U>
+    static Type normalize(const U& x) {
+        Type v;
+        if (-mod() <= x && x < mod())
+            v = static_cast<Type>(x);
+        else
+            v = static_cast<Type>(x % mod());
+        if (v < 0) v += mod();
+        return v;
+    }
+
+    const Type& operator()() const { return value; }
+    template <typename U>
+    explicit operator U() const { return static_cast<U>(value); }
+    constexpr static Type mod() { return T::value; }
+
+    Modular& operator+=(const Modular& other) {
+        if ((value += other.value) >= mod()) value -= mod();
+        return *this;
+    }
+    Modular& operator-=(const Modular& other) {
+        if ((value -= other.value) < 0) value += mod();
+        return *this;
+    }
+    template <typename U>
+    Modular& operator+=(const U& other) { return *this += Modular(other); }
+    template <typename U>
+    Modular& operator-=(const U& other) { return *this -= Modular(other); }
+    Modular& operator++() { return *this += 1; }
+    Modular& operator--() { return *this -= 1; }
+    Modular operator++(int) {
+        Modular result(*this);
+        *this += 1;
+        return result;
+    }
+    Modular operator--(int) {
+        Modular result(*this);
+        *this -= 1;
+        return result;
+    }
+    Modular operator-() const { return Modular(-value); }
+
+    template <typename U = T>
+    typename enable_if<is_same<typename Modular<U>::Type, int>::value, Modular>::type& operator*=(const Modular& rhs) {
+#ifdef _WIN32
+        uint64_t x = static_cast<int64_t>(value) * static_cast<int64_t>(rhs.value);
+        uint32_t xh = static_cast<uint32_t>(x >> 32), xl = static_cast<uint32_t>(x), d, m;
+        asm(
+            "divl %4; \n\t"
+            : "=a"(d), "=d"(m)
+            : "d"(xh), "a"(xl), "r"(mod()));
+        value = m;
+#else
+        value = normalize(static_cast<int64_t>(value) * static_cast<int64_t>(rhs.value));
+#endif
+        return *this;
+    }
+    template <typename U = T>
+    typename enable_if<is_same<typename Modular<U>::Type, long long>::value, Modular>::type& operator*=(const Modular& rhs) {
+        long long q = static_cast<long long>(static_cast<long double>(value) * rhs.value / mod());
+        value = normalize(value * rhs.value - q * mod());
+        return *this;
+    }
+    template <typename U = T>
+    typename enable_if<!is_integral<typename Modular<U>::Type>::value, Modular>::type& operator*=(const Modular& rhs) {
+        value = normalize(value * rhs.value);
+        return *this;
+    }
+
+    Modular& operator/=(const Modular& other) { return *this *= Modular(inverse(other.value, mod())); }
+
+    friend const Type& abs(const Modular& x) { return x.value; }
+
+    template <typename U>
+    friend bool operator==(const Modular<U>& lhs, const Modular<U>& rhs);
+
+    template <typename U>
+    friend bool operator<(const Modular<U>& lhs, const Modular<U>& rhs);
+
+    template <typename V, typename U>
+    friend V& operator>>(V& stream, Modular<U>& number);
+
+   private:
+    Type value;
+};
+
+template <typename T>
+bool operator==(const Modular<T>& lhs, const Modular<T>& rhs) { return lhs.value == rhs.value; }
+template <typename T, typename U>
+bool operator==(const Modular<T>& lhs, U rhs) { return lhs == Modular<T>(rhs); }
+template <typename T, typename U>
+bool operator==(U lhs, const Modular<T>& rhs) { return Modular<T>(lhs) == rhs; }
+
+template <typename T>
+bool operator!=(const Modular<T>& lhs, const Modular<T>& rhs) { return !(lhs == rhs); }
+template <typename T, typename U>
+bool operator!=(const Modular<T>& lhs, U rhs) { return !(lhs == rhs); }
+template <typename T, typename U>
+bool operator!=(U lhs, const Modular<T>& rhs) { return !(lhs == rhs); }
+
+template <typename T>
+bool operator<(const Modular<T>& lhs, const Modular<T>& rhs) { return lhs.value < rhs.value; }
+
+template <typename T>
+Modular<T> operator+(const Modular<T>& lhs, const Modular<T>& rhs) { return Modular<T>(lhs) += rhs; }
+template <typename T, typename U>
+Modular<T> operator+(const Modular<T>& lhs, U rhs) { return Modular<T>(lhs) += rhs; }
+template <typename T, typename U>
+Modular<T> operator+(U lhs, const Modular<T>& rhs) { return Modular<T>(lhs) += rhs; }
+
+template <typename T>
+Modular<T> operator-(const Modular<T>& lhs, const Modular<T>& rhs) { return Modular<T>(lhs) -= rhs; }
+template <typename T, typename U>
+Modular<T> operator-(const Modular<T>& lhs, U rhs) { return Modular<T>(lhs) -= rhs; }
+template <typename T, typename U>
+Modular<T> operator-(U lhs, const Modular<T>& rhs) { return Modular<T>(lhs) -= rhs; }
+
+template <typename T>
+Modular<T> operator*(const Modular<T>& lhs, const Modular<T>& rhs) { return Modular<T>(lhs) *= rhs; }
+template <typename T, typename U>
+Modular<T> operator*(const Modular<T>& lhs, U rhs) { return Modular<T>(lhs) *= rhs; }
+template <typename T, typename U>
+Modular<T> operator*(U lhs, const Modular<T>& rhs) { return Modular<T>(lhs) *= rhs; }
+
+template <typename T>
+Modular<T> operator/(const Modular<T>& lhs, const Modular<T>& rhs) { return Modular<T>(lhs) /= rhs; }
+template <typename T, typename U>
+Modular<T> operator/(const Modular<T>& lhs, U rhs) { return Modular<T>(lhs) /= rhs; }
+template <typename T, typename U>
+Modular<T> operator/(U lhs, const Modular<T>& rhs) { return Modular<T>(lhs) /= rhs; }
+
+template <typename T, typename U>
+Modular<T> power(const Modular<T>& a, const U& b) {
+    assert(b >= 0);
+    Modular<T> x = a, res = 1;
+    U p = b;
+    while (p > 0) {
+        if (p & 1) res *= x;
+        x *= x;
+        p >>= 1;
+    }
+    return res;
+}
+
+template <typename T>
+bool IsZero(const Modular<T>& number) {
+    return number() == 0;
+}
+
+template <typename T>
+string to_string(const Modular<T>& number) {
+    return to_string(number());
+}
+
+
+
+template <typename U, typename T>
+U& operator<<(U& stream, const Modular<T>& number) {
+    return stream << number();
+}
+
+
+
+template <typename U, typename T>
+U& operator>>(U& stream, Modular<T>& number) {
+    typename common_type<typename Modular<T>::Type, long long>::type x;
+    stream >> x;
+    number.value = Modular<T>::normalize(x);
+    return stream;
+}
+
+
+
+constexpr int md = 998244353;
+using Mint = Modular<std::integral_constant<decay<decltype(md)>::type, md>>;
+
+
+
+typedef long long ll;
+template <typename T = ll>
+struct Matrix {
+    int n, m;
+    T mat[2][2];
+    Matrix() {}
+    Matrix(int n, int m, const T& val = T()) : n(n), m(m) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                mat[i][j] = val;
+            }
+        }
+    }
+    Matrix(int n, const T& val = T()) : n(n), m(n) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                mat[i][j] = val;
+            }
+        }
+    }
+    Matrix(const vector<vector<T>>& _mat) : n(_mat.size()), m(_mat[0].size()) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                mat[i][j] = _mat[i][j];
+            }
+        }
+    }
+
+    static Matrix I(int n) {
+        Matrix res(n);
+        for (int i = 0; i < n; i++) res.mat[i][i] = 1;
+        return res;
+    }
+
+    
+
+
+    Matrix operator+(const Matrix& r) const {
+        assert(n == r.n && m == r.m);
+        Matrix res(n, m);
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < m; j++) res.mat[i][j] = mat[i][j] + r.mat[i][j];
+        return res;
+    }
+
+    Matrix operator-(const Matrix& r) const {
+        assert(n == r.n && m == r.m);
+        Matrix res(n, m);
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < m; j++) res.mat[i][j] = mat[i][j] - r.mat[i][j];
+        return res;
+    }
+
+    Matrix operator*(const Matrix& r) const {
+        assert(m == r.n);
+        Matrix res(n, r.m);
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < r.m; j++)
+                for (int k = 0; k < m; k++) res.mat[i][j] += mat[i][k] * r.mat[k][j];
+        return res;
+    }
+
+    bool operator==(const Matrix& r) const {
+        if (m != r.m || n != r.n) return false;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (mat[i][j] != r.mat[i][j]) return false;
+            }
+        }
+        return true;
+    }
+
+    Matrix operator^(ll k) const {
+        assert(n == m);
+        Matrix res = I(n), a = *this;
+        while (k > 0) {
+            if (k & 1) res = res * a;
+            a = a * a;
+            k >>= 1;
+        }
+        return res;
+    }
+};
+
+const Matrix<Mint> the_I = Matrix<Mint>::I(2);
+
+static string to_string(const Matrix<Mint>& mat) {
+    string res = "";
+    for (int i = 0; i < mat.n; i++) {
+        for (int j = 0; j < mat.m; j++) res += to_string(mat.mat[i][j]) + " ";
+        res += "\n";
+    }
+    return res;
+}
+struct Tag {
+    
+
+    Matrix<Mint> f;
+    Tag(Matrix<Mint> _f = the_I) {
+        f = _f;
+    }
+    
+
+    void apply(const Tag& v, int l, int r) {
+        if (v.f == the_I) return;
+        f = v.f * f;
+    }
+};
+
+struct Info {
+    
+
+    Matrix<Mint> f;
+    Info(Mint val0 = 0, Mint val1 = 0) {
+        f = Matrix<Mint>(2, 1);
+        f.mat[0][0] = val0;
+        f.mat[1][0] = val1;
+    }
+
+    
+
+    void apply(const Tag& v, int l, int r) {
+        if (v.f == the_I) return;
+        auto it = v.f * f;
+        f = it;
+    }
+
+    static Info merge(const Info& left_info, const Info& right_info, int l, int r) {
+        auto it = left_info.f + right_info.f;
+        return Info(it.mat[0][0], it.mat[1][0]);
+    }
+};
+
+#define lson l, m, rt << 1
+#define rson m + 1, r, rt << 1 | 1
+int MAXN = 0;
+const int maxn = 3e5 + 5;
+Info info[maxn << 2];
+Tag tag[maxn << 2];
+Info init[maxn];
+
+void push_up(int l, int r, int rt) {
+    info[rt].f.mat[0][0] = info[rt << 1].f.mat[0][0] + info[rt << 1 | 1].f.mat[0][0];
+    info[rt].f.mat[1][0] = info[rt << 1].f.mat[1][0] + info[rt << 1 | 1].f.mat[1][0];
+    
+
+}
+void apply(int p, const Tag& v, int l, int r) {
+    info[p].apply(v, l, r);
+    tag[p].apply(v, l, r);
+}
+
+void push_down(int l, int r, int rt) {
+    int m = l + r >> 1;
+    apply(rt << 1, tag[rt], l, m);
+    apply(rt << 1 | 1, tag[rt], m + 1, r);
+    tag[rt] = Tag();
+}
+
+void build(int l, int r, int rt) {
+    if (l == r) {
+        info[rt] = init[l];
+        return;
+    }
+    int m = l + r >> 1;
+    build(lson);
+    build(rson);
+    push_up(l, r, rt);
+}
+
+void rangeUpdate(int L, int R, const Tag& v, int l, int r, int rt) {
+    if (L <= l && r <= R) {
+        apply(rt, v, l, r);
+        return;
+    }
+    int m = l + r >> 1;
+    push_down(l, r, rt);
+    if (L <= m) {
+        rangeUpdate(L, R, v, lson);
+    }
+    if (R > m) {
+        rangeUpdate(L, R, v, rson);
+    }
+    push_up(l, r, rt);
+}
+
+void rangeUpdate(int L, int R, const Tag& v) {
+    return rangeUpdate(L, R, v, 0, MAXN, 1);
+}
+
+int main() {
+#ifdef LOCAL
+    freopen("./data.in", "r", stdin);
+#endif
+
+    int n;
+    cin >> n;
+
+    vector<pii> V(n);
+    for (int i = 0; i < n; i++) {
+        cin >> V[i].first >> V[i].second;
+        MAXN = max(MAXN, V[i].second);
+    }
+
+    
+
+    Matrix<Mint> x({{3, 1}, {0, 2}});
+    
+
+    Matrix<Mint> y({{1, 1}, {2, 2}});
+
+    
+
+    
+
+
+    for (int i = 0; i <= MAXN; i++) {
+        if (i >= V[0].first && i <= V[0].second) {
+            init[i] = Info(0, 1);
+        } else {
+            init[i] = Info(1, 0);
+        }
+    }
+
+    debug("begin");
+    build(0, MAXN, 1);
+    debug("finish");
+
+    for (int i = 1; i < n; i++) {
+        auto [l, r] = V[i];
+        rangeUpdate(l, r, Tag(y));
+        if (l != 0) {
+            rangeUpdate(0, l - 1, Tag(x));
+        }
+        if (r != MAXN) {
+            rangeUpdate(r + 1, MAXN, Tag(x));
+        }
+    }
+
+    auto res = info[1];
+    cout << res.f.mat[1][0] << endl;
+    return 0;
+}

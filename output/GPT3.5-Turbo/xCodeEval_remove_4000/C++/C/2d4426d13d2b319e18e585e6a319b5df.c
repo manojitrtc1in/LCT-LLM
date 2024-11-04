@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+
+#define Mask(x) ((1 << (x)) - 1)
+#define Maskx(x, y) ((x) << (y))
+
+#define loop(i, n) for (int i = 0; i < n; i++)
+#define circ(i, a, b) for (int i = a; i <= b; i++)
+#define pool(i, n) for (int i = 0; i < (1 << (n)); i++)
+#define Full(x) ((1 << (x)) - 1)
+
+typedef long long ll;
+typedef long double lf;
+
+const int jt = 998244353;
+
+int n, m;
+char s[55][25];
+int val[55];
+ll dy[Mask(20) + 5];
+lf dp[Mask(20) + 5];
+
+int main()
+{
+    scanf("%d", &n);
+    loop(i, n)
+    {
+        scanf("%s", s[i]);
+    }
+    m = strlen(s[0]);
+    loop(i, n)
+    {
+        circ(j, i + 1, n - 1)
+        {
+            int num = 0;
+            loop(k, m)
+            {
+                num |= Maskx(s[i][k] == s[j][k], k);
+            }
+            dy[num] |= Mask(i) | Mask(j);
+        }
+    }
+    pool(i, Mask(m))
+    {
+        for (int j = i; j & -j; j -= j & -j)
+        {
+            int lst = j & -j;
+            dy[i ^ lst] |= dy[i];
+        }
+    }
+    dp[0] = 1;
+    lf ans = 0;
+    pool(i, Mask(m))
+    {
+        lf v = dp[i] / (m - __builtin_popcount(i));
+        for (int j = Full(m) ^ i; j & -j; j -= j & -j)
+        {
+            dp[i | (j & -j)] += v;
+        }
+        ans += dp[i] * __builtin_popcountll(dy[i]);
+    }
+    printf("%.10Lf\n", ans / n);
+    return 0;
+}

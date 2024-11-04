@@ -1,0 +1,49 @@
+
+
+import java.util.*;
+
+public class Ex3 {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int q = in.nextInt();
+        for (int t = 0; t < q; t++) {
+            int x = in.nextInt();
+            String str = String.valueOf(x);
+            if (x % 2 == 0) {
+                System.out.println(0);
+            } else {
+                int cout = 0;
+               for(int i = 0; i < str.length(); i++){
+                   if(Integer.parseInt(String.valueOf(str.charAt(i))) % 2 ==0){
+                       cout++;
+                   }
+               }
+               String str1 = "";
+               for(int i = str.length()-1; i >=0; i--){
+                   str1+=String.valueOf(str.charAt(i));
+               }
+               int x1 = Integer.parseInt(str1);
+               if(x1 % 2 == 0){
+                   System.out.println(1);
+               }else {
+                   if(cout > 0){
+                       System.out.println(2);
+                   }else {
+                       System.out.println(-1);
+                   }
+               }
+            }
+        }
+    }
+
+
+    static long gcd(long a, long b) {
+        return b == 0 ? a : gcd(b, a % b);
+    }
+
+    static long lcm(long a, long b) {
+        return a * b / gcd(a, b);
+    }
+}
+
+

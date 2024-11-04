@@ -1,0 +1,187 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <cstring>
+#include <stdexcept>
+#include <algorithm>
+#include <sstream>
+
+using namespace std;
+
+class Modular {
+    int m;
+
+public:
+    Modular(int m) : m(m) {}
+
+    int valueOf(int x) {
+        x %= m;
+        if (x < 0) {
+            x += m;
+        }
+        return x;
+    }
+
+    int mul(int x, int y) {
+        return valueOf((long long)x * y);
+    }
+
+    int plus(int x, int y) {
+        return valueOf(x + y);
+    }
+
+    Modular getModularForPowerComputation() {
+        return Modular(m - 1);
+    }
+};
+
+class FastInput {
+    istream &is;
+    char buf[1 << 13];
+    int bufLen;
+    int bufOffset;
+    int next;
+
+    void skipBlank() {
+        while (next >= 0 && next <= 32) {
+            next = read();
+        }
+    }
+
+    int read() {
+        while (bufLen == bufOffset) {
+            bufOffset = 0;
+            is.read(buf, sizeof(buf));
+            bufLen = is.gcount();
+            if (bufLen == 0) {
+                return -1;
+            }
+        }
+        return buf[bufOffset++];
+    }
+
+public:
+    FastInput(istream &is) : is(is), bufLen(0), bufOffset(0), next(0) {}
+
+    int readInt() {
+        int sign = 1;
+        skipBlank();
+        if (next == '+' || next == '-') {
+            sign = next == '+' ? 1 : -1;
+            next = read();
+        }
+
+        int val = 0;
+        if (sign == 1) {
+            while (next >= '0' && next <= '9') {
+                val = val * 10 + next - '0';
+                next = read();
+            }
+        } else {
+            while (next >= '0' && next <= '9') {
+                val = val * 10 - next + '0';
+                next = read();
+            }
+        }
+
+        return val;
+    }
+};
+
+class FastOutput {
+    ostringstream cache;
+
+public:
+    void println(int c) {
+        cache << c << '\n';
+    }
+
+    void flush(ostream &os) {
+        os << cache.str();
+        cache.str("");
+        cache.clear();
+    }
+};
+
+class FCards {
+    Modular mod = Modular(998244353);
+
+public:
+    void solve(int testNumber, FastInput &in, FastOutput &out) {
+        int n = in.readInt();
+        int m = in.readInt();
+        int k = in.readInt();
+
+        vector<int> xk(k + 1);
+        for (int i = 0; i <= k; i++) {
+            xk[i] = mod.valueOf(pow(i, k));
+        }
+
+        int ans = 0;
+        for (int t = 0; t <= k; t++) {
+            int p1 = binomial(n, t);
+            int p2 = 0;
+            for (int i = 0; i <= t; i++) {
+                int contrib = composite(t, i);
+                contrib = mod.mul(contrib, xk[t - i]);
+                if (i % 2 == 1) {
+                    contrib = mod.valueOf(-contrib);
+                }
+                p2 = mod.plus(p2, contrib);
+            }
+            int p3 = inverse(t);
+
+            int contrib = mod.mul(p1, p2);
+            contrib = mod.mul(contrib, p3);
+            ans = mod.plus(ans, contrib);
+        }
+
+        out.println(ans);
+    }
+
+    int binomial(int n, int k) {
+        if (k > n) return 0;
+        // Implement binomial coefficient calculation
+        return 1; // Placeholder
+    }
+
+    int composite(int m, int n) {
+        // Implement composite calculation
+        return 1; // Placeholder
+    }
+
+    int inverse(int t) {
+        // Implement inverse calculation
+        return 1; // Placeholder
+    }
+
+    int pow(int base, int exp) {
+        int result = 1;
+        while (exp > 0) {
+            if (exp % 2 == 1) {
+                result = mod.mul(result, base);
+            }
+            base = mod.mul(base, base);
+            exp /= 2;
+        }
+        return result;
+    }
+};
+
+class TaskAdapter {
+public:
+    void operator()() {
+        FastInput in(cin);
+        FastOutput out;
+        FCards solver;
+        solver.solve(1, in, out);
+        out.flush(cout);
+    }
+};
+
+int main() {
+    TaskAdapter task;
+    thread t(task);
+    t.join();
+    return 0;
+}

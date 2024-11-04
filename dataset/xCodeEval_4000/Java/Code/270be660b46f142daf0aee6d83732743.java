@@ -1,0 +1,198 @@
+import java.io.File;import java.io.FileInputStream;import java.io.FileNotFoundException;
+import java.io.IOException;import java.io.InputStream;import java.io.PrintStream;
+import java.io.PrintWriter;import java.lang.annotation.Retention;import java.lang.annotation.RetentionPolicy;
+import java.lang.reflect.Array;import java.lang.reflect.InvocationTargetException;
+import java.security.AccessControlException;import java.util.ArrayDeque;import java.util.ArrayList;
+import java.util.Arrays;import java.util.Collection;import java.util.Comparator;
+import java.util.Deque;import java.util.List;import java.util.Map;import java.util.Objects;
+import java.util.Stack;import java.util.TreeMap;import java.util.TreeSet;import java.util.function.Function;
+import java.util.stream.Collectors;import java.util.stream.IntStream;import java.util.stream.LongStream;
+import java.util.stream.Stream;public class _p001472D {static public void main(final String[] args) 
+throws IOException{p001472D._main(args);}
+static private class p001472D extends Solver{public p001472D(){}static Comparator<int[]>
+cmp=(x,y)->x[0]-y[0];static public class H{static int id_gen=0;public int id=++id_gen;
+public int player;public int take;public int[]scores=new int[2];public TreeSet<int[]>
+arr=new TreeSet<>(cmp);H parent=null;public int parent(){return parent.id;}public 
+int level=0;public TreeSet<Integer>variants=new TreeSet<>();ArrayList<H>children
+=new ArrayList<>();H start=null;}@Override public void solve()throws IOException{int n=sc.nextInt();
+sc.nextLine();TreeSet<int[]>set=new TreeSet<>(cmp);int[]probe=new int[1];for(int 
+$i0=0;$i0<n;$i0++){int a=sc.nextInt();probe[0]=a;int[]it=set.floor(probe);if(it==
+null || it[0]!=a){it=new int[]{a,1};set.add(it);}else{it[1]++;}}sc.nextLine();int 
+res=strategy(set);pw.println(render_result(res));}private int strategy(TreeSet<int[]>
+_set){TreeSet<int[]>set=new TreeSet<>(cmp);set.addAll(_set.stream().map(v->new int[]{v[0],
+v[1]}).collect(Collectors.toList()));int player=0;long[]scores=new long[2];while(!set.isEmpty())
+{int[]it=set.last();if(it[0]%2==player){scores[player]+=it[0];}if(--it[1]==0){set.pollLast();
+}player ^=1;}return(scores[0]==scores[1]?0:(scores[0]<scores[1]?-1:1));}private 
+String render_result(int res){return res==-2?"N/A":(res==0?"Tie":(res==-1?"Bob":
+"Alice"));}private int calculate(TreeSet<int[]>_set,boolean show){TreeSet<int[]>
+set=new TreeSet<>(cmp);set.addAll(_set.stream().map(v->new int[]{v[0],v[1]}).collect(Collectors.toList()));
+H.id_gen=0;Deque<H>queue=new ArrayDeque<>();H root=new H();root.player=1;root.scores[0]
+=0;root.scores[1]=0;root.arr.addAll(set.stream().map(v->new int[]{v[0],v[1]}).collect(Collectors.toList()));
+queue.offer(root);Stack<H>path=new Stack<>();Stack<H>ends=new Stack<>();TreeSet<H>
+starts=new TreeSet<>((x,y)->x.id-y.id);while(!queue.isEmpty()){H h=queue.poll();
+for(int[]it:h.arr){H h1=new H();h.children.add(h1);h1.player=h.player ^ 1;h1.parent
+=h;h1.start=h.start;h1.scores[h1.player]=h.scores[h1.player]+(it[0]%2==h1.player
+?it[0]:0);h1.scores[h.player]=h.scores[h.player];h1.level=h.level+1;h1.take=it[0];
+if(h1.level==1){starts.add(h1);h1.start=h1;}for(int[]it1:h.arr){if(it1!=it){h1.arr.add(new 
+int[]{it1[0],it1[1]});}else if(it1[1]>1){h1.arr.add(new int[]{it1[0],it1[1]-1});
+}}if(!h1.arr.isEmpty()){queue.offer(h1);}else{ends.add(h1);}}}for(H h1:ends){int 
+winner=h1.scores[0]==h1.scores[1]?-1:(h1.scores[0]<h1.scores[1]?1:0);for(H p=h1;
+p.parent!=null;p=p.parent){if(winner==-1){p.variants.add(0);}else if(winner==0){
+p.variants.add(1);}else{p.variants.add(-1);}}}int res=-2;if(starts.stream().filter(v
+->v.variants.size()==1 && v.variants.first()==1).findAny().isPresent()){res=1;}else
+{List<H>no_lost_ends=ends.stream().filter(v->v.variants.first()>=0).collect(Collectors.toList());
+if(no_lost_ends.isEmpty()){res=-1;}else{res=0;TreeSet<H>no_lost_starts=(TreeSet<H>)
+no_lost_ends.stream().collect(()->new TreeSet<H>((x,y)->x.id-y.id),(r,v)->r.add(v.start),
+TreeSet::addAll);no_lost_starts.forEach(v->queue.offer(v));H[]hh=new H[1];int level
+=0;l:while(!queue.isEmpty()){if(queue.peek().level!=level){level=queue.peek().level;
+if(show){pw.println("level: "+level+", queue: "+Datas.dump(queue));}}hh[0]=queue.poll();
+List<H>improved=hh[0].children.stream().filter(v->v.variants.size()<hh[0].variants.size()
+&&(v.player==0?v.variants.first()>hh[0].variants.first():v.variants.last()<hh[0].variants.last()
+)).collect(Collectors.toList());if(improved.isEmpty()){improved=hh[0].children.stream().
+filter(v->v.variants.size()==hh[0].variants.size()).collect(Collectors.toList());
+}if(show){pw.println("improved: "+Datas.dump(improved));}if(!improved.isEmpty()){for(H 
+imp:improved){if(imp.variants.size()==1 && imp.variants.first()>res){res=imp.variants.first();
+break l;}queue.offer(imp);}}}if(show){pw.println("no_lost_ends:");for(H h1:no_lost_ends)
+{path.clear();for(H p=h1;p.parent!=null;p=p.parent){path.push(p);}if(true){pw.println("---");
+while(!path.isEmpty()){H p=path.pop();pw.println(Datas.dump(p));if(path.isEmpty()){pw.println(render_result(p.variants.first()));
+}}}}pw.println("no_lost_starts: "+Datas.dump(no_lost_starts));}}}return res;}static public 
+void _main(String[]args)throws IOException{new p001472D().run();}}static private class 
+Datas{static class Pair<K,V>{private K k;private V v;public Pair(final K t,final 
+V u){this.k=t;this.v=u;}public K getKey(){return k;}public V getValue(){return v;
+}}final static String SPACE=" ";public static TreeMap<Integer,Integer>mapc(final 
+int[]a){return IntStream.range(0,a.length).collect(()->new TreeMap<Integer,Integer>(),
+(res,i)->{res.put(a[i],res.getOrDefault(a[i],0)+1);},Map::putAll);}public static 
+TreeMap<Long,Integer>mapc(final long[]a){return IntStream.range(0,a.length).collect(
+()->new TreeMap<Long,Integer>(),(res,i)->{res.put(a[i],res.getOrDefault(a[i],0)+
+1);},Map::putAll);}public static<T>TreeMap<T,Integer>mapc(final T[]a,Comparator<T>
+cmp){return IntStream.range(0,a.length).collect(cmp!=null?()->new TreeMap<T,Integer>(cmp)
+:()->new TreeMap<T,Integer>(),(res,i)->{res.put(a[i],res.getOrDefault(a[i],0)+1);
+},Map::putAll);}public static<T>TreeMap<T,Integer>mapc(final T[]a){return mapc(a,
+null);}public static TreeMap<Integer,Integer>mapc(final IntStream a){return a.collect(
+()->new TreeMap<Integer,Integer>(),(res,v)->{res.put(v,res.getOrDefault(v,0)+1);
+},Map::putAll);}public static TreeMap<Long,Integer>mapc(final LongStream a){return 
+a.collect(()->new TreeMap<Long,Integer>(),(res,v)->{res.put(v,res.getOrDefault(v,
+0)+1);},Map::putAll);}public static<T>TreeMap<T,Integer>mapc(final Stream<T>a,Comparator<T>
+cmp){return a.collect(cmp!=null?()->new TreeMap<T,Integer>(cmp):()->new TreeMap<T,
+Integer>(),(res,v)->{res.put(v,res.getOrDefault(v,0)+1);},Map::putAll);}public static
+<T>TreeMap<T,Integer>mapc(final Stream<T>a){return mapc(a,null);}public static<T>
+TreeMap<T,Integer>mapc(final Collection<T>a,Comparator<T>cmp){return mapc(a.stream(),
+cmp);}public static<T>TreeMap<T,Integer>mapc(final Collection<T>a){return mapc(a.stream());
+}public static TreeMap<Integer,List<Integer>>mapi(final int[]a){return IntStream.range(0,
+a.length).collect(()->new TreeMap<Integer,List<Integer>>(),(res,i)->{if(!res.containsKey(a[i]))
+{res.put(a[i],Stream.of(i).collect(Collectors.toList()));}else{res.get(a[i]).add(i);
+}},Map::putAll);}public static TreeMap<Long,List<Integer>>mapi(final long[]a){return 
+IntStream.range(0,a.length).collect(()->new TreeMap<Long,List<Integer>>(),(res,i)
+->{if(!res.containsKey(a[i])){res.put(a[i],Stream.of(i).collect(Collectors.toList()));
+}else{res.get(a[i]).add(i);}},Map::putAll);}public static<T>TreeMap<T,List<Integer>>
+mapi(final T[]a,Comparator<T>cmp){return IntStream.range(0,a.length).collect(cmp
+!=null?()->new TreeMap<T,List<Integer>>(cmp):()->new TreeMap<T,List<Integer>>(),
+(res,i)->{if(!res.containsKey(a[i])){res.put(a[i],Stream.of(i).collect(Collectors.toList()));
+}else{res.get(a[i]).add(i);}},Map::putAll);}public static<T>TreeMap<T,List<Integer>>
+mapi(final T[]a){return mapi(a,null);}public static TreeMap<Integer,List<Integer>>
+mapi(final IntStream a){int[]i=new int[]{0};return a.collect(()->new TreeMap<Integer,
+List<Integer>>(),(res,v)->{if(!res.containsKey(v)){res.put(v,Stream.of(i[0]).collect(Collectors.toList()));
+}else{res.get(v).add(i[0]);}i[0]++;},Map::putAll);}public static TreeMap<Long,List<Integer>>
+mapi(final LongStream a){int[]i=new int[]{0};return a.collect(()->new TreeMap<Long,
+List<Integer>>(),(res,v)->{if(!res.containsKey(v)){res.put(v,Stream.of(i[0]).collect(Collectors.toList()));
+}else{res.get(v).add(i[0]);}i[0]++;},Map::putAll);}public static<T>TreeMap<T,List<Integer>>
+mapi(final Stream<T>a,Comparator<T>cmp){int[]i=new int[]{0};return a.collect(cmp
+!=null?()->new TreeMap<T,List<Integer>>(cmp):()->new TreeMap<T,List<Integer>>(),
+(res,v)->{if(!res.containsKey(v)){res.put(v,Stream.of(i[0]).collect(Collectors.toList()));
+}else{res.get(v).add(i[0]);}i[0]++;},Map::putAll);}public static<T>TreeMap<T,List<Integer>>
+mapi(final Stream<T>a){return mapi(a,null);}public static<T>TreeMap<T,List<Integer>>
+mapi(final Collection<T>a,Comparator<T>cmp){return mapi(a.stream(),cmp);}public 
+static<T>TreeMap<T,List<Integer>>mapi(final Collection<T>a){return mapi(a.stream());
+}public static List<int[]>listi(final int[]a){return IntStream.range(0,a.length).mapToObj(i
+->new int[]{a[i],i}).collect(Collectors.toList());}public static List<long[]>listi(final 
+long[]a){return IntStream.range(0,a.length).mapToObj(i->new long[]{a[i],i}).collect(Collectors.toList());
+}public static<T>List<Pair<T,Integer>>listi(final T[]a){return IntStream.range(0,
+a.length).mapToObj(i->new Pair<T,Integer>(a[i],i)).collect(Collectors.toList());
+}public static List<int[]>listi(final IntStream a){int[]i=new int[]{0};return a.mapToObj(v
+->new int[]{v,i[0]++}).collect(Collectors.toList());}public static List<long[]>listi(final 
+LongStream a){int[]i=new int[]{0};return a.mapToObj(v->new long[]{v,i[0]++}).collect(Collectors.toList());
+}public static<T>List<Pair<T,Integer>>listi(final Stream<T>a){int[]i=new int[]{0};
+return a.map(v->new Pair<T,Integer>(v,i[0]++)).collect(Collectors.toList());}public 
+static<T>List<Pair<T,Integer>>listi(final Collection<T>a){int[]i=new int[]{0};return 
+a.stream().map(v->new Pair<T,Integer>(v,i[0]++)).collect(Collectors.toList());}public 
+static String join(final int[]a){return Arrays.stream(a).mapToObj(Integer::toString).collect(Collectors.joining(SPACE));
+}public static String join(final long[]a){return Arrays.stream(a).mapToObj(Long::toString).collect(Collectors.joining(SPACE));
+}public static<T>String join(final T[]a){return Arrays.stream(a).map(v->Objects.toString(v)).collect(Collectors.joining(SPACE));
+}public static<T>String join(final T[]a,final Function<T,String>toString){return 
+Arrays.stream(a).map(v->toString.apply(v)).collect(Collectors.joining(SPACE));}public 
+static<T>String join(final Collection<T>a){return a.stream().map(v->Objects.toString(v)).collect(Collectors.joining(SPACE));
+}public static<T>String join(final Collection<T>a,final Function<T,String>toString)
+{return a.stream().map(v->toString.apply(v)).collect(Collectors.joining(SPACE));
+}public static<T>String join(final Stream<T>a){return a.map(v->Objects.toString(v)).collect(Collectors.joining(SPACE));
+}public static<T>String join(final Stream<T>a,final Function<T,String>toString){
+return a.map(v->toString.apply(v)).collect(Collectors.joining(SPACE));}public static
+<T>String join(final IntStream a){return a.mapToObj(Integer::toString).collect(Collectors.joining(SPACE));
+}public static<T>String join(final LongStream a){return a.mapToObj(Long::toString).collect(Collectors.joining(SPACE));
+}public static List<Integer>list(final int[]a){return Arrays.stream(a).mapToObj(Integer::valueOf).collect(Collectors.toList());
+}public static List<Integer>list(final IntStream a){return a.mapToObj(Integer::valueOf).collect(Collectors.toList());
+}public static List<Long>list(final long[]a){return Arrays.stream(a).mapToObj(Long::valueOf).collect(Collectors.toList());
+}public static List<Long>list(final LongStream a){return a.mapToObj(Long::valueOf).collect(Collectors.toList());
+}public static<T>List<T>list(final Stream<T>a){return a.collect(Collectors.toList());
+}public static<T>List<T>list(final Collection<T>a){return a.stream().collect(Collectors.toList());
+}public static<T>List<T>list(final T[]a){return Arrays.stream(a).collect(Collectors.toList());
+}public static String yesNo(final boolean res){return res?"YES":"NO";}public static 
+String dump(Object obj){String res="";if(obj!=null){Class cl=obj.getClass();String 
+cls=cl.getName();if(cls.startsWith("[")){res+="[";for(int i=0;;i++){try{Object o
+=Array.get(obj,i);String s=dump(o);if(i>0){res+=", ";}res+=s;}catch(ArrayIndexOutOfBoundsException 
+ex){break;}}res+="]";}else if(Collection.class.isAssignableFrom(cl)){@SuppressWarnings("unchecked")final 
+Object s=((Collection)obj).stream().map(v->dump(v)).collect(Collectors.joining(", ",
+"[","]"));res+=s.toString();}else if(Map.class.isAssignableFrom(cl)){@SuppressWarnings("unchecked")final 
+Object s=((Map)obj).entrySet().stream().map(v->dump(v)).collect(Collectors.joining(", ",
+"{","}"));res+=s.toString();}else if(Character.class.isInstance(obj)|| Integer.class.isInstance(obj)
+|| Long.class.isInstance(obj)|| Float.class.isInstance(obj)|| Double.class.isInstance(obj)|| String.class.isInstance(obj)
+){res+=Objects.toString(obj);}else if(Map.Entry.class.isInstance(obj)){res+=dump(((Map.Entry)obj).getKey())
++"="+dump(((Map.Entry)obj).getValue());}else if(Stream.class.isInstance(obj)){@SuppressWarnings("unchecked")
+final Object s=((Stream)obj).map(v->dump(v)).collect(Collectors.joining(", ","[",
+"]"));res+=s.toString();}else{res+=Stream.concat(Arrays.stream(obj.getClass().getFields()).map(v
+->{String r=v.getName()+"=";String val;try{val=dump(v.get(obj));}catch(IllegalAccessException 
+ex){val="N/A";}r+=val;return r;}),Arrays.stream(obj.getClass().getMethods()).filter(m
+->m.getDeclaringClass().equals(cl)&& m.isAnnotationPresent(Getter.class)).map(m->{String 
+r=m.getName()+"=";String val;try{val=dump(m.invoke(obj));}catch(IllegalAccessException 
+| InvocationTargetException ex){val="N/A";}r+=val;return r;})).collect(Collectors.joining(", ",
+"{"+obj.getClass().getName()+": ","}"));}}if(res.length()==0){res="<null>";}return 
+res;}}@Retention(RetentionPolicy.RUNTIME)public @interface Getter{}static private class MyScanner{private 
+StringBuilder cache=new StringBuilder();int cache_pos=0;private int first_linebreak
+=-1;private int second_linebreak=-1;private StringBuilder sb=new StringBuilder();
+private InputStream is=null;public MyScanner(final InputStream is){this.is=is;}private 
+String charToString(final int c){return String.format("'%s'",c=='\n'?"\\n":(c=='\r'
+?"\\r":String.valueOf((char)c)));}public int get(){int res=-1;if(cache_pos<cache.length())
+{res=cache.charAt(cache_pos);cache_pos++;if(cache_pos==cache.length()){cache.delete(0,
+cache_pos);cache_pos=0;}}else{try{res=is.read();}catch(IOException ex){throw new 
+RuntimeException(ex);}}return res;}private void unget(final int c){if(cache_pos==
+0){cache.insert(0,(char)c);}else{cache_pos--;}}public String nextLine(){sb.delete(0,
+sb.length());int c;boolean done=false;boolean end=false;while((c=get())!=-1){if(check_linebreak(c))
+{done=true;if(c==first_linebreak){if(!end){end=true;}else{cache.append((char)c);
+break;}}else if(second_linebreak!=-1 && c==second_linebreak){break;}}if(end && c
+!=first_linebreak && c!=second_linebreak){cache.append((char)c);break;}if(!done)
+{sb.append((char)c);}}return sb.toString();}private boolean check_linebreak(int 
+c){if(c=='\n'|| c=='\r'){if(first_linebreak==-1){first_linebreak=c;}else if(c!=first_linebreak 
+&& second_linebreak==-1){second_linebreak=c;}return true;}return false;}public int 
+nextInt(){return Integer.parseInt(next());}public long nextLong(){return Long.parseLong(next());
+}public boolean hasNext(){boolean res=false;int c;while((c=get())!=-1){if(!check_linebreak(c)
+&& c!=' '&& c!='\t'){res=true;unget(c);break;}}return res;}public String next(){
+sb.delete(0,sb.length());boolean started=false;int c;while((c=get())!=-1){if(check_linebreak(c)
+|| c==' '|| c=='\t'){if(started){unget(c);break;}}else{started=true;sb.append((char)c);
+}}return sb.toString();}public int nextChar(){return get();}public boolean eof()
+{int c=get();boolean res=false;if(c!=-1){unget(c);}else{res=true;}return res;}public 
+double nextDouble(){return Double.parseDouble(next());}}static private abstract class 
+Solver{protected String nameIn=null;protected String nameOut=null;protected boolean 
+singleTest=false;protected boolean preprocessDebug=false;protected boolean doNotPreprocess
+=false;protected PrintStream debugPrintStream=null;protected MyScanner sc=null;protected 
+PrintWriter pw=null;private int current_test=0;private int count_tests=0;protected 
+int currentTest(){return current_test;}protected int countTests(){return count_tests;
+}private void process()throws IOException{if(!singleTest){count_tests=sc.nextInt();
+sc.nextLine();for(current_test=1;current_test<=count_tests;current_test++){solve();
+pw.flush();}}else{count_tests=1;current_test=1;solve();pw.flush();}}abstract protected 
+void solve()throws IOException;protected void run()throws IOException{boolean done
+=false;try{if(nameIn!=null && new File(nameIn).exists()){try(FileInputStream fis
+=new FileInputStream(nameIn);PrintWriter pw0=select_output();){done=true;sc=new 
+MyScanner(fis);pw=pw0;process();}}}catch(IOException ex){}catch(AccessControlException 
+ex){}if(!done){try(PrintWriter pw0=select_output();){sc=new MyScanner(System.in);
+pw=pw0;process();}}}private PrintWriter select_output()throws FileNotFoundException
+{if(nameOut!=null){return new PrintWriter(nameOut);}return new PrintWriter(System.out);
+}}}

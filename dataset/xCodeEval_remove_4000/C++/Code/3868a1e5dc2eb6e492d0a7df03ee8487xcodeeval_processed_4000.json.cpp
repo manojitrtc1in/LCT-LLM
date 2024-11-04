@@ -1,0 +1,154 @@
+
+
+using namespace std;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+typedef long long ll;
+typedef long double lf;
+const int Inf = 0x3f3f3f3f;
+const ll INF = 0x3f3f3f3f3f3f3f3fll;
+const lf pi = acosl(-1), eps = 1e-12;
+const int dx[] = {1, 0, -1, 0, 1, 1, -1, -1}, dy[] = {0, 1, 0, -1, 1, -1, 1, -1};
+struct fastIO {
+    FILE *Fi;
+    fastIO(FILE *F) : Fi(F) { }
+    fastIO inline operator >> (int &num) {
+        num = 0; char c = getchar();
+        while (c != '-' && (c < '0' || c > '9')) c = getchar();
+        bool foo = 0; if (c == '-') foo = 1, c = getchar();
+        while (c >= '0' && c <= '9') {
+            num = (num << 3) + (num << 1) + c - '0';
+            c = getchar();
+        }
+        if (foo) num = -num;
+        return *this;
+    }
+    fastIO inline operator >> (ll &num) {
+        num = 0; char c = getchar();
+        while (c != '-' && (c < '0' || c > '9')) c = getchar();
+        bool foo = 0; if (c == '-') foo = 1, c = getchar();
+        while (c >= '0' && c <= '9') {
+            num = (num << 3) + (num << 1) + c - '0';
+            c = getchar();
+        }
+        if (foo) num = -num;
+        return *this;
+    }
+    fastIO inline operator >> (float &num) { return scanf("%f", &num), *this; }
+    fastIO inline operator >> (double &num) { return scanf("%lf", &num), *this; }
+    fastIO inline operator >> (lf &num) { return scanf("%Lf", &num), *this; }
+    fastIO inline operator >> (char &num) {
+        num = getchar();
+        while (num == ' ' || num == '\n') num = getchar();
+        return *this;
+    }
+    fastIO inline operator >> (char *num) {
+        char c = getchar();
+        while (c == ' ' || c == '\n') c = getchar();
+        while (c != ' ' && c != '\n') *(num++) = c, c = getchar();
+        *num = 0; return *this;
+    }
+    fastIO inline operator >> (string &num) { return cin >> num, *this; }
+    void inline getline(string &num) { std::getline(cin, num); }
+    void inline putchar(char c) { putc(c, Fi); }
+    void inline printInt(const int &num) {
+        if (num < 10) return void(putchar(num + '0'));
+        printInt(num / 10); putchar((num % 10) + '0');
+    }
+    void inline printll(const ll &num) {
+        if (num < 10) return void(putchar(num + '0'));
+        printll(num / 10); putchar((num % 10) + '0');
+    }
+    fastIO inline operator << (const int &num) {
+        if (num < 0) putchar('-'), printInt(-num);
+        else printInt(num);
+        return *this;
+    }
+    fastIO inline operator << (const ll &num) {
+        if (num < 0) putchar('-'), printll(-num);
+        else printll(num);
+        return *this;
+    }
+    fastIO inline operator << (const float &num) { return fprintf(Fi, "%.8f", num), *this; }
+    fastIO inline operator << (const double &num) { return fprintf(Fi, "%.12lf", num), *this; }
+    fastIO inline operator << (const lf &num) { return fprintf(Fi, "%.16Lf", num), *this; }
+    fastIO inline operator << (const char &num) { return putchar(num), *this; }
+    fastIO inline operator << (const char *num) {
+        for (int i = 0; num[i]; i++) putchar(num[i]);
+        return *this;
+    }
+    fastIO inline operator << (const string &num) { return fprintf(Fi, "%s", num.c_str()), *this; }
+    void inline flush() { fflush(Fi); }
+    template<typename _T1, typename _T2> inline fastIO operator << (const pair<_T1, _T2> &par) {
+        return *this << '(' << par.first << ", " << par.second << ')';
+    }
+    template<typename _T> inline fastIO operator << (const vector<_T> &vec) {
+        fprintf(Fi, "{ "); foreach(i, vec) *this << *i << ' ';
+        putchar('}'); return *this;
+    }
+} fio(stdout), ferr(stderr);
+
+
+
+
+
+
+
+template<typename _T> bool inline chmin(_T &a, _T b){ return a > b ? (a = b, 1) : 0; }
+template<typename _T> bool inline chmax(_T &a, _T b){ return a < b ? (a = b, 1) : 0; }
+int inline sign(const lf &x) {return x < -eps ? -1 : (x > eps);}
+bool inline feql(const lf &a, const lf &b) {return !sign(a - b);}
+bool inline fsml(const lf &a, const lf &b) {return !~sign(a - b);}
+bool inline flar(const lf &a, const lf &b) {return !~sign(b - a);}
+
+int n, x;
+int w[105];
+int qzh[105];
+
+void solve() {
+    fio >> n >> x;
+    cont(i, n) fio >> w[i];
+    sort(w + 1, w + n + 1);
+    cont(i, n) qzh[i] = qzh[i - 1] + w[i];
+    if (qzh[n] == x) return void(puts("NO"));
+    cont(i, n) if (qzh[i] == x) swap(w[i], w[n]);
+    puts("YES");
+    cont(i, n) fio << w[i] << ' ';
+    fio << ln;
+}
+
+int main() {
+    int T; fio >> T;
+    while(T--) solve();
+    return 0;
+}
+ 	  	 		 		  			  	   		 	   		

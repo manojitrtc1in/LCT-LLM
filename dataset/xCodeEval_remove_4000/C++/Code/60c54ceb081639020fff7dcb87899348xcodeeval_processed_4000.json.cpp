@@ -1,0 +1,250 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+using namespace std;
+using str = string;
+using ll = long long;
+using ld = long double;
+using uint = unsigned int;
+using ull = unsigned long long;
+mt19937 rnd(timeStamp().time_since_epoch().count());
+mt19937_64 rndll(timeStamp().time_since_epoch().count());
+template<typename T> constexpr inline int sign(T x) {return x < 0 ? -1 : x > 0 ? 1 : 0;}
+template<typename T, typename U> bool chmin(T& a, const U& b) {return (T)b < a ? a = b, 1 : 0;}
+template<typename T, typename U> bool chmax(T& a, const U& b) {return (T)b > a ? a = b, 1 : 0;}
+constexpr inline uint id7(const uint x) {return 1u << __lg(x);}
+constexpr inline ull id8(const ull x) {return 1ull << __lg(x);}
+constexpr inline uint id0(const uint x) {return x & (x - 1) ? 2u << __lg(x) : x;}
+constexpr inline ull id3(const ull x) {return x & (x - 1) ? 2ull << __lg(x) : x;}
+constexpr inline ll sqd(const pll p1, const pll p2) {return (p1.F - p2.F) * (p1.F - p2.F) + (p1.S - p2.S) * (p1.S - p2.S);}
+constexpr inline ll sqd(const ll x1, const ll y1, const ll x2, const ll y2) {return (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);}
+struct custom_hash {static uint64_t xs(uint64_t x) {x += 0x9e3779b97f4a7c15; x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9; x = (x ^ (x >> 27)) * 0x94d049bb133111eb; return x ^ (x >> 31);} template<typename T> size_t operator()(T x) const {static const uint64_t C = timeStamp().time_since_epoch().count(); return xs(hash<T> {}(x) + C);}};
+template<typename K> using uset = unordered_set<K, custom_hash>;
+template<typename K, typename V> using umap = unordered_map<K, V, custom_hash>;
+template<typename T1, typename T2> ostream& operator<<(ostream& out, const pair<T1, T2>& x) {return out << x.F << ' ' << x.S;}
+template<typename T1, typename T2> istream& operator>>(istream& in, pair<T1, T2>& x) {return in >> x.F >> x.S;}
+template<typename T, size_t N> istream& operator>>(istream& in, array<T, N>& a) {for (auto &x : a) in >> x; return in;};
+template<typename T, size_t N> ostream& operator<<(ostream& out, const array<T, N>& a) {for (int q = 0; q < a.size(); ++q) {out << a[q]; if (q + 1 < a.size()) out << ' ';} return out;};
+template<typename T> istream& operator>>(istream& in, vector<T>& a) {for (auto &x : a) in >> x; return in;};
+template<typename T> ostream& operator<<(ostream& out, const vector<T>& a) {for (int q = 0; q < a.size(); ++q) {out << a[q]; if (q + 1 < a.size()) out << ' ';} return out;};
+
+static const auto IOSetup = [] {
+    std::cin.tie(nullptr)->sync_with_stdio(false);
+    
+
+    return nullptr;
+}();
+struct IOPre {static constexpr int TEN = 10, SZ = TEN * TEN * TEN * TEN; std::array<char, 4 * SZ> num; constexpr IOPre() : num{} {for (int i = 0; i < SZ; i++) {int n = i; for (int j = 3; j >= 0; j--) {num[i * 4 + j] = static_cast<char>(n % TEN + '0'); n /= TEN;}}}};
+struct IO {
+
+
+
+
+
+
+    static constexpr int SZ = 1 << 17, LEN = 32, TEN = 10, HUNDRED = TEN * TEN, THOUSAND = HUNDRED * TEN, id4 = THOUSAND * TEN, MAGIC_MULTIPLY = 205, MAGIC_SHIFT = 11, MASK = 15, id1 = 12, SIXTEEN = 16; static constexpr IOPre io_pre = {}; std::array<char, SZ> input_buffer, output_buffer; int id2, id9, id5;
+    IO(): input_buffer{}, output_buffer{}, id2{}, id9{}, id5{} {}
+    IO(const IO&) = delete; IO(IO&&) = delete; IO& operator=(const IO&) = delete; IO& operator=(IO&&) = delete;
+    ~IO() { flush(); }
+    template <class T>struct is_char {static constexpr bool value = std::is_same_v<T, char>;};
+    template <class T>struct is_bool {static constexpr bool value = std::is_same_v<T, bool>;};
+    template <class T>struct is_string {static constexpr bool value = std::is_same_v<T, std::string> || std::is_same_v<T, const char*> || std::is_same_v<T, char*> || std::is_same_v<std::decay_t<T>, char*>;;};
+    template <class T, class D = void>struct is_custom {static constexpr bool value = false;};
+    template <class T>struct is_custom<T, std::void_t<typename T::internal_value_type>> {static constexpr bool value = true;};
+    template <class T>struct is_default {static constexpr bool value = is_char<T>::value || is_bool<T>::value || is_string<T>::value || std::is_integral_v<T>;};
+    template <class T, class D = void>struct is_iterable {static constexpr bool value = false;};
+    template <class T>struct is_iterable <T, typename std::void_t<decltype(std::begin(std::declval<T>())) >> {static constexpr bool value = true;};
+    template <class T, class D = void, class E = void>struct is_applyable {static constexpr bool value = false;};
+    template <class T>struct is_applyable<T, std::void_t<typename std::tuple_size<T>::type>, std::void_t<decltype(std::get<0>(std::declval<T>()))>> {static constexpr bool value = true;};
+    template <class T>static constexpr bool id6 = (is_iterable<T>::value || is_applyable<T>::value) && (!is_default<T>::value);
+    template <typename T, typename U> struct any_needs_newline {static constexpr bool value = false;}; template <typename T>
+    struct any_needs_newline<T, std::index_sequence<>> {static constexpr bool value = false;};
+    template <typename T, std::size_t I, std::size_t... Is>struct any_needs_newline<T, std::index_sequence<I, Is...>> {static constexpr bool value = id6<decltype(std::get<I>(std::declval<T>()))> || any_needs_newline<T, std::index_sequence<Is...>>::value;};
+    inline void load() {memmove(std::begin(input_buffer), std::begin(input_buffer) + id2, id9 - id2); id9 = id9 - id2 + static_cast<int>(fread_unlocked(std::begin(input_buffer) + id9 - id2, 1, SZ - id9 + id2, stdin)); id2 = 0;}
+    inline void read_char(char& c) {if (id2 + LEN > id9) load(); c = input_buffer[id2++];}
+    inline void read_string(std::string& x) {char c; while (read_char(c), c < '!') continue; x = c; while (read_char(c), c >= '!') x += c;}
+    template <class T> inline std::enable_if_t<std::is_integral_v<T>, void> read_int(T& x) {if (id2 + LEN > id9) load(); char c = 0; do c = input_buffer[id2++]; while (c < '-'); [[maybe_unused]] bool minus = false; if constexpr (std::is_signed<T>::value == true)if (c == '-') minus = true, c = input_buffer[id2++]; x = 0; while (c >= '0')x = x * TEN + (c & MASK), c = input_buffer[id2++]; if constexpr (std::is_signed<T>::value == true)if (minus) x = -x;}
+    inline void skip_space() {if (id2 + LEN > id9) load(); while (input_buffer[id2] <= ' ') id2++;}
+    inline void flush() {fwrite_unlocked(std::begin(output_buffer), 1, id5, stdout); id5 = 0;}
+    inline void write_char(char c) {if (id5 > SZ - LEN) flush(); output_buffer[id5++] = c;}
+    inline void write_bool(bool b) {if (id5 > SZ - LEN) flush(); output_buffer[id5++] = b ? '1' : '0';}
+    inline void write_string(const std::string& s) {for (auto x : s) write_char(x);}
+    inline void write_string(const char* s) {while (*s) write_char(*s++);}
+    inline void write_string(char* s) {while (*s) write_char(*s++);}
+    template <typename T>inline std::enable_if_t<std::is_integral_v<T>, void> write_int(T x) {if (id5 > SZ - LEN) flush(); if (!x) {output_buffer[id5++] = '0'; return;} if constexpr (std::is_signed<T>::value == true)if (x < 0) output_buffer[id5++] = '-', x = -x; int i = id1; std::array<char, SIXTEEN> buf{}; while (x >= id4) {memcpy(std::begin(buf) + i, std::begin(io_pre.num) + (x % id4) * 4, 4); x /= id4; i -= 4;} if (x < HUNDRED) {if (x < TEN) {output_buffer[id5++] = static_cast<char>('0' + x);} else {std::uint32_t q = (static_cast<std::uint32_t>(x) * MAGIC_MULTIPLY) >> MAGIC_SHIFT; std::uint32_t r = static_cast<std::uint32_t>(x) - q * TEN; output_buffer[id5] = static_cast<char>('0' + q); output_buffer[id5 + 1] = static_cast<char>('0' + r); id5 += 2;}} else {if (x < THOUSAND) {memcpy(std::begin(output_buffer) + id5, std::begin(io_pre.num) + (x << 2) + 1, 3), id5 += 3;} else {memcpy(std::begin(output_buffer) + id5, std::begin(io_pre.num) + (x << 2), 4), id5 += 4;}} memcpy(std::begin(output_buffer) + id5, std::begin(buf) + i + 4, id1 - i); id5 += id1 - i;}
+    template <typename T_>IO& operator<<(T_&& x) {using T = typename std::remove_cv < typename std::remove_reference<T_>::type >::type; static_assert(is_custom<T>::value or is_default<T>::value or is_iterable<T>::value or is_applyable<T>::value); if constexpr (is_custom<T>::value) {write_int(x.get());} else if constexpr (is_default<T>::value) {if constexpr (is_bool<T>::value) {write_bool(x);} else if constexpr (is_string<T>::value) {write_string(x);} else if constexpr (is_char<T>::value) {write_char(x);} else if constexpr (std::is_integral_v<T>) {write_int(x);}} else if constexpr (is_iterable<T>::value) {using E = decltype(*std::begin(x)); constexpr char sep = id6<E> ? '\n' : ' '; int i = 0; for (const auto& y : x) {if (i++) write_char(sep); operator<<(y);}} else if constexpr (is_applyable<T>::value) {constexpr char sep = (any_needs_newline < T, std::make_index_sequence<std::tuple_size_v<T> >>::value) ? '\n' : ' '; int i = 0; std::apply([this, &sep, &i](auto const & ... y) {(((i++ ? write_char(sep) : void()), this->operator<<(y)), ...);}, x);} return *this;}
+    template <typename T>IO& operator>>(T& x) {static_assert(is_custom<T>::value or is_default<T>::value or is_iterable<T>::value or is_applyable<T>::value); static_assert(!is_bool<T>::value); if constexpr (is_custom<T>::value) {typename T::internal_value_type y; read_int(y); x = y;} else if constexpr (is_default<T>::value) {if constexpr (is_string<T>::value) {read_string(x);} else if constexpr (is_char<T>::value) {read_char(x);} else if constexpr (std::is_integral_v<T>) {read_int(x);}} else if constexpr (is_iterable<T>::value) {for (auto& y : x) operator>>(y);} else if constexpr (is_applyable<T>::value) {std::apply([this](auto & ... y) { ((this->operator>>(y)), ...); }, x);} return *this;}
+    IO* tie(std::nullptr_t) { return this; }
+    void sync_with_stdio(bool) {}
+} io;
+
+
+
+
+
+template<typename T, const int G>
+struct fenwick {
+    vec<T> fen;
+    
+
+    
+
+
+    fenwick() {
+        fen.resize(G);
+    }
+
+    fenwick(vec<T> &n) {
+        G = n.size() + 1;
+        fen.resize(G);
+        for (int q = 1; q <= n.size(); q++) {
+            fen[q] += n[q - 1];
+            const int nw = q + (q & -q);
+            if (nw < G) fen[nw] += fen[q];
+        }
+        for (int q = n.size() + 1; q < G; q++) {
+            const int nw = q + (q & -q);
+            if (nw < G) fen[nw] += fen[q];
+        }
+    }
+
+    void clear() {
+        fill(all(fen), 0);
+    }
+
+    void point_add(int p, T x) {
+        for (p += 1; p < G; p += p & -p) fen[p] += x;
+    }
+
+    T pref_sum(int p) {
+        T o = 0;
+        for (p += 1; p; p -= p & -p) o += fen[p];
+        return o;
+    }
+
+    T suf_sum(int p) {
+        return pref_sum(G - 2) - pref_sum(p - 1);
+    }
+
+    T seg_sum(int l, int r) {
+        return pref_sum(r) - pref_sum(l - 1);
+    }
+};
+
+template<typename K, typename V, const int LG>
+struct hash_map_open_addressing {
+
+    const int N = 1 << LG;
+    vec<pair<K, V>> store = vec<pair<K, V>>(N);
+    vec<bool> is_occupied = vec<bool>(N);
+
+    constexpr inline void next_pos(int &pos) const {
+        pos = pos < N - 1 ? pos + 1 : 0;
+    }
+
+    static constexpr ull kek = 11995408973635179863ull;
+    constexpr inline int hsh(const K& key) const {
+        if constexpr(std::is_integral<K>::value) {
+            return key & (N - 1);
+            
+
+        } else {
+            return hash<K> {}(key) % N;
+        }
+    }
+
+    inline void clear() {
+        fill(all(is_occupied), false);
+    }
+
+    inline V operator[](const K& key) const {
+        int pos = hsh(key);
+        for (; is_occupied[pos]; next_pos(pos)) {
+            if (store[pos].F == key) return store[pos].S;
+        }
+        return 0;
+    }
+
+    inline bool contains(const K& key) const {
+        int pos = hsh(key);
+        for (; is_occupied[pos]; next_pos(pos)) {
+            if (store[pos].F == key) return true;
+        }
+        return false;
+    }
+
+    inline void add(const K& key, const V& val) {
+        int pos = hsh(key);
+        for (; is_occupied[pos]; next_pos(pos)) {
+            if (store[pos].F == key) {
+                return;
+            }
+        }
+        store[pos] = {key, val};
+        is_occupied[pos] = 1;
+    }
+};
+
+const ll C = 24, G = 300005;
+fenwick<int, 300005> n[C];
+ull m[G];
+hash_map_open_addressing<ull, ull, 20> mp;
+
+int main() {
+    fast;
+    ull a, z; cin >> a >> z;
+    uid<ull> gen(0, ULLONG_MAX);
+    for (int q = 0; q < a; ++q) {
+        cin >> m[q];
+        mp.add(m[q], gen(rndll));
+        m[q] = mp[m[q]];
+        for (int w = 0; w < C; ++w) {
+            n[w].point_add(q, m[q] >> w & 1);
+        }
+    }
+    for (; z--;) {
+        ll t; cin >> t;
+        if (t == 1) {
+            ll i, x; cin >> i >> x; --i;
+            mp.add(x, gen(rndll));
+            x = mp[x];
+            for (int w = 0; w < C; ++w) {
+                n[w].point_add(i, -(m[i] >> w & 1));
+            }
+            m[i] = x;
+            for (int w = 0; w < C; ++w) {
+                n[w].point_add(i, m[i] >> w & 1);
+            }
+        } else {
+            ll l, r, k; cin >> l >> r >> k; --l, --r;
+            ll fl = 1;
+            for (int q = 0; q < C && fl; ++q) {
+                fl &= n[q].seg_sum(l, r) % k == 0;
+            }
+            cout << (fl ? "YES" : "NO") << '\n';
+        }
+    }
+}

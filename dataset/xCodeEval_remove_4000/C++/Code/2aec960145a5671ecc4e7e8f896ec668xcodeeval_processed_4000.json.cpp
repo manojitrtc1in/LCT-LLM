@@ -1,0 +1,455 @@
+
+
+
+
+
+
+
+
+namespace suisen {
+
+
+template <typename ...Types>
+using constraints_t = std::enable_if_t<std::conjunction_v<Types...>, std::nullptr_t>;
+template <bool cond_v, typename Then, typename OrElse>
+constexpr decltype(auto) constexpr_if(Then&& then, OrElse&& or_else) {
+    if constexpr (cond_v) {
+        return std::forward<Then>(then);
+    } else {
+        return std::forward<OrElse>(or_else);
+    }
+}
+
+
+
+template <typename ReturnType, typename Callable, typename ...Args>
+using is_same_as_invoke_result = std::is_same<std::invoke_result_t<Callable, Args...>, ReturnType>;
+template <typename F, typename T>
+using is_uni_op = is_same_as_invoke_result<T, F, T>;
+template <typename F, typename T>
+using is_bin_op = is_same_as_invoke_result<T, F, T, T>;
+
+template <typename Comparator, typename T>
+using is_comparator = std::is_same<std::invoke_result_t<Comparator, T, T>, bool>;
+
+
+
+template <typename T, typename = constraints_t<std::is_integral<T>>>
+constexpr int bit_num = std::numeric_limits<std::make_unsigned_t<T>>::digits;
+template <typename T, unsigned int n>
+struct is_nbit { static constexpr bool value = bit_num<T> == n; };
+template <typename T, unsigned int n>
+static constexpr bool id0 = is_nbit<T, n>::value;
+
+
+
+template <typename T>
+struct safely_multipliable {};
+template <>
+struct safely_multipliable<int> { using type = long long; };
+template <>
+struct safely_multipliable<long long> { using type = __int128_t; };
+template <>
+struct safely_multipliable<unsigned int> { using type = unsigned long long; };
+template <>
+struct safely_multipliable<unsigned long long> { using type = __uint128_t; };
+template <>
+struct safely_multipliable<float> { using type = float; };
+template <>
+struct safely_multipliable<double> { using type = double; };
+template <>
+struct safely_multipliable<long double> { using type = long double; };
+template <typename T>
+using safely_multipliable_t = typename safely_multipliable<T>::type;
+
+} 
+
+
+
+
+using i128 = __int128_t;
+using u128 = __uint128_t;
+using ll = long long;
+using uint = unsigned int;
+using ull  = unsigned long long;
+
+template <typename T> using vec  = std::vector<T>;
+template <typename T> using vec2 = vec<vec <T>>;
+template <typename T> using vec3 = vec<vec2<T>>;
+template <typename T> using vec4 = vec<vec3<T>>;
+
+template <typename T>
+using pq_greater = std::priority_queue<T, std::vector<T>, std::greater<T>>;
+template <typename T, typename U>
+using umap = std::unordered_map<T, U>;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+template <typename T, typename U>
+std::ostream& operator<<(std::ostream& out, const std::pair<T, U> &a) {
+    return out << a.first << ' ' << a.second;
+}
+
+
+template <unsigned int N = 0, typename ...Args>
+std::ostream& operator<<(std::ostream& out, const std::tuple<Args...> &a) {
+    if constexpr (N >= std::tuple_size_v<std::tuple<Args...>>) {
+        return out;
+    } else {
+        out << std::get<N>(a);
+        if constexpr (N + 1 < std::tuple_size_v<std::tuple<Args...>>) {
+            out << ' ';
+        }
+        return operator<<<N + 1>(out, a);
+    }
+}
+
+
+template <typename T>
+std::ostream& operator<<(std::ostream& out, const std::vector<T> &a) {
+    for (auto it = a.begin(); it != a.end();) {
+        out << *it;
+        if (++it != a.end()) out << ' ';
+    }
+    return out;
+}
+
+
+template <typename T, size_t N>
+std::ostream& operator<<(std::ostream& out, const std::array<T, N> &a) {
+    for (auto it = a.begin(); it != a.end();) {
+        out << *it;
+        if (++it != a.end()) out << ' ';
+    }
+    return out;
+}
+inline void print() { std::cout << '\n'; }
+template <typename Head, typename... Tail>
+inline void print(const Head &head, const Tail &...tails) {
+    std::cout << head;
+    if (sizeof...(tails)) std::cout << ' ';
+    print(tails...);
+}
+template <typename Iterable>
+auto print_all(const Iterable& v, std::string sep = " ", std::string end = "\n") -> decltype(std::cout << *v.begin(), void()) {
+    for (auto it = v.begin(); it != v.end();) {
+        std::cout << *it;
+        if (++it != v.end()) std::cout << sep;
+    }
+    std::cout << end;
+}
+
+
+
+template <typename T, typename U>
+std::istream& operator>>(std::istream& in, std::pair<T, U> &a) {
+    return in >> a.first >> a.second;
+}
+
+
+template <unsigned int N = 0, typename ...Args>
+std::istream& operator>>(std::istream& in, std::tuple<Args...> &a) {
+    if constexpr (N >= std::tuple_size_v<std::tuple<Args...>>) {
+        return in;
+    } else {
+        return operator>><N + 1>(in >> std::get<N>(a), a);
+    }
+}
+
+
+template <typename T>
+std::istream& operator>>(std::istream& in, std::vector<T> &a) {
+    for (auto it = a.begin(); it != a.end(); ++it) in >> *it;
+    return in;
+}
+
+
+template <typename T, size_t N>
+std::istream& operator>>(std::istream& in, std::array<T, N> &a) {
+    for (auto it = a.begin(); it != a.end(); ++it) in >> *it;
+    return in;
+}
+template <typename ...Args>
+void read(Args &...args) {
+    ( std::cin >> ... >> args );
+}
+
+
+
+
+
+
+template <typename T>
+constexpr inline int id10(T n) {
+    return -(n & 1) | 1;
+}
+
+
+template <>
+constexpr inline int id10<bool>(bool n) {
+    return -int(n) | 1;
+}
+
+
+
+template <typename T>
+constexpr inline T fld(const T x, const T y) {
+    return (x ^ y) >= 0 ? x / y : (x - (y + id10(y >= 0))) / y;
+}
+template <typename T>
+constexpr inline T cld(const T x, const T y) {
+    return (x ^ y) <= 0 ? x / y : (x + (y + id10(y >= 0))) / y;
+}
+
+template <typename T, suisen::constraints_t<suisen::is_nbit<T, 16>> = nullptr>
+constexpr inline int popcount(const T x) { return __builtin_popcount(x); }
+template <typename T, suisen::constraints_t<suisen::is_nbit<T, 32>> = nullptr>
+constexpr inline int popcount(const T x) { return __builtin_popcount(x); }
+template <typename T, suisen::constraints_t<suisen::is_nbit<T, 64>> = nullptr>
+constexpr inline int popcount(const T x) { return __builtin_popcountll(x); }
+template <typename T, suisen::constraints_t<suisen::is_nbit<T, 16>> = nullptr>
+constexpr inline int id4(const T x) { return x ? __builtin_clz(x)   : suisen::bit_num<T>; }
+template <typename T, suisen::constraints_t<suisen::is_nbit<T, 32>> = nullptr>
+constexpr inline int id4(const T x) { return x ? __builtin_clz(x)   : suisen::bit_num<T>; }
+template <typename T, suisen::constraints_t<suisen::is_nbit<T, 64>> = nullptr>
+constexpr inline int id4(const T x) { return x ? __builtin_clzll(x) : suisen::bit_num<T>; }
+template <typename T, suisen::constraints_t<suisen::is_nbit<T, 16>> = nullptr>
+constexpr inline int id5(const T x) { return x ? __builtin_ctz(x)   : suisen::bit_num<T>; }
+template <typename T, suisen::constraints_t<suisen::is_nbit<T, 32>> = nullptr>
+constexpr inline int id5(const T x) { return x ? __builtin_ctz(x)   : suisen::bit_num<T>; }
+template <typename T, suisen::constraints_t<suisen::is_nbit<T, 64>> = nullptr>
+constexpr inline int id5(const T x) { return x ? __builtin_ctzll(x) : suisen::bit_num<T>; }
+template <typename T>
+constexpr inline int id1(const T x) { return suisen::bit_num<T> - 1 - id4(x); }
+template <typename T>
+constexpr inline int id2(const T x)  { return id1(x) + ((x & -x) != x); }
+template <typename T>
+constexpr inline int id13(const T x, const unsigned int k) { return (x >> k) & 1; }
+template <typename T>
+constexpr inline int parity(const T x) { return popcount(x) & 1; }
+
+struct all_subset {
+    struct id7 {
+        const int s; int t;
+        constexpr id7(int s) : s(s), t(s + 1) {}
+        constexpr auto operator*() const { return t; }
+        constexpr auto operator++() {}
+        constexpr auto operator!=(std::nullptr_t) { return t ? (--t &= s, true) : false; }
+    };
+    int s;
+    constexpr all_subset(int s) : s(s) {}
+    constexpr auto begin() { return id7(s); }
+    constexpr auto end()   { return nullptr; }
+};
+
+
+
+
+template <typename T, typename Comparator, suisen::constraints_t<suisen::is_comparator<Comparator, T>> = nullptr>
+auto id12(const Comparator comparator) {
+    return std::priority_queue<T, std::vector<T>, Comparator>(comparator);
+}
+
+template <typename Iterable>
+auto isize(const Iterable &iterable) -> decltype(int(iterable.size())) {
+    return iterable.size();
+}
+
+template <typename T, typename Gen, suisen::constraints_t<suisen::is_same_as_invoke_result<T, Gen, int>> = nullptr>
+auto generate_vector(int n, Gen generator) {
+    std::vector<T> v(n);
+    for (int i = 0; i < n; ++i) v[i] = generator(i);
+    return v;
+}
+template <typename T>
+auto id11(T l, T r) {
+    return generate_vector(r - l, [l](int i) { return l + i; });
+}
+template <typename T>
+auto id11(T n) {
+    return id11(0, n);
+}
+
+template <typename T>
+void id3(std::vector<T> &a) {
+    std::sort(a.begin(), a.end());
+    a.erase(std::unique(a.begin(), a.end()), a.end());
+}
+
+template <typename InputIterator, typename BiConsumer>
+auto id6(InputIterator first, InputIterator last, BiConsumer f) -> decltype(f(*first++, *last), void()) {
+    if (first != last) for (auto itr = first, itl = itr++; itr != last; itl = itr++) f(*itl, *itr);
+}
+template <typename Container, typename BiConsumer>
+auto id6(Container c, BiConsumer f) -> decltype(c.begin(), c.end(), void()){
+    id6(c.begin(), c.end(), f);
+}
+
+
+
+
+
+
+template <typename T>
+inline bool chmin(T &x, const T &y) {
+    if (y >= x) return false;
+    x = y;
+    return true;
+}
+
+
+template <typename T>
+inline bool chmax(T &x, const T &y) {
+    if (y <= x) return false;
+    x = y;
+    return true;
+}
+
+namespace suisen {}
+using namespace suisen;
+using namespace std;
+
+struct io_setup {
+    io_setup(int precision = 20) {
+        std::ios::sync_with_stdio(false);
+        std::cin.tie(nullptr);
+        std::cout << std::fixed << std::setprecision(precision);
+    }
+} id9 {};
+
+
+
+
+
+
+
+namespace suisen {
+class id8 {
+    public:
+        id8(const std::vector<std::vector<int>> &g): _n(g.size()) {
+            build(g);
+        }
+        bool is_dag() const { return _ord.size() == _n; }
+        const std::vector<int>& sorted() const { return _ord; }
+        int operator[](int i) const { return _ord[i]; }
+    private:
+        const int _n;
+        std::vector<int> _ord;
+        void build(const std::vector<std::vector<int>> &g) {
+            std::vector<int> in(_n);
+            for (auto &adj : g) for (int j : adj) ++in[j];
+            std::deque<int> dq;
+            for (int i = 0; i < _n; ++i) {
+                if (in[i] == 0) dq.push_back(i);
+            }
+            _ord.reserve(_n);
+            while (dq.size()) {
+                int u = dq.front(); dq.pop_front();
+                _ord.push_back(u);
+                for (int v : g[u]) {
+                    if (--in[v] == 0) dq.push_back(v);
+                }
+            }
+        }
+};
+} 
+
+
+void solve() {
+    input(int, n);
+
+    vector<pair<int, int>> edges;
+
+    vector<vector<int>> g(n);
+    rep(i, n - 1) {
+        input(int, u, v);
+        --u, --v;
+        g[u].push_back(v);
+        g[v].push_back(u);
+        edges.push_back(minmax(u, v));
+    }
+    sort(all(edges));
+
+    auto get_id = [&](int u, int v) {
+        auto [x, y] = minmax(u, v);
+        return lower_bound(all(edges), make_pair(x, y)) - edges.begin();
+    };
+
+    vector<vector<int>> h(n - 1);
+
+    auto dfs = [&](auto dfs, int u, int p) -> int {
+        array<vector<int>, 2> c{};
+        for (int v : g[u]) if (v != p) {
+            int k = dfs(dfs, v, u);
+            if (k < 0) return -1;
+            c[k].push_back(get_id(u, v));
+        }
+
+        int d = g[u].size();
+        int m0 = d / 2, m1 = d - m0;
+        if (int(c[0].size()) > m0 or int(c[1].size()) > m1) return -1;
+
+        int k = int(c[1].size()) < m1;
+        if (p >= 0) c[k].push_back(get_id(u, p));
+        
+        int x = d & 1;
+        rep(i, d / 2) {
+            h[c[x][i]].push_back(c[x ^ 1][i]);
+            if (i + 1 < int(c[x].size())) {
+                h[c[x ^ 1][i]].push_back(c[x][i + 1]);
+            }
+        }
+
+        return k;
+    };
+
+    if (dfs(dfs, 0, -1) < 0) {
+        print("NO");
+        return;
+    }
+
+    id8 top(h);
+    print("YES");
+    for (auto id : top.sorted()) {
+        auto [u, v] = edges[id];
+        print(u + 1, v + 1);
+    }
+}
+
+int main() {
+    input(int, t);
+    loop(t) solve();
+    return 0;
+}
+

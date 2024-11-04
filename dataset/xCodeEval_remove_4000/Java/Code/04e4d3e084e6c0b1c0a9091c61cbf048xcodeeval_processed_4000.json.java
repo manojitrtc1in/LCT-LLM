@@ -1,0 +1,757 @@
+import javax.print.DocFlavor;
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
+import java.io.*;
+import java.lang.reflect.Array;
+import java.math.BigInteger;
+import java.net.CookieHandler;
+import java.nio.Buffer;
+import java.nio.charset.IllegalCharsetNameException;
+import java.sql.BatchUpdateException;
+import java.util.*;
+import java.util.stream.Stream;
+import java.util.Vector;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import static java.lang.Math.*;
+import java.util.*;
+import java.nio.file.StandardOpenOption;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.Iterator;
+import java.util.PriorityQueue;
+
+public class icpc
+{
+    public static void main(String[] args)throws IOException
+    {
+        
+
+
+
+        Scanner in = new Scanner(System.in);
+        id0 id10 = new id0();
+        int max = Integer.MAX_VALUE;
+        String s1 = in.nextLine();
+        String s2 = in.nextLine();
+        String s3 = in.nextLine();
+        String h = "";
+        int len1 = 0, len2 = 0;
+        String g = "";
+
+        
+
+        int[] lps = id10.id3((s2 + "
+        len1 = lps[lps.length - 1];
+        if(id10.id1(s1.toCharArray(), s2.toCharArray()).size() > 0)
+            h = s1;
+        else if(id10.id1(s2.toCharArray(), s1.toCharArray()).size() > 0)
+            h = s2;
+        else
+        {
+            h = s1.concat(s2.substring(len1));
+            lps = id10.id3((s3 + "
+            len2 = lps[lps.length - 1];
+        }
+        if(id10.id1(h.toCharArray(), s3.toCharArray()).size() > 0)
+            g = h;
+        else if(id10.id1(s3.toCharArray(), h.toCharArray()).size() > 0)
+            g = s3;
+        else
+        {
+            g = h.concat(s3.substring(len2));
+        }
+        max = Math.min(g.length(), max);
+
+        
+
+        lps = id10.id3((s3 + "
+        len1 = lps[lps.length - 1];
+        if(id10.id1(s1.toCharArray(), s3.toCharArray()).size() > 0)
+            h = s1;
+        else if(id10.id1(s3.toCharArray(), s1.toCharArray()).size() > 0)
+            h = s3;
+        else
+        {
+            h = s1.concat(s3.substring(len1));
+            lps = id10.id3((s2 + "
+            len2 = lps[lps.length - 1];
+        }
+
+        if(id10.id1(h.toCharArray(), s2.toCharArray()).size() > 0)
+            g = h;
+        else if(id10.id1(s2.toCharArray(), h.toCharArray()).size() > 0)
+            g = s2;
+        else
+        {
+            g = h.concat(s2.substring(len2));
+        }
+        max = Math.min(g.length(), max);
+
+        
+
+        lps = id10.id3((s1 + "
+        len1 = lps[lps.length - 1];
+        if(id10.id1(s2.toCharArray(), s1.toCharArray()).size() > 0)
+            h = s2;
+        else if(id10.id1(s1.toCharArray(), s2.toCharArray()).size() > 0)
+            h = s1;
+        else
+        {
+            h = s2.concat(s1.substring(len1));
+            lps = id10.id3((s3 + "
+            len2 = lps[lps.length - 1];
+        }
+
+        if(id10.id1(h.toCharArray(), s3.toCharArray()).size() > 0)
+            g = h;
+        else if(id10.id1(s3.toCharArray(), h.toCharArray()).size() > 0)
+            g = s3;
+        else
+        {
+            g = h.concat(s3.substring(len2));
+        }
+        max = Math.min(g.length(), max);
+
+        
+
+        lps = id10.id3((s3 + "
+        len1 = lps[lps.length - 1];
+        if(id10.id1(s2.toCharArray(), s3.toCharArray()).size() > 0)
+            h = s2;
+        else if(id10.id1(s3.toCharArray(), s2.toCharArray()).size() > 0)
+            h = s3;
+        else
+        {
+            h = s2.concat(s3.substring(len1));
+            lps = id10.id3((s1 + "
+            len2 = lps[lps.length - 1];
+        }
+
+        if(id10.id1(h.toCharArray(), s1.toCharArray()).size() > 0)
+            g = h;
+        else if(id10.id1(s1.toCharArray(), h.toCharArray()).size() > 0)
+            g = s1;
+        else
+        {
+            g = h.concat(s1.substring(len2));
+        }
+        max = Math.min(g.length(), max);
+
+        
+
+        lps = id10.id3((s1 + "
+        len1 = lps[lps.length - 1];
+        if(id10.id1(s3.toCharArray(), s1.toCharArray()).size() > 0)
+            h = s3;
+        else if(id10.id1(s1.toCharArray(), s3.toCharArray()).size() > 0)
+            h = s1;
+        else
+        {
+            h = s3.concat(s1.substring(len1));
+            lps = id10.id3((s2 + "
+            len2 = lps[lps.length - 1];
+        }
+        if(id10.id1(h.toCharArray(), s2.toCharArray()).size() > 0)
+            g = h;
+        else if(id10.id1(s2.toCharArray(), h.toCharArray()).size() > 0)
+            g = s2;
+        else
+        {
+            g = h.concat(s2.substring(len2));
+        }
+        max = Math.min(g.length(), max);
+
+        
+
+        lps = id10.id3((s2 + "
+        len1 = lps[lps.length - 1];
+        if(id10.id1(s3.toCharArray(), s2.toCharArray()).size() > 0)
+            h = s3;
+        else if(id10.id1(s2.toCharArray(), s3.toCharArray()).size() > 0)
+            h = s2;
+        else
+        {
+            h = s3.concat(s2.substring(len1));
+            lps = id10.id3((s1 + "
+            len2 = lps[lps.length - 1];
+        }
+        if(id10.id1(h.toCharArray(), s1.toCharArray()).size() > 0)
+            g = h;
+        else if(id10.id1(s1.toCharArray(), h.toCharArray()).size() > 0)
+            g = s1;
+        else
+        {
+            g = h.concat(s1.substring(len2));
+        }
+        max = Math.min(g.length(), max);
+
+        System.out.println(max);
+    }
+}
+class Name
+{
+    int a;
+    int b;
+
+    public Name(int a, int b)
+    {
+        this.a = a;
+        this.b = b;
+    }
+}
+class StringAlgorithms
+{
+    public int[] calculateZ(char input[])
+    {
+        int Z[] = new int[input.length];
+        int left = 0;
+        int right = 0;
+        for(int k = 1; k < input.length; k++) {
+            if(k > right) {
+                left = right = k;
+                while(right < input.length && input[right] == input[right - left]) {
+                    right++;
+                }
+                Z[k] = right - left;
+                right--;
+            } else {
+                
+
+                int k1 = k - left;
+                
+
+                if(Z[k1] < right - k + 1) {
+                    Z[k] = Z[k1];
+                } else { 
+
+                    left = k;
+                    while(right < input.length && input[right] == input[right - left]) {
+                        right++;
+                    }
+                    Z[k] = right - left;
+                    right--;
+                }
+            }
+        }
+        return Z;
+    }
+    public ArrayList<Integer> matchPattern(char text[], char pattern[])
+    {
+        char newString[] = new char[text.length + pattern.length + 1];
+        int i = 0;
+        for(char ch : pattern) {
+            newString[i] = ch;
+            i++;
+        }
+        newString[i] = '$';
+        i++;
+        for(char ch : text) {
+            newString[i] = ch;
+            i++;
+        }
+        ArrayList<Integer> result = new ArrayList<>();
+        int Z[] = calculateZ(newString);
+
+        for(i = 0; i < Z.length ; i++) {
+            if(Z[i] == pattern.length) {
+                result.add(i - pattern.length - 1);
+            }
+        }
+        return result;
+    }
+
+
+}
+class id0
+{
+    public int[] id3(char[] pattern)
+    {
+        int[] lps = new int[pattern.length];
+
+        int index = 0;
+        for(int i=1;i<pattern.length;)
+        {
+            if(pattern[i] == pattern[index])
+            {
+                lps[i] = index + 1;
+                index++;
+                i++;
+            }
+            else
+            {
+                if(index != 0)
+                {
+                    index = lps[index - 1];
+                }
+                else
+                {
+                    lps[i] = 0;
+                    i++;
+                }
+            }
+        }
+        return lps;
+    }
+
+    public ArrayList<Integer> id1(char[] text, char[] pattern)
+    {
+        int[] lps = id3(pattern);
+
+        int j = 0;
+        int i = 0;
+        int n = text.length;
+        int m = pattern.length;
+        ArrayList<Integer> indices = new ArrayList<>();
+        while(i < n)
+        {
+            if(pattern[j] == text[i])
+            {
+                i++;
+                j++;
+            }
+            if(j == m)
+            {
+                indices.add(i - j);
+                j = lps[j - 1];
+            }
+            else if(i < n && pattern[j] != text[i])
+            {
+                if(j != 0)
+                    j = lps[j - 1];
+                else
+                    i = i + 1;
+            }
+        }
+        return indices;
+    }
+}
+class BasicFunctions
+{
+    public long min(long[] A)
+    {
+        long min = Long.MAX_VALUE;
+        for(int i=0;i<A.length;i++)
+        {
+            min = Math.min(min, A[i]);
+        }
+        return min;
+    }
+    public long max(long[] A)
+    {
+        long max = Long.MAX_VALUE;
+        for(int i=0;i<A.length;i++)
+        {
+            max = Math.max(max, A[i]);
+        }
+        return max;
+    }
+}
+class Matrix
+{
+    long a;
+    long b;
+    long c;
+    long d;
+
+    public Matrix(long a, long b, long c, long d)
+    {
+        this.a = a;
+        this.b = b;
+        this.c = c;
+        this.d = d;
+    }
+}
+class id9
+{
+    
+
+    
+
+    
+
+    void merge(int arr[], int l, int m, int r) {
+        
+
+        int n1 = m - l + 1;
+        int n2 = r - m;
+
+        
+        int L[] = new int[n1];
+        int R[] = new int[n2];
+
+        
+        for (int i = 0; i < n1; ++i)
+            L[i] = arr[l + i];
+        for (int j = 0; j < n2; ++j)
+            R[j] = arr[m + 1 + j];
+
+
+        
+
+        
+
+        int i = 0, j = 0;
+
+        
+
+        int k = l;
+        while (i < n1 && j < n2) {
+            if (L[i] <= R[j]) {
+                arr[k] = L[i];
+                i++;
+            } else {
+                arr[k] = R[j];
+                j++;
+            }
+            k++;
+        }
+
+        
+        while (i < n1) {
+            arr[k] = L[i];
+            i++;
+            k++;
+        }
+
+        
+        while (j < n2) {
+            arr[k] = R[j];
+            j++;
+            k++;
+        }
+    }
+
+    
+
+    
+
+    void sort(int arr[], int l, int r) {
+        if (l < r) {
+            
+
+            int m = (l + r) / 2;
+
+            
+
+            sort(arr, l, m);
+            sort(arr, m + 1, r);
+
+            
+
+            merge(arr, l, m, r);
+        }
+    }
+
+}
+class id4
+{
+    
+
+    
+
+    
+
+    void merge(long arr[], int l, int m, int r) {
+        
+
+        int n1 = m - l + 1;
+        int n2 = r - m;
+
+        
+        long L[] = new long[n1];
+        long R[] = new long[n2];
+
+        
+        for (int i = 0; i < n1; ++i)
+            L[i] = arr[l + i];
+        for (int j = 0; j < n2; ++j)
+            R[j] = arr[m + 1 + j];
+
+
+        
+
+        
+
+        int i = 0, j = 0;
+
+        
+
+        int k = l;
+        while (i < n1 && j < n2) {
+            if (L[i] <= R[j]) {
+                arr[k] = L[i];
+                i++;
+            } else {
+                arr[k] = R[j];
+                j++;
+            }
+            k++;
+        }
+
+        
+        while (i < n1) {
+            arr[k] = L[i];
+            i++;
+            k++;
+        }
+
+        
+        while (j < n2) {
+            arr[k] = R[j];
+            j++;
+            k++;
+        }
+    }
+
+    
+
+    
+
+    void sort(long arr[], int l, int r) {
+        if (l < r) {
+            
+
+            int m = (l + r) / 2;
+
+            
+
+            sort(arr, l, m);
+            sort(arr, m + 1, r);
+
+            
+
+            merge(arr, l, m, r);
+        }
+    }
+}
+class Node
+{
+    String a;
+    String b;
+    Node(String s1,String s2)
+    {
+        this.a = s1;
+        this.b = s2;
+    }
+    @Override
+    public boolean equals(Object ob)
+    {
+        if(ob == null)
+            return false;
+        if(!(ob instanceof Node))
+            return false;
+        if(ob == this)
+            return true;
+        Node obj = (Node)ob;
+        if(this.a.equals(obj.a) && this.b.equals(obj.b))
+            return true;
+        return false;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return (int)this.a.length();
+    }
+}
+class Reader
+{
+    final private int BUFFER_SIZE = 1 << 16;
+    private DataInputStream din;
+    private byte[] buffer;
+    private int bufferPointer, bytesRead;
+
+    public Reader()
+    {
+        din = new DataInputStream(System.in);
+        buffer = new byte[BUFFER_SIZE];
+        bufferPointer = bytesRead = 0;
+    }
+
+    public Reader(String file_name) throws IOException
+    {
+        din = new DataInputStream(new FileInputStream(file_name));
+        buffer = new byte[BUFFER_SIZE];
+        bufferPointer = bytesRead = 0;
+    }
+
+    public String readLine() throws IOException
+    {
+        byte[] buf = new byte[64]; 
+
+        int cnt = 0, c;
+        while ((c = read()) != -1)
+        {
+            if (c == '\n')
+                break;
+            buf[cnt++] = (byte) c;
+        }
+        return new String(buf, 0, cnt);
+    }
+
+    public int nextInt() throws IOException
+    {
+        int ret = 0;
+        byte c = read();
+        while (c <= ' ')
+            c = read();
+        boolean neg = (c == '-');
+        if (neg)
+            c = read();
+        do
+        {
+            ret = ret * 10 + c - '0';
+        }  while ((c = read()) >= '0' && c <= '9');
+
+        if (neg)
+            return -ret;
+        return ret;
+    }
+
+    public long nextLong() throws IOException
+    {
+        long ret = 0;
+        byte c = read();
+        while (c <= ' ')
+            c = read();
+        boolean neg = (c == '-');
+        if (neg)
+            c = read();
+        do {
+            ret = ret * 10 + c - '0';
+        }
+        while ((c = read()) >= '0' && c <= '9');
+        if (neg)
+            return -ret;
+        return ret;
+    }
+
+    public double nextDouble() throws IOException
+    {
+        double ret = 0, div = 1;
+        byte c = read();
+        while (c <= ' ')
+            c = read();
+        boolean neg = (c == '-');
+        if (neg)
+            c = read();
+
+        do {
+            ret = ret * 10 + c - '0';
+        }
+        while ((c = read()) >= '0' && c <= '9');
+
+        if (c == '.')
+        {
+            while ((c = read()) >= '0' && c <= '9')
+            {
+                ret += (c - '0') / (div *= 10);
+            }
+        }
+
+        if (neg)
+            return -ret;
+        return ret;
+    }
+
+    private void fillBuffer() throws IOException
+    {
+        bytesRead = din.read(buffer, bufferPointer = 0, BUFFER_SIZE);
+        if (bytesRead == -1)
+            buffer[0] = -1;
+    }
+
+    private byte read() throws IOException
+    {
+        if (bufferPointer == bytesRead)
+            fillBuffer();
+        return buffer[bufferPointer++];
+    }
+
+    public void close() throws IOException
+    {
+        if (din == null)
+            return;
+        din.close();
+    }
+}
+class id11
+{
+    public void update(long[] id8,long delta,int index)
+    {
+        index += 1;
+        while(index < id8.length)
+        {
+            id8[index] += delta;
+            index = index + (index & (-index));
+        }
+    }
+    public long prefixSum(long[] id8,int index)
+    {
+        long sum = 0L;
+        index += 1;
+        while(index > 0)
+        {
+            sum += id8[index];
+            index -= (index & (-index));
+        }
+        return sum;
+    }
+}
+class SegmentTree
+{
+    public int id7(int num)
+    {
+        if(num == 0)
+            return 1;
+        if(num > 0 && (num & (num - 1)) == 0)
+            return num;
+        while((num &(num - 1)) > 0)
+        {
+            num = num & (num - 1);
+        }
+        return num << 1;
+    }
+    public int[] id6(int[] input)
+    {
+        int np2 = id7(input.length);
+        int[] segmentTree = new int[np2 * 2 - 1];
+
+        for(int i=0;i<segmentTree.length;i++)
+            segmentTree[i] = Integer.MIN_VALUE;
+
+        id5(segmentTree,input,0,input.length-1,0);
+        return segmentTree;
+
+    }
+    private void id5(int[] segmentTree,int[] input,int low,int high,int pos)
+    {
+        if(low == high)
+        {
+            segmentTree[pos] = input[low];
+            return;
+        }
+        int mid = (low + high)/ 2;
+        id5(segmentTree,input,low,mid,2*pos + 1);
+        id5(segmentTree,input,mid+1,high,2*pos + 2);
+        segmentTree[pos] = Math.max(segmentTree[2*pos + 1],segmentTree[2*pos + 2]);
+    }
+    public int id2(int []segmentTree,int qlow,int qhigh,int len)
+    {
+        return id2(segmentTree,0,len-1,qlow,qhigh,0);
+    }
+    private int id2(int segmentTree[],int low,int high,int qlow,int qhigh,int pos)
+    {
+        if(qlow <= low && qhigh >= high){
+            return segmentTree[pos];
+        }
+        if(qlow > high || qhigh < low){
+            return Integer.MIN_VALUE;
+        }
+        int mid = (low+high)/2;
+        return Math.max(id2(segmentTree, low, mid, qlow, qhigh, 2 * pos + 1),
+                id2(segmentTree, mid + 1, high, qlow, qhigh, 2 * pos + 2));
+    }
+}

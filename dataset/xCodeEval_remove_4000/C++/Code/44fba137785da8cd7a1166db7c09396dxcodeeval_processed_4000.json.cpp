@@ -1,0 +1,772 @@
+
+
+
+using namespace std;
+
+using ll = long long;
+using pi = pair<ll, ll>;
+using vi = vector<ll>;
+using u32 = unsigned int;
+using u64 = unsigned long long;
+using i128 = __int128;
+
+template <class T>
+using vc = vector<T>;
+template <class T>
+using vvc = vector<vc<T>>;
+template <class T>
+using vvvc = vector<vvc<T>>;
+template <class T>
+using vvvvc = vector<vvvc<T>>;
+template <class T>
+using vvvvvc = vector<vvvvc<T>>;
+template <class T>
+using pq = priority_queue<T>;
+template <class T>
+using pqg = priority_queue<T, vector<T>, greater<T>>;
+
+
+
+  vector<vector<type>> name(h, vector<type>(id0))
+
+  vector<vector<vector<type>>> name( \
+      h, vector<vector<type>>(w, vector<type>(id0)))
+
+  vector<vector<vector<vector<type>>>> name( \
+      a, vector<vector<vector<type>>>(       \
+             b, vector<vector<type>>(c, vector<type>(id0))))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  id1(id0, FOR4_R, FOR3_R, FOR2_R, FOR1_R)(id0)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+template <typename T>
+T SUM(vector<T> &A) {
+  T sum = T(0);
+  for (auto &&a: A) sum += a;
+  return sum;
+}
+
+
+
+
+
+
+
+int popcnt(int x) { return __builtin_popcount(x); }
+int popcnt(u32 x) { return __builtin_popcount(x); }
+int popcnt(ll x) { return __builtin_popcountll(x); }
+int popcnt(u64 x) { return __builtin_popcountll(x); }
+
+
+int topbit(int x) { return (x == 0 ? -1 : 31 - __builtin_clz(x)); }
+int topbit(u32 x) { return (x == 0 ? -1 : 31 - __builtin_clz(x)); }
+int topbit(ll x) { return (x == 0 ? -1 : 63 - __builtin_clzll(x)); }
+int topbit(u64 x) { return (x == 0 ? -1 : 63 - __builtin_clzll(x)); }
+
+
+int lowbit(int x) { return (x == 0 ? -1 : __builtin_ctz(x)); }
+int lowbit(u32 x) { return (x == 0 ? -1 : __builtin_ctz(x)); }
+int lowbit(ll x) { return (x == 0 ? -1 : __builtin_ctzll(x)); }
+int lowbit(u64 x) { return (x == 0 ? -1 : __builtin_ctzll(x)); }
+
+template <typename T, typename U>
+T ceil(T x, U y) {
+  return (x > 0 ? (x + y - 1) / y : x / y);
+}
+
+template <typename T, typename U>
+T floor(T x, U y) {
+  return (x > 0 ? x / y : (x - y + 1) / y);
+}
+
+template <typename T, typename U>
+pair<T, T> divmod(T x, U y) {
+  T q = floor(x, y);
+  return {q, x - q * y};
+}
+
+ll binary_search(function<bool(ll)> check, ll ok, ll ng) {
+  assert(check(ok));
+  while (abs(ok - ng) > 1) {
+    auto x = (ng + ok) / 2;
+    if (check(x))
+      ok = x;
+    else
+      ng = x;
+  }
+  return ok;
+}
+
+template <class T, class S>
+inline bool chmax(T &a, const S &b) {
+  return (a < b ? a = b, 1 : 0);
+}
+template <class T, class S>
+inline bool chmin(T &a, const S &b) {
+  return (a > b ? a = b, 1 : 0);
+}
+
+vi id3(const string &S, char first_char) {
+  vi A(S.size());
+  FOR(i, S.size()) { A[i] = S[i] - first_char; }
+  return A;
+}
+
+template <typename T>
+vector<T> cumsum(vector<T> &A, int off = 1) {
+  int N = A.size();
+  vector<T> B(N + 1);
+  FOR(i, N) { B[i + 1] = B[i] + A[i]; }
+  if (off == 0) B.erase(B.begin());
+  return B;
+}
+
+template <typename CNT, typename T>
+vc<CNT> id5(const vc<T> &A, int size) {
+  vc<CNT> C(size);
+  for (auto &&x: A) { ++C[x]; }
+  return C;
+}
+
+template <typename T>
+vector<int> argsort(const vector<T> &A) {
+  
+
+  vector<int> ids(A.size());
+  iota(all(ids), 0);
+  sort(all(ids),
+       [&](int i, int j) { return A[i] < A[j] || (A[i] == A[j] && i < j); });
+  return ids;
+}
+
+
+
+template <typename T>
+vc<T> id4(const vc<T> &A, const vc<int> &I) {
+  int n = len(A);
+  assert(len(I) == n);
+  vc<T> B(n);
+  FOR(i, n) B[i] = A[I[i]];
+  return B;
+}
+
+
+
+
+
+namespace detail {
+template <typename T, decltype(&T::is_modint) = &T::is_modint>
+std::true_type check_value(int);
+template <typename T>
+std::false_type check_value(long);
+} 
+
+
+template <typename T>
+struct is_modint : decltype(detail::check_value<T>(0)) {};
+template <typename T>
+using is_modint_t = enable_if_t<is_modint<T>::value>;
+template <typename T>
+using is_not_modint_t = enable_if_t<!is_modint<T>::value>;
+
+struct Scanner {
+  FILE *fp;
+  char line[(1 << 15) + 1];
+  size_t st = 0, ed = 0;
+  void reread() {
+    memmove(line, line + st, ed - st);
+    ed -= st;
+    st = 0;
+    ed += fread(line + ed, 1, (1 << 15) - ed, fp);
+    line[ed] = '\0';
+  }
+  bool succ() {
+    while (true) {
+      if (st == ed) {
+        reread();
+        if (st == ed) return false;
+      }
+      while (st != ed && isspace(line[st])) st++;
+      if (st != ed) break;
+    }
+    if (ed - st <= 50) {
+      bool sep = false;
+      for (size_t i = st; i < ed; i++) {
+        if (isspace(line[i])) {
+          sep = true;
+          break;
+        }
+      }
+      if (!sep) reread();
+    }
+    return true;
+  }
+  template <class T, enable_if_t<is_same<T, string>::value, int> = 0>
+  bool read_single(T &ref) {
+    if (!succ()) return false;
+    while (true) {
+      size_t sz = 0;
+      while (st + sz < ed && !isspace(line[st + sz])) sz++;
+      ref.append(line + st, sz);
+      st += sz;
+      if (!sz || st != ed) break;
+      reread();
+    }
+    return true;
+  }
+  template <class T, enable_if_t<is_integral<T>::value, int> = 0>
+  bool read_single(T &ref) {
+    if (!succ()) return false;
+    bool neg = false;
+    if (line[st] == '-') {
+      neg = true;
+      st++;
+    }
+    ref = T(0);
+    while (isdigit(line[st])) { ref = 10 * ref + (line[st++] & 0xf); }
+    if (neg) ref = -ref;
+    return true;
+  }
+  template <class T, is_modint_t<T> * = nullptr>
+  bool read_single(T &ref) {
+    long long val = 0;
+    bool f = read_single(val);
+    ref = T(val);
+    return f;
+  }
+  bool read_single(double &ref) {
+    string s;
+    if (!read_single(s)) return false;
+    ref = std::stod(s);
+    return true;
+  }
+  bool read_single(char &ref) {
+    string s;
+    if (!read_single(s) || s.size() != 1) return false;
+    ref = s[0];
+    return true;
+  }
+  template <class T>
+  bool read_single(vector<T> &ref) {
+    for (auto &d: ref) {
+      if (!read_single(d)) return false;
+    }
+    return true;
+  }
+  template <class T, class U>
+  bool read_single(pair<T, U> &p) {
+    return (read_single(p.first) && read_single(p.second));
+  }
+  template <class A, class B, class C>
+  bool read_single(tuple<A, B, C> &p) {
+    return (read_single(get<0>(p)) && read_single(get<1>(p))
+            && read_single(get<2>(p)));
+  }
+  template <class A, class B, class C, class D>
+  bool read_single(tuple<A, B, C, D> &p) {
+    return (read_single(get<0>(p)) && read_single(get<1>(p))
+            && read_single(get<2>(p)) && read_single(get<3>(p)));
+  }
+  void read() {}
+  template <class H, class... T>
+  void read(H &h, T &... t) {
+    bool f = read_single(h);
+    assert(f);
+    read(t...);
+  }
+  Scanner(FILE *fp) : fp(fp) {}
+};
+
+struct Printer {
+  Printer(FILE *_fp) : fp(_fp) {}
+  ~Printer() { flush(); }
+
+  static constexpr size_t SIZE = 1 << 15;
+  FILE *fp;
+  char line[SIZE], small[50];
+  size_t pos = 0;
+  void flush() {
+    fwrite(line, 1, pos, fp);
+    pos = 0;
+  }
+  void write(const char &val) {
+    if (pos == SIZE) flush();
+    line[pos++] = val;
+  }
+  template <class T, enable_if_t<is_integral<T>::value, int> = 0>
+  void write(T val) {
+    if (pos > (1 << 15) - 50) flush();
+    if (val == 0) {
+      write('0');
+      return;
+    }
+    if (val < 0) {
+      write('-');
+      val = -val; 
+
+    }
+    size_t len = 0;
+    while (val) {
+      small[len++] = char(0x30 | (val % 10));
+      val /= 10;
+    }
+    for (size_t i = 0; i < len; i++) { line[pos + i] = small[len - 1 - i]; }
+    pos += len;
+  }
+  void write(const string &s) {
+    for (char c: s) write(c);
+  }
+  void write(const char *s) {
+    size_t len = strlen(s);
+    for (size_t i = 0; i < len; i++) write(s[i]);
+  }
+  void write(const double &x) {
+    ostringstream oss;
+    oss << setprecision(15) << x;
+    string s = oss.str();
+    write(s);
+  }
+  void write(const long double &x) {
+    ostringstream oss;
+    oss << setprecision(15) << x;
+    string s = oss.str();
+    write(s);
+  }
+  template <class T, is_modint_t<T> * = nullptr>
+  void write(T &ref) {
+    write(ref.val);
+  }
+  template <class T>
+  void write(const vector<T> &val) {
+    auto n = val.size();
+    for (size_t i = 0; i < n; i++) {
+      if (i) write(' ');
+      write(val[i]);
+    }
+  }
+  template <class T, class U>
+  void write(const pair<T, U> &val) {
+    write(val.first);
+    write(' ');
+    write(val.second);
+  }
+  template <class A, class B, class C>
+  void write(const tuple<A, B, C> &val) {
+    auto &[a, b, c] = val;
+    write(a), write(' '), write(b), write(' '), write(c);
+  }
+  template <class A, class B, class C, class D>
+  void write(const tuple<A, B, C, D> &val) {
+    auto &[a, b, c, d] = val;
+    write(a), write(' '), write(b), write(' '), write(c), write(' '), write(d);
+  }
+  template <class A, class B, class C, class D, class E>
+  void write(const tuple<A, B, C, D, E> &val) {
+    auto &[a, b, c, d, e] = val;
+    write(a), write(' '), write(b), write(' '), write(c), write(' '), write(d), write(' '), write(e);
+  }
+  template <class A, class B, class C, class D, class E, class F>
+  void write(const tuple<A, B, C, D, E, F> &val) {
+    auto &[a, b, c, d, e, f] = val;
+    write(a), write(' '), write(b), write(' '), write(c), write(' '), write(d), write(' '), write(e), write(' '), write(f);
+  }
+  template <class T, size_t S>
+  void write(const array<T, S> &val) {
+    auto n = val.size();
+    for (size_t i = 0; i < n; i++) {
+      if (i) write(' ');
+      write(val[i]);
+    }
+  }
+  void write(i128 val) {
+    string s;
+    bool negative = 0;
+    if(val < 0){
+      negative = 1;
+      val = -val;
+    }
+    while (val) {
+      s += '0' + int(val % 10);
+      val /= 10;
+    }
+    if(negative) s += "-";
+    reverse(all(s));
+    if (len(s) == 0) s = "0";
+    write(s);
+  }
+};
+
+Scanner scanner = Scanner(stdin);
+Printer printer = Printer(stdout);
+
+void flush() { printer.flush(); }
+void print() { printer.write('\n'); }
+template <class Head, class... Tail>
+void print(Head &&head, Tail &&... tail) {
+  printer.write(head);
+  if (sizeof...(Tail)) printer.write(' ');
+  print(forward<Tail>(tail)...);
+}
+
+void read() {}
+template <class Head, class... Tail>
+void read(Head &head, Tail &... tail) {
+  scanner.read(head);
+  read(tail...);
+}
+
+
+  int id0; \
+  read(id0)
+
+  ll id0; \
+  read(id0)
+
+  string id0; \
+  read(id0)
+
+  char id0; \
+  read(id0)
+
+  double id0; \
+  read(id0)
+
+
+  vector<type> name(size);    \
+  read(name)
+
+  vector<vector<type>> name(h, vector<type>(w)); \
+  read(name)
+
+void YES(bool t = 1) { print(t ? "YES" : "NO"); }
+void NO(bool t = 1) { YES(!t); }
+void Yes(bool t = 1) { print(t ? "Yes" : "No"); }
+void No(bool t = 1) { Yes(!t); }
+void yes(bool t = 1) { print(t ? "yes" : "no"); }
+void no(bool t = 1) { yes(!t); }
+
+
+template <typename Lazy>
+struct id2 {
+  using Monoid_X = typename Lazy::X_structure;
+  using Monoid_A = typename Lazy::A_structure;
+  using X = typename Monoid_X::value_type;
+  using A = typename Monoid_A::value_type;
+  int n, log, size;
+  vc<X> dat;
+  vc<A> laz;
+
+  id2() : id2(0) {}
+  id2(int n) : id2(vc<X>(n, Monoid_X::unit())) {}
+  id2(vc<X> v) : n(len(v)) {
+    log = 1;
+    while ((1 << log) < n) ++log;
+    size = 1 << log;
+    dat.assign(size << 1, Monoid_X::unit());
+    laz.assign(size, Monoid_A::unit());
+    FOR(i, n) dat[size + i] = v[i];
+    FOR3_R(i, 1, size) update(i);
+  }
+
+  void reset() {
+    fill(all(dat), Monoid_X::unit());
+    fill(all(laz), Monoid_A::unit());
+  }
+
+  void reset(const vc<X>& v) {
+    assert(len(v) == n);
+    reset();
+    FOR(i, n) dat[size + i] = v[i];
+    FOR3_R(i, 1, size) update(i);
+  }
+
+  void update(int k) { dat[k] = Monoid_X::op(dat[2 * k], dat[2 * k + 1]); }
+
+  void all_apply(int k, A a) {
+    dat[k] = Lazy::act(dat[k], a);
+    if (k < size) laz[k] = Monoid_A::op(laz[k], a);
+  }
+
+  void push(int k) {
+    all_apply(2 * k, laz[k]);
+    all_apply(2 * k + 1, laz[k]);
+    laz[k] = Monoid_A::unit();
+  }
+
+  void set(int p, X x) {
+    assert(0 <= p && p < n);
+    p += size;
+    for (int i = log; i >= 1; i--) push(p >> i);
+    dat[p] = x;
+    for (int i = 1; i <= log; i++) update(p >> i);
+  }
+
+  X get(int p) {
+    assert(0 <= p && p < n);
+    p += size;
+    for (int i = log; i >= 1; i--) push(p >> i);
+    return dat[p];
+  }
+
+  vc<X> get_all() {
+    FOR(i, size) push(i);
+    return {dat.begin() + size, dat.begin() + size + n};
+  }
+
+  X prod(int l, int r) {
+    assert(0 <= l && l <= r && r <= n);
+    if (l == r) return Monoid_X::unit();
+
+    l += size;
+    r += size;
+
+    for (int i = log; i >= 1; i--) {
+      if (((l >> i) << i) != l) push(l >> i);
+      if (((r >> i) << i) != r) push((r - 1) >> i);
+    }
+
+    X xl = Monoid_X::unit(), xr = Monoid_X::unit();
+    while (l < r) {
+      if (l & 1) xl = Monoid_X::op(xl, dat[l++]);
+      if (r & 1) xr = Monoid_X::op(dat[--r], xr);
+      l >>= 1;
+      r >>= 1;
+    }
+
+    return Monoid_X::op(xl, xr);
+  }
+
+  X prod_all() { return dat[1]; }
+
+  void apply(int p, A a) {
+    assert(0 <= p && p < n);
+    p += size;
+    dat[p] = Lazy::act(dat[p], a);
+    for (int i = 1; i <= log; i++) update(p >> i);
+  }
+
+  void apply(int l, int r, A a) {
+    assert(0 <= l && l <= r && r <= n);
+    if (l == r) return;
+
+    l += size;
+    r += size;
+
+    for (int i = log; i >= 1; i--) {
+      if (((l >> i) << i) != l) push(l >> i);
+      if (((r >> i) << i) != r) push((r - 1) >> i);
+    }
+
+    {
+      int l2 = l, r2 = r;
+      while (l < r) {
+        if (l & 1) all_apply(l++, a);
+        if (r & 1) all_apply(--r, a);
+        l >>= 1;
+        r >>= 1;
+      }
+      l = l2;
+      r = r2;
+    }
+
+    for (int i = 1; i <= log; i++) {
+      if (((l >> i) << i) != l) update(l >> i);
+      if (((r >> i) << i) != r) update((r - 1) >> i);
+    }
+  }
+
+  template <typename C>
+  int max_right(C& check, int l) {
+    assert(0 <= l && l <= n);
+    assert(check(Monoid_X::unit()));
+    if (l == n) return n;
+    l += size;
+    for (int i = log; i >= 1; i--) push(l >> i);
+    X sm = Monoid_X::unit();
+    do {
+      while (l % 2 == 0) l >>= 1;
+      if (!check(Monoid_X::op(sm, dat[l]))) {
+        while (l < size) {
+          push(l);
+          l = (2 * l);
+          if (check(Monoid_X::op(sm, dat[l]))) {
+            sm = Monoid_X::op(sm, dat[l]);
+            l++;
+          }
+        }
+        return l - size;
+      }
+      sm = Monoid_X::op(sm, dat[l]);
+      l++;
+    } while ((l & -l) != l);
+    return n;
+  }
+
+  template <typename C>
+  int min_left(C& check, int r) {
+    assert(0 <= r && r <= n);
+    assert(check(Monoid_X::unit()));
+    if (r == 0) return 0;
+    r += size;
+    for (int i = log; i >= 1; i--) push((r - 1) >> i);
+    X sm = Monoid_X::unit();
+    do {
+      r--;
+      while (r > 1 && (r % 2)) r >>= 1;
+      if (!check(Monoid_X::op(dat[r], sm))) {
+        while (r < size) {
+          push(r);
+          r = (2 * r + 1);
+          if (check(Monoid_X::op(dat[r], sm))) {
+            sm = Monoid_X::op(dat[r], sm);
+            r--;
+          }
+        }
+        return r + 1 - size;
+      }
+      sm = Monoid_X::op(dat[r], sm);
+    } while ((r & -r) != r);
+    return 0;
+  }
+
+  void debug() { print("lazysegtree getall:", get_all()); }
+};
+
+template <class X>
+struct Monoid_Max {
+  using value_type = X;
+  static constexpr X op(const X &x, const X &y) noexcept { return max(x, y); }
+  static constexpr X unit() { return -numeric_limits<X>::lowest(); }
+  static constexpr bool commute = true;
+};
+
+
+template <typename E>
+struct Lazy_Max_Max {
+  using MX = Monoid_Max<E>;
+  using MA = Monoid_Max<E>;
+  using X_structure = MX;
+  using A_structure = MA;
+  using X = typename MX::value_type;
+  using A = typename MA::value_type;
+  static constexpr X act(const X &x, const A &a) { return max(x, a); }
+};
+
+
+template <typename T, bool IS_MIN>
+struct CartesianTree {
+  int n;
+  vc<T> A;
+  vc<pair<int, int>> range;
+  vc<int> lch, rch, par;
+
+  CartesianTree(vc<T> A) : n(len(A)), A(A) {
+    range.assign(n, {-1, -1});
+    lch.assign(n, -1);
+    rch.assign(n, -1);
+    par.assign(n, -1);
+    auto is_sm = [&](int i, int j) -> bool {
+      if (IS_MIN) return (A[i] < A[j]) || (A[i] == A[j] && i < j);
+      return (A[i] > A[j]) || (A[i] == A[j] && i < j);
+    };
+    vc<int> st;
+    FOR(i, n) {
+      while (!st.empty() && is_sm(i, st.back())) {
+        lch[i] = st.back();
+        st.pop_back();
+      }
+      range[i].fi = (st.empty() ? 0 : st.back() + 1);
+      st.eb(i);
+    }
+    st.clear();
+    FOR_R(i, n) {
+      while (!st.empty() && is_sm(i, st.back())) {
+        rch[i] = st.back();
+        st.pop_back();
+      }
+      range[i].se = (st.empty() ? n : st.back());
+      st.eb(i);
+    }
+    FOR(i, n) if (lch[i] != -1) par[lch[i]] = i;
+    FOR(i, n) if (rch[i] != -1) par[rch[i]] = i;
+  }
+
+  
+
+  tuple<int, int, T> maximum_rectangle(int i) {
+    auto [l, r] = range[i];
+    return {l, r, A[i]};
+  }
+
+  
+
+  T max_rectangle_area() {
+    assert(IS_MIN);
+    T res = 0;
+    FOR(i, n) {
+      auto [l, r, h] = maximum_rectangle(i);
+      chmax(res, (r - l) * h);
+    }
+    return res;
+  }
+};
+
+
+void solve() {
+  LL(N);
+  VEC(ll, A, N);
+  VEC(ll, B, N);
+  CartesianTree<ll, 1> CT(A);
+  using Lazy = Lazy_Max_Max<ll>;
+  vi DP(N + 1);
+  id2<Lazy> seg(N + 1);
+  seg.set(0, 0);
+
+  FOR(i, N) {
+    auto [l, r] = CT.range[i];
+    ll x = seg.prod(l, i + 1);
+    seg.apply(i + 1, r + 1, x + B[i]);
+  }
+  auto dp = seg.get_all();
+  
+
+  print(dp[N]);
+}
+
+signed main() {
+  cin.tie(nullptr);
+  ios::sync_with_stdio(false);
+  cout << setprecision(15);
+
+  ll T = 1;
+  
+
+  FOR(_, T) solve();
+
+  return 0;
+}

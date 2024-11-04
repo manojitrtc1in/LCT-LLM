@@ -1,0 +1,102 @@
+
+
+using namespace std;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef vector<int> vi;
+typedef pair<int,int> ii;
+typedef vector<ii> vii;
+typedef vector<ll> vll;
+typedef pair<ll,ll> pll;
+typedef pair<ll,pll> plll;
+typedef pair<ll,int> pli;
+
+
+
+
+
+
+
+
+
+using namespace std;
+int n,len;
+ll a[N],tag[N];
+typedef vector<pli>::iterator IT;
+vector<pli> v[SQ];
+inline int id0(int p,ll k){
+	int l=0,r=v[p].size()-1,mid;
+	while(l<=r){
+		mid=l+r>>1;
+		if(v[p][mid].F>=k) r=mid-1;
+		else l=mid+1;
+	}
+	return l;
+}
+int main(){
+	int q,op,l,r,sl,sr,pl,pr,f;
+	ll k;
+	scanf("%d%d",&n,&q);
+	len=(n-1)/SQ+1;
+	for(int i=1;i<=n;++i){
+		scanf("%lld",a+i);
+		v[(i-1)/SQ].push_back(pli(a[i],i));
+	}
+	for(int i=0;i<len;++i) sort(v[i].begin(),v[i].end());
+	while(q--){
+		scanf("%d",&op);
+		if(op==1){
+			scanf("%d%d%lld",&l,&r,&k);
+			sl=(l-1)/SQ;sr=(r-1)/SQ;
+			if(sl==sr){
+				for(int i=0;i<v[sl].size();++i) if(v[sl][i].S>=l&&v[sl][i].S<=r) v[sl][i].F+=k;
+				sort(v[sl].begin(),v[sl].end());
+			}else{
+				for(int i=0;i<v[sl].size();++i) if(v[sl][i].S>=l) v[sl][i].F+=k;
+				sort(v[sl].begin(),v[sl].end());
+				for(int i=0;i<v[sr].size();++i) if(v[sr][i].S<=r) v[sr][i].F+=k;
+				sort(v[sr].begin(),v[sr].end());
+				for(int i=sl+1;i<sr;++i) tag[i]+=k;
+			}
+		}else if(op==2){
+			scanf("%lld",&k);
+			pl=-1;
+			for(int i=0;i<len;++i){
+				
+				IT it=lower_bound(v[i].begin(),v[i].end(),pli(k-tag[i],0));
+				if(it!=v[i].end()&&it->F==k-tag[i]){
+					pl=it->S;
+					break;
+				}
+				
+				
+				
+
+			}
+			if(pl==-1){
+				puts("-1");
+				continue;
+			}
+			pr=-1;
+			for(int i=len-1;i>=0;--i){
+				
+				IT it=lower_bound(v[i].begin(),v[i].end(),pli(k-tag[i]+1,0));
+				if(it!=v[i].begin()){
+					--it;
+					if(it->F==k-tag[i]){
+						pr=it->S;
+						break;
+					}
+				}
+				
+				
+
+			}
+			
+
+			printf("%d\n",pr-pl);
+		}
+		
+	}
+	return 0;
+}

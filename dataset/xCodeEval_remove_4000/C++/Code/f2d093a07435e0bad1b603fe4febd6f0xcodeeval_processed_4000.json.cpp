@@ -1,0 +1,531 @@
+
+
+using namespace std;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+template <class T = int>
+using V = std::vector<T>;
+template <class T = int>
+using VV = std::vector<std::vector<T>>;
+template <class T>
+using pqup = std::priority_queue<T, std::vector<T>, std::greater<T>>;
+using ll = long long;
+using ld = long double;
+using int128 = __int128_t;
+using pii = std::pair<int, int>;
+using pll = std::pair<long long, long long>;
+
+
+
+template <class T, class U>
+std::istream &operator>>(std::istream &is, std::pair<T, U> &p) {
+	is >> p.first >> p.second;
+	return is;
+}
+template <class T>
+std::istream &operator>>(std::istream &is, std::vector<T> &v) {
+	for(T &i : v) is >> i;
+	return is;
+}
+std::istream &operator>>(std::istream &is, __int128_t &a) {
+	std::string s;
+	is >> s;
+	__int128_t ret = 0;
+	for(int i = 0; i < s.length(); i++)
+		if('0' <= s[i] and s[i] <= '9')
+			ret = 10 * ret + s[i] - '0';
+	a = ret * (s[0] == '-' ? -1 : 1);
+	return is;
+}
+namespace scanner {
+void scan(int &a) { std::cin >> a; }
+void scan(long long &a) { std::cin >> a; }
+void scan(std::string &a) { std::cin >> a; }
+void scan(char &a) { std::cin >> a; }
+void scan(char a[]) { std::scanf("%s", a); }
+void scan(double &a) { std::cin >> a; }
+void scan(long double &a) { std::cin >> a; }
+template <class T, class U>
+void scan(std::pair<T, U> &p) { std::cin >> p; }
+template <class T>
+void scan(std::vector<T> &a) { std::cin >> a; }
+void INPUT() {}
+template <class Head, class... Tail>
+void INPUT(Head &head, Tail &... tail) {
+	scan(head);
+	INPUT(tail...);
+}
+}  
+
+
+	std::vector<type> name(size); \
+	scanner::INPUT(name)
+
+	std::vector<std::vector<type>> name(h, std::vector<type>(w)); \
+	scanner::INPUT(name)
+
+	int id0; \
+	scanner::INPUT(id0)
+
+	long long id0; \
+	scanner::INPUT(id0)
+
+	std::string id0; \
+	scanner::INPUT(id0)
+
+	char id0; \
+	scanner::INPUT(id0)
+
+	double id0; \
+	scanner::INPUT(id0)
+
+	long double id0; \
+	scanner::INPUT(id0)
+
+
+
+template <class T, class U>
+std::ostream &operator<<(std::ostream &os, const std::pair<T, U> &p) {
+	os << p.first << " " << p.second;
+	return os;
+}
+template <class T>
+std::ostream &operator<<(std::ostream &os, const std::vector<T> &a) {
+	for(int i = 0; i < int(a.size()); ++i) {
+		if(i) os << " ";
+		os << a[i];
+	}
+	return os;
+}
+std::ostream &operator<<(std::ostream &dest, __int128_t &value) {
+	std::ostream::sentry s(dest);
+	if(s) {
+		__uint128_t tmp = value < 0 ? -value : value;
+		char buffer[128];
+		char *d = std::end(buffer);
+		do {
+			--d;
+			*d = "0123456789"[tmp % 10];
+			tmp /= 10;
+		} while(tmp != 0);
+		if(value < 0) {
+			--d;
+			*d = '-';
+		}
+		int len = std::end(buffer) - d;
+		if(dest.rdbuf()->sputn(d, len) != len) {
+			dest.setstate(std::ios_base::badbit);
+		}
+	}
+	return dest;
+}
+template <class T>
+void print(const T a) { std::cout << a << '\n'; }
+template <class Head, class... Tail>
+void print(Head H, Tail... T) {
+	std::cout << H << ' ';
+	print(T...);
+}
+template <class T>
+void printel(const T a) { std::cout << a << '\n'; }
+template <class T>
+void printel(const std::vector<T> &a) {
+	for(const auto &v : a)
+		std::cout << v << '\n';
+}
+template <class Head, class... Tail>
+void printel(Head H, Tail... T) {
+	std::cout << H << '\n';
+	printel(T...);
+}
+void Yes(const bool b = true) { std::cout << (b ? "Yes\n" : "No\n"); }
+void No() { std::cout << "No\n"; }
+void YES(const bool b = true) { std::cout << (b ? "YES\n" : "NO\n"); }
+void NO() { std::cout << "NO\n"; }
+void err(const bool b = true) {
+	if(b) {
+		std::cout << "-1\n", exit(0);
+	}
+}
+
+
+
+namespace debugger {
+template <class T>
+void view(const std::vector<T> &a) {
+	std::cerr << "{ ";
+	for(const auto &v : a) {
+		std::cerr << v << ", ";
+	}
+	std::cerr << "\b\b }";
+}
+template <class T>
+void view(const std::vector<std::vector<T>> &a) {
+	std::cerr << "{\n";
+	for(const auto &v : a) {
+		std::cerr << "\t";
+		view(v);
+		std::cerr << "\n";
+	}
+	std::cerr << "}";
+}
+template <class T, class U>
+void view(const std::vector<std::pair<T, U>> &a) {
+	std::cerr << "{\n";
+	for(const auto &p : a) std::cerr << "\t(" << p.first << ", " << p.second << ")\n";
+	std::cerr << "}";
+}
+template <class T, class U>
+void view(const std::map<T, U> &m) {
+	std::cerr << "{\n";
+	for(const auto &p : m) std::cerr << "\t[" << p.first << "] : " << p.second << "\n";
+	std::cerr << "}";
+}
+template <class T, class U>
+void view(const std::pair<T, U> &p) { std::cerr << "(" << p.first << ", " << p.second << ")"; }
+template <class T>
+void view(const std::set<T> &s) {
+	std::cerr << "{ ";
+	for(auto &v : s) {
+		view(v);
+		std::cerr << ", ";
+	}
+	std::cerr << "\b\b }";
+}
+
+template <class T>
+void view(const T &e) { std::cerr << e; }
+}  
+
+
+void debug_out() {}
+template <typename Head, typename... Tail>
+void debug_out(Head H, Tail... T) {
+	debugger::view(H);
+	std::cerr << ", ";
+	debug_out(T...);
+}
+
+	do {                                                          \
+		std::cerr << __LINE__ << " [" << 
+		debug_out(id0);                                   \
+		std::cerr << "\b\b]\n";                                   \
+	} while(false)
+
+
+
+
+
+
+template <class T>
+int lb(const std::vector<T> &a, const T x) { return std::distance((a).begin(), std::lower_bound((a).begin(), (a).end(), (x))); }
+template <class T>
+int ub(const std::vector<T> &a, const T x) { return std::distance((a).begin(), std::upper_bound((a).begin(), (a).end(), (x))); }
+template <class T>
+void UNIQUE(std::vector<T> &a) {
+	std::sort(a.begin(), a.end());
+	a.erase(std::unique(a.begin(), a.end()), a.end());
+}
+template <class T>
+std::vector<T> press(std::vector<T> &a) {
+	auto res = a;
+	UNIQUE(res);
+	for(auto &v : a)
+		v = lb(res, v);
+	return res;
+}
+
+
+
+
+template <class T>
+void ADD(std::vector<T> &a, const T x = 1) {
+	for(auto &v : a) v += x;
+}
+template <class T>
+void SUB(std::vector<T> &a, const T x = 1) {
+	for(auto &v : a) v -= x;
+}
+template <class T>
+void MUL(std::vector<T> &a, const T x) {
+	for(auto &v : a) v *= x;
+}
+template <class T>
+void DIV(std::vector<T> &a, const T x) {
+	for(auto &v : a) v /= x;
+}
+std::vector<std::pair<char, int>> rle(const string &s) {
+	int n = s.size();
+	std::vector<std::pair<char, int>> ret;
+	for(int l = 0; l < n;) {
+		int r = l + 1;
+		for(; r < n and s[l] == s[r]; r++) {}
+		ret.emplace_back(s[l], r - l);
+		l = r;
+	}
+	return ret;
+}
+template <class T>
+std::vector<std::pair<T, int>> rle(const std::vector<T> &v) {
+	int n = v.size();
+	std::vector<std::pair<T, int>> ret;
+	for(int l = 0; l < n;) {
+		int r = l + 1;
+		for(; r < n and v[l] == v[r]; r++) {}
+		ret.emplace_back(v[l], r - l);
+		l = r;
+	}
+	return ret;
+}
+
+
+
+template <class T, class U>
+inline bool chmin(T &a, const U &b) { return a > b ? a = b, true : false; }
+template <class T, class U>
+inline bool chmax(T &a, const U &b) { return a < b ? a = b, true : false; }
+template <class T>
+T divup(T x, T y) { return (x + y - 1) / y; }
+template <class T>
+T POW(T a, long long n) {
+	T ret = 1;
+	while(n) {
+		if(n & 1) ret *= a;
+		a *= a;
+		n >>= 1;
+	}
+	return ret;
+}
+
+
+long long POW(long long a, long long n, const int mod) {
+	long long ret = 1;
+	a = (a % mod + mod) % mod;
+	while(n) {
+		if(n & 1) (ret *= a) %= mod;
+		(a *= a) %= mod;
+		n >>= 1;
+	}
+	return ret;
+}
+
+
+
+struct fast_io {
+	fast_io() {
+		ios::sync_with_stdio(false);
+		cin.tie(nullptr);
+		cout << fixed << setprecision(15);
+	}
+} id2;
+const int inf = 1e9;
+const ll INF = 1e18;
+
+
+void main_();
+
+int main() {
+	main_();
+	return 0;
+}
+
+
+struct osa_k {
+private:
+	std::vector<int> spf, pr;
+
+public:
+	osa_k() = default;
+
+	osa_k(int MAX) : spf(MAX + 1) {
+		for(int i = 2; i <= MAX; i++) {
+			if(spf[i] == 0) {
+				spf[i] = i;
+				pr.push_back(i);
+			}
+			for(int j = 0; j < pr.size() and pr[j] <= spf[i] and i * pr[j] <= MAX; j++)
+				spf[i * pr[j]] = pr[j];
+		}
+	}
+
+	std::vector<std::pair<int, int>> PF(int n) {
+		std::vector<std::pair<int, int>> divisor;
+		if(n == 1) return divisor;
+		int before = spf[n], cnt = 0;
+		while(n > 1) {
+			if(spf[n] == before) {
+				cnt++;
+				n /= spf[n];
+			} else {
+				divisor.emplace_back(before, cnt);
+				before = spf[n];
+				cnt = 1;
+				n /= spf[n];
+			}
+		}
+		divisor.emplace_back(before, cnt);
+		return divisor;
+	}
+
+	int smallestprimefactor(const int n) const {
+		return spf[n];
+	}
+
+	bool isPrime(const int n) const {
+		return n == spf[n];
+	}
+};
+
+
+struct id1 {
+	using u32 = uint32_t;
+	u32 x = 123456789, y = 362436069, z = 521288629, w = 88675123;
+	id1(u32 seed = 0) { z ^= seed; }
+	u32 operator()() {
+		u32 t = x ^ (x << 11);
+		x = y;
+		y = z;
+		z = w;
+		return w = (w ^ (w >> 19)) ^ (t ^ (t >> 8));
+	}
+};
+
+
+const int M = 200000;
+
+void main_() {
+	osa_k pf(M);
+	map<ll, pll> mul;
+	REPS(i, M) { mul[(ll)i * (i + 1)] = {i, i + 1}; }
+
+	id1 rnd(clock());
+
+	auto query = [](int i, int j) {
+		cout << "? " << i + 1 << " " << j + 1 << endl;
+		LL(x);
+		return x;
+	};
+
+	INT(t);
+	while(t--) {
+		INT(n);
+		auto ans = [&n](V<ll> vec) {
+			cout << "! ";
+			REP(i, n) {
+				if(i) cout << " ";
+				cout << vec[i];
+			}
+			cout << endl;
+		};
+		V<ll> res(n);
+		if(n <= 100) {
+			VV<ll> d(n, V<ll>(n));
+			REP(i, n) {
+				REP(j, i + 1, n) {
+					d[i][j] = d[j][i] = query(i, j);
+				}
+			}
+
+			int mi = 0, mj = 0;
+			ll mx = 0;
+			REP(i, n) {
+				REP(j, i + 1, n) {
+					if(chmax(mx, d[i][j])) mi = i, mj = j;
+				}
+			}
+
+			auto [x, y] = mul[mx];
+			
+
+			int l = y - n + 1, r = y;
+			REP(j, n) {
+				if(mi == j) continue;
+				if(d[mi][j] % x) {
+					swap(x, y);
+					break;
+				}
+			}
+			res[mi] = x, res[mj] = y;
+			V<> used(n);
+			used[x - l] = used[y - l] = 1;
+
+			int cnt = 2;
+			REP(j, n) {
+				if(j == mi or j == mj) continue;
+				REP(k, l, r + 1) {
+					if(used[k - l]) continue;
+					if(lcm((ll)x, (ll)k) == d[mi][j] and lcm((ll)y, (ll)k) == d[mj][j]) {
+						res[j] = k;
+						used[k - l] = 1;
+						cnt++;
+						break;
+					}
+				}
+			}
+			assert(cnt == n);
+			ans(res);
+		} else {
+			set<int> candi;
+			int target = -1;
+			int target_p = -1;
+			REP(_, min(n, 1000)) {
+				int pl = rnd() % n;
+				while(candi.count(pl)) pl = rnd() % n;
+				candi.insert(pl);
+				set<int> st;
+				st.insert(pl);
+				ll g = 0;
+				REP(j, 5) {
+					int nx = rnd() % n;
+					while(st.count(nx)) nx = rnd() % n;
+					st.insert(nx);
+					g = gcd(g, query(pl, nx));
+				}
+				if(g <= M and pf.isPrime(g) and g * 1.2 > n) {
+					target = pl;
+					target_p = g;
+					break;
+				}
+			}
+			assert(target != -1);
+			res[target] = target_p;
+			REP(i, n) {
+				if(i == target) continue;
+				res[i] = query(i, target) / target_p;
+			}
+			ans(res);
+		}
+	}
+}

@@ -1,0 +1,157 @@
+from collections import deque
+import sys
+
+input = sys.stdin.read
+MOD = int(1e9 + 7)
+
+class TreeSegment:
+    class Node:
+        def __init__(self):
+            self.have_mod = False
+            self.l = -1
+            self.r = -1
+            self.value = 0
+            self.mod = 0
+
+    def __init__(self, src, magic, apply_mod, merge_mods):
+        self.magic = magic
+        self.apply_mod = apply_mod
+        self.merge_mods = merge_mods
+        self.S = []
+        self.n = len(src)
+        self.init(0, self.n, src)
+
+    def __intersects(self, tl, tr, ql, qr):
+        return not (tr <= ql or qr <= tl)
+
+    def __create_node(self):
+        node = self.Node()
+        self.S.append(node)
+        return len(self.S) - 1
+
+    def __get_value(self, i, tl, tr):
+        if not self.S[i].have_mod:
+            return self.S[i].value
+        return self.apply_mod(self.S[i].value, self.S[i].mod, tl, tr)
+
+    def __recalc_value(self, i, tl, tr):
+        if tl + 1 != tr:
+            mid = (tl + tr) // 2
+            self.S[i].value = self.magic(
+                self.__get_value(self.S[i].l, tl, mid),
+                self.__get_value(self.S[i].r, mid, tr)
+            )
+
+    def __add_mod(self, i, tl, tr, sub):
+        if self.S[i].have_mod:
+            self.S[i].mod = self.merge_mods(self.S[i].mod, sub, tl, tr)
+        else:
+            self.S[i].mod = sub
+            self.S[i].have_mod = True
+
+    def __push(self, i, tl, tr):
+        if self.S[i].have_mod:
+            self.S[i].value = self.apply_mod(self.S[i].value, self.S[i].mod, tl, tr)
+            if tl + 1 != tr:
+                mid = (tl + tr) // 2
+                self.__add_mod(self.S[i].l, tl, mid, self.S[i].mod)
+                self.__add_mod(self.S[i].r, mid, tr, self.S[i].mod)
+            self.S[i].have_mod = False
+
+    def init(self, tl, tr, src):
+        i = self.__create_node()
+        if tl + 1 == tr:
+            self.S[i].value = src[tl]
+        else:
+            mid = (tl + tr) // 2
+            self.S[i].l = self.init(tl, mid, src)
+            self.S[i].r = self.init(mid, tr, src)
+            self.__recalc_value(i, tl, tr)
+        return i
+
+    def __query(self, i, tl, tr, ql, qr):
+        self.__push(i, tl, tr)
+        if ql <= tl and tr <= qr:
+            return self.S[i].value
+        mid = (tl + tr) // 2
+        if self.__intersects(tl, mid, ql, qr) and self.__intersects(mid, tr, ql, qr):
+            return self.magic(
+                self.__query(self.S[i].l, tl, mid, ql, qr),
+                self.__query(self.S[i].r, mid, tr, ql, qr)
+            )
+        elif self.__intersects(tl, mid, ql, qr):
+            return self.__query(self.S[i].l, tl, mid, ql, qr)
+        elif self.__intersects(mid, tr, ql, qr):
+            return self.__query(self.S[i].r, mid, tr, ql, qr)
+        else:
+            raise AssertionError("Should not reach here")
+
+    def __update(self, i, tl, tr, ql, qr, mod):
+        self.__push(i, tl, tr)
+        if ql <= tl and tr <= qr:
+            self.__add_mod(i, tl, tr, mod)
+        else:
+            mid = (tl + tr) // 2
+            if self.__intersects(tl, mid, ql, qr):
+                self.__update(self.S[i].l, tl, mid, ql, qr, mod)
+            if self.__intersects(mid, tr, ql, qr):
+                self.__update(self.S[i].r, mid, tr, ql, qr, mod)
+            self.__recalc_value(i, tl, tr)
+
+    def query(self, ql, qr):
+        return self.__query(0, 0, self.n, ql, qr)
+
+    def update(self, ql, qr, mod):
+        self.__update(0, 0, self.n, ql, qr, mod)
+
+def floor_mod(a, b):
+    if a % b == 0:
+        return 0
+    if a >= 0 and b >= 0:
+        return a % b
+    if a <= 0 and b <= 0:
+        return a % b
+    return abs(b) - (abs(a) % abs(b))
+
+def main():
+    input_data = input().split()
+    n = int(input_data[0])
+    q = int(input_data[1])
+    pos = list(map(int, input_data[2:n + 2]))
+    w = list(map(int, input_data[n + 2:n + 2 + n]))
+
+    ts = TreeSegment(w, lambda a, b: a + b, lambda value, mod, _, _: mod)
+
+    subw = [(w[i] * (i - pos[i])) % MOD for i in range(n)]
+    resp = TreeSegment(subw, lambda a, b: (a + b) % MOD, lambda value, mod, _, _: mod)
+
+    index = n + 2 + n
+    for _ in range(q):
+        x = int(input_data[index])
+        y = int(input_data[index + 1])
+        index += 2
+        if x < 0:
+            ind = -x - 1
+            _new = y
+            ts.update(ind, ind + 1, _new)
+            resp.update(ind, ind + 1, (_new * (ind - pos[ind])) % MOD)
+        else:
+            l = x - 1
+            r = y
+            sm = ts.query(l, r)
+
+            bestL = ts.find_right(l, lambda x: x * 2 >= sm, 0)
+
+            x = pos[bestL] - bestL + l
+
+            left = 0
+            if l < bestL:
+                left = resp.query(l, bestL) + ts.query(l, bestL) * (x - l)
+            right = 0
+            if bestL < r:
+                right = resp.query(bestL, r) + ts.query(bestL, r) * (x - l)
+
+            print(floor_mod(left - right, MOD))
+
+if __name__ == "__main__":
+    main()

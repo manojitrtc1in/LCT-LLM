@@ -1,0 +1,619 @@
+
+		    		import java.awt.List;
+		    		import java.io.*;
+		import java.math.BigInteger;
+		import java.util.*;
+		
+		    		
+		    		
+		    		
+		    		
+		    		
+		    		public class prac {
+		    			FastScanner in;
+		    			PrintWriter out;
+		    		
+		    			static ArrayList[] adj;
+		    			static ArrayList[] aadj;
+		    		    static int last;
+		    			static int n;
+		    			static int m;
+		    			
+		    			static int[] dp1;
+		    			static int[] dp2;
+		    			static int color[];
+		    			static int visited[];
+		    			static int[] arr;
+		    			static long[] brr;
+		    			static double ans;
+		    			static int array[];
+		    			static int start[];
+		    			static int finish[];
+		    			static int pref[];
+		    			static int tree[];
+		    			static int maxval = 32;
+		    		
+		    			static int ttt[];
+		    			static int sum = 0;
+		    			static String s;
+		    		
+		    			static int cc = 0;
+		    			static long min = Long.MAX_VALUE;
+		    			
+		    		
+
+		    			static int dir[][] ={{1,0},{0,1},{0,-1},{-1,0}};
+		    			
+		    		
+		    			static long[] seg;
+		    			static long count = 1;
+		    			static long mod = (long)1e9 + 7;
+		    	
+		    			static int parent[];
+		    			static int size[];
+		    			
+		    		    static int[] l;
+		    		    static int[] r;
+		    		    static int[] next;
+		    		    static int[] cnt;
+		    		    static int[] block;
+		    		    
+		    			static HashSet<String> set;
+		    			static HashSet<String> set2;
+		    			
+		    			static int low[];
+		    			static int disc[];
+		    			static int time;
+		    			static int acn[];
+		    			
+		    			static class Pair implements Comparable<Pair>
+		    		    {
+		    				int x;int y;
+		    				
+		    		        Pair(int l, int m) {
+		    		          
+		    		        	this.x = l;
+		    		            this.y = m;
+		    		          
+		    		        }
+		    		        
+		    		        public int compareTo(Pair p) {
+		    		      
+		    		        	
+		    		            if (this.x == p.x) {
+		    		                return (int)(this.y-p.y);
+		    		            }
+		    		            return (int)(this.x - p.x);
+		    		        }
+		    		        
+		    		        public String toString(){
+		    		        	return x + " " + y;
+		    		        }
+		    		        
+		    		        public boolean equals(Object o){
+		    		        	if(o instanceof Pair){
+		    		        		Pair a = (Pair)o;
+		    		        		
+		    		        		return this.x == a.x;
+		    		        	}
+		    		        	
+		    		        	return false;
+		    		        }
+		    		        
+		    		        public int hashCode(){
+		    		        	return new Long(x).hashCode()*31 + new Long(y).hashCode();
+		    		        }
+		    		    
+		    		    }
+		    		    
+		    			
+		    			public static int gcd(int a, int b) {
+		    				if (b == 0) return a;
+		    				return gcd(b, a%b);
+		    			}
+		    	
+		    			void build(int n) {  
+
+		  				  for (int i = n - 1; i > 0; --i) seg[i] = seg[i<<1]+seg[i<<1|1];
+		  				}
+	
+		  			public static void modify(int p, long val,int n) {  
+
+		  				  for (seg[p += n] = val; p > 1; p >>= 1) seg[p>>1] = seg[p] + seg[p^1];
+		  				}
+	
+		  				long query(int l, int r,int n) {  
+
+		  				  long res = 0;
+		  				  for (l += n, r += n; l < r; l >>= 1, r >>= 1) {
+		  				    if ((l&1) == 1) res += seg[l++];
+		  				    if ((r&1) == 1) res += seg[--r];
+		  				  }
+		  				  return res;
+		  				}
+		    				
+
+
+
+
+
+
+
+
+
+
+
+
+		    			
+		    			public static int read(int idx){
+		    				int sum = 0;
+		    				
+		    				while(idx>= 0){
+		    					sum += tree[idx];
+		    					idx -= (idx&(-idx));
+		    				}
+		    				
+		    				return sum;
+		    			}
+		    			
+		    			public static int find(int i){
+		    				if(parent[i] != i){
+		    					return find(parent[i]);
+		    				}
+		    				
+		    				return i;
+		    			}
+		    			
+		    			public static void union(int a,int b){
+		    				int x = find(a);
+		    				int y = find(b);
+		    				
+		    				if(x!=y){
+		    					if(size[x] > size[y]){
+		    						size[x] += size[y];
+		    						parent[y] = x;
+		    					}else{
+		    						size[y] += size[x];
+		    						parent[x] = y;
+		    				}
+		    				}
+		    			}
+		    			
+		    			
+		    			
+		    		    void solve() throws NumberFormatException,InputMismatchException, IOException {
+		    		 
+		    		    
+		    		    	
+
+
+		    		    	int n = in.nextInt();
+		    		    	
+		    		    	int arr[] = new int[n];
+		    		    	
+		    		    	for(int i = 0;i<n;i++){
+		    		    		arr[i] = in.nextInt();
+		    		    	}
+		    		    	
+		    		    	int dp1[] = new int[n+1];
+		    		    	int dp2[] = new int[n+1];
+		    		    	
+		   
+		    		    	
+		    		    	for(int i = 0;i<n;i++){
+		    		    		if(arr[i] == 1){
+		    		    			dp1[i+1] = dp1[i] + 1;
+		    		    		}else{
+		    		    			dp1[i+1] = dp1[i];
+		    		    		}
+		    		    	}
+		    		    	int c = 0;
+		    		    	for(int i = n-1;i>=0;i--){
+		    		    		if(arr[i] == 2){
+		    		    			c++;
+		    		    			dp2[i] = c;
+		    		    		}else{
+		    		    			dp2[i] = c;
+		    		    		}
+		    		    	}
+		    		    	
+		    		    	int dp[][][] = new int[n+1][n+1][2];
+		    		    	
+		    		    	for(int i = n-1;i>=0;i--){
+		    		    		for(int j = i;j>=0;j--){
+		    		    			
+		    		    			if(arr[j] == 1){
+		    		    				dp[i][j][0] = dp[i][j+1][0] + 1;
+		    		    				dp[i][j][1] = dp[i][j+1][1];
+		    		    			}else{
+		    		    				dp[i][j][0] = dp[i][j+1][0];
+		    		    				dp[i][j][1] = Math.max(dp[i][j+1][0] + 1 , dp[i][j+1][1] + 1);
+		    		    			}
+		    		    			
+		    		    		}
+		    		    	}
+		    		    	
+		    		    	
+		    		    	int ans = 0;
+		    		    	
+		    		    	for(int i = 0;i<n;i++){
+		    		    		for(int j = i;j<n;j++){
+		    		    			ans = Math.max(ans, dp1[i] + Math.max(dp[j][i][0], dp[j][i][1]) + dp2[j+1] );
+		    		    		}
+		    		    	}
+		    		    	
+		    		    	out.println(ans);
+		    		    }
+		    		    
+		    		    
+		    		    static void call(int i){
+		    		    	
+		    		    	
+
+		    		    	
+		    		    	visited[i] = 1;
+		    		    	time++;
+		    		    	disc[i] = time;
+		    		    	low[i] = time;
+		    		    	
+		    		    	for(int j = 0;j<adj[i].size();j++){
+		    		    		if(visited[(int)adj[i].get(j)] == 0){
+		    		    			acn[(int)adj[i].get(j)] = i;
+		    		    			call((int)adj[i].get(j));
+		    		    			
+		    		    			low[i] = Math.min(low[i], low[(int)adj[i].get(j)]);
+		    		    			
+		    		    			if(low[(int)adj[i].get(j)] > disc[i] ){
+		    		    				int temp = (int)adj[i].get(j);
+		    		    				union(temp,i);	
+		    		    				System.out.println(temp + " " + i);
+		    		    			}
+		    		    		}else if((int)adj[i].get(j) != acn[i]){
+		    		    			low[i] = Math.min(low[i], disc[(int)adj[i].get(j)]);
+		    		    		}
+		    		    	}
+		    		    	
+		    		    	
+		    		    }
+		    		    
+		    		    
+		    		    static void update(int idx, int b){
+		    		        int j = block[idx];
+		    		        arr[idx] = b;
+		    		        
+		    		        for(int i = r[j]; i >= l[j]; i--){
+		    		            int k = (int) (i + arr[i]);
+		    		            if(k >= n){
+		    		                next[i] = i;
+		    		                cnt[i] = 1;
+		    		                continue;
+		    		            }
+		    		            if(block[k] > block[i]){
+		    		                next[i] = k;
+		    		                cnt[i] = 1;
+		    		            }
+		    		            else{
+		    		                next[i] = next[k];
+		    		                cnt[i] = cnt[k] + 1;
+		    		            }
+		    		        }
+		    		        
+		    		    }
+		    		    
+		    		    
+		    		    
+		    		    static void get(int idx){
+		    		        if(next[idx] == idx){
+		    		            last = idx;
+		    		            ans = 1;
+		    		            return;
+		    		        }
+		    		        int c = 0;
+		    		        while(true){
+		    		            int j = next[idx];
+		    		            if(block[j] == block[idx]){
+		    		               c += cnt[idx];
+		    		               last = next[idx];
+		    		               break;
+		    		            }
+		    		            else{
+		    		                c += cnt[idx];
+		    		                idx = next[idx];
+		    		            }
+		    		        }
+		    		        
+		    		        ans = c;
+		    		    }
+		    	
+		    		    
+		    		    static private String Frac(double x){
+		    		        if (x < 0){
+		    		            return "-" + Frac(-x);
+		    		        }
+		    		        double tolerance = 1.0E-18;
+		    		        double h1=1; double h2=0;
+		    		        double k1=0; double k2=1;
+		    		        double b = x;
+		    		        do {
+		    		            double a = Math.floor(b);
+		    		            double aux = h1; h1 = a*h1+h2; h2 = aux;
+		    		            aux = k1; k1 = a*k1+k2; k2 = aux;
+		    		            b = 1/(b-a);
+		    		        } while (Math.abs(x-h1/k1) > x*tolerance);
+
+		    		        return h1+" "+k1;
+		    		    }
+		    		    
+		    		    public static long invcount(int arr[]){
+		    		    	if(arr.length<2){
+		    		    		return 0;
+		    		    	}
+		    		    	
+		    		    	int mid = (arr.length + 1)/2;
+		    		    	
+		    		    	int left[] = Arrays.copyOfRange(arr, 0,mid);
+		    		    	int right[] = Arrays.copyOfRange(arr, mid, arr.length);
+		    		    	
+		    		    	return invcount(left)+invcount(right)+merge(arr,left,right);
+		    		    	
+		    		    }	    		    
+		    		    public static long merge(int arr[],int left[],int right[]){
+		    		    	long count = 0;
+		    		    	
+		    		    	int i = 0;
+		    		    	int j = 0;
+		    		    	
+		    		    	while(i<left.length || j < right.length){
+		    		    		
+		    		    		if(i == left.length){
+		    		    			arr[i+j] = right[j];
+		    		    			j++;
+		    		    		}else if(j == right.length){
+		    		    			arr[j+i] = left[i];
+		    		    			i++;
+		    		    		}else{
+		    		    			if(left[i] <= right[j]){
+		    		    				arr[i+j] = left[i];
+		    		    				i++;
+		    		    			}else{
+		    		    				arr[i+j] = right[j];
+		    		    				j++;
+		    		    				count += left.length-i;
+		    		    			}
+		    		    		}
+		    		    		
+		    		    	}
+		    		    	
+		    		    	return count;
+		    		    }
+		    		    
+		    		    int ff(int[] div, int left, int right, int value) {
+		    		        int low = left;
+		    		        int high = right;
+		    		        
+		    		        if(value > div[right-1]){
+		    		        	return left;
+		    		        }
+		    		        
+		    		        while (low != high) {
+		    		            int mid = (low + high) / 2;
+		    		            if (div[mid] < value) {
+		    		                low = mid + 1;
+		    		            } else {
+		    		                high = mid;
+		    		            }
+		    		        }
+		    		        if (low == right) {
+		    		            return low;
+		    		        }
+		    		        return low;
+		    		    } 
+		    		   
+		    		    
+		    		    int ffff(int[] div, int left, int right, int value) {
+		    		        
+		    		    	if(value < div[left]){
+		    		    		return right-1;
+		    		    	}
+		    		    	
+		    		    	while (left != right) {
+		    		            int mid = (left + right) >> 1;
+		    		            if (div[mid] <= value) {
+		    		                left = mid + 1;
+		    		            } else {
+		    		                right = mid;
+		    		            }
+		    		        }
+		    		        if (left < 0) {
+		    		            left *= -1;
+		    		        }
+		    		        return --left;
+		    		    }
+			    
+		    		   
+		    		  
+		    		
+		    		    public static String reverse(String s){
+		    		    	
+		    		    	String ans = "";
+		    		    	
+		    		    	for(int i = s.length()-1;i>=0;i--){
+		    		    		ans += s.charAt(i);
+		    		    	}
+		    		    	
+		    		    	return ans;
+		    		    	
+		    		    }
+		    			
+		    			
+		    		    
+		    		 
+		    		    public static long sum(long x){
+		    		    	return x<10?x:x%10 + sum(x/10);
+		    		    }
+		    			
+		    			public static long gcd(long x, long y) {
+		    				if (x == 0)
+		    					return y;
+		    				else
+		    					return gcd( y % x,x);
+		    			}
+		    			static long inv(long x , long mod)
+		    			{
+		    				long r,y;
+		    				for(r=1,y=mod-2;y!=0;x=x*x%mod,y>>=1)
+		    				{
+		    					if((y&1)==1)
+		    						r=r*x%mod;
+		    				
+		    				}
+		    				return r;
+		    			}
+		    			
+		    			public static long pow(long x,long y,long n){
+		    				if(y==0)
+		    					return 1%n;
+		    				if(y%2==0){
+		    					long z=pow(x,y/2,n);
+		    					return (z*z)%n;
+		    				}
+		    				return ((x%n)*pow(x,y-1,n))%n;
+		    			}
+		    			
+		    			
+		    			
+		    			
+		    			public static boolean isPrime(long a) {
+		    				
+
+		    				if (a <= 1)
+		    					return false;
+		    				if (a <= 3)
+		    					return true;
+		    		 
+		    				
+
+		    				
+
+		    				if (a % 2 == 0 || a % 3 == 0)
+		    					return false;
+		    		 
+		    				for (long i = 5; i * i <= a; i = i + 6)
+		    					if (a % i == 0 || a % (i + 2) == 0)
+		    						return false;
+		    		 
+		    				return true;
+		    			}
+		    			
+		    		
+		    			void run() throws NumberFormatException, InputMismatchException,IOException {
+		    				in = new FastScanner();
+		    				out = new PrintWriter(System.out);
+		    		
+		    				solve();
+		    		
+		    				out.close();
+		    			}
+		    		
+		    			class FastScanner {
+		    				BufferedReader br;
+		    				StringTokenizer st;
+		    		
+		    				public FastScanner() {
+		    					br = new BufferedReader(new InputStreamReader(System.in));
+		    				}
+		    		
+		    				String next() {
+		    					while (st == null || !st.hasMoreTokens()) {
+		    						try {
+		    							st = new StringTokenizer(in.br.readLine());
+		    						} catch (IOException e) {
+		    							
+
+		    							e.printStackTrace();
+		    						}
+		    					}
+		    					return st.nextToken();
+		    				}
+		    		
+		    				int nextInt() {
+		    					return Integer.parseInt(next());
+		    				}
+		    		
+		    				long nextLong() {
+		    					return Long.parseLong(next());
+		    				}
+		    		
+		    				double nextDouble() {
+		    					return Double.parseDouble(next());
+		    				}
+		    			}
+		    			
+		    			
+		    			
+		    			
+		    		 
+		    		
+		    			public static void main(String[] args) throws NumberFormatException,InputMismatchException, IOException {
+		    				new prac().run();
+		    			}
+		    		}
+		    		class Node{
+		    			int a;
+		    			int b;
+		    			public Node(int i, int j) {
+							this.a = i;
+							this.b = j;
+							
+						}
+					
+		    			
+		    		}
+		    		
+		    		class MyComp implements Comparator<String>{
+		    		    
+		    			int c = 0;
+		    			
+		    			MyComp(int d){
+		    				c = d;
+		    			}
+		    			
+		    			@Override
+		    			public int compare(String a,String b) {
+		    				
+		    				
+
+		    				
+		    				String arr[] = a.split(" ");
+		    				String brr[] = b.split(" ");
+		    				
+		    				return arr[c].compareTo(brr[c]);
+		    				
+		    				
+		    			}
+		
+		    			
+		    		}
+		    		
+		    		class id0 implements Comparator<Node>{
+		    		    
+		    		
+		    			
+		    			@Override
+		    			public int compare(Node a,Node b) {
+		    				
+		    				
+
+		
+		    				
+		    				if(a.b > b.b){
+		    					return -1;
+		    				}else{
+		    					return 1;
+		    				}
+		    				
+		    				
+		    			}
+		
+		    			
+		    		}

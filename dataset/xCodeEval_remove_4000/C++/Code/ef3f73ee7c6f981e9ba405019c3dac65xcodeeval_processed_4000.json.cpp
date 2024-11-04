@@ -1,0 +1,1030 @@
+
+
+
+
+
+
+using namespace std;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ll minn(ll a, ll b)
+{
+	return a < b ? a : b;
+}
+
+ll maxx(ll a, ll b)
+{
+	return a > b ? a : b;
+}
+
+ll cill(ll a, ll b)
+{
+	if (a % b == 0)
+		return a / b;
+	return a / b + 1;
+}
+
+
+
+ll mod_exp(ll a, ll n, ll mod)
+{
+	if (n == 0)
+		return 1;
+	if (n % 2 == 0)
+	{
+		ll temp = mod_exp(a, n / 2, mod);
+		return (temp % mod * temp % mod) % mod;
+	}
+	else
+	{
+		ll temp1 = a;
+		ll temp2 = mod_exp(a, n - 1, mod);
+		return (temp1 % mod * temp2 % mod) % mod;
+	}
+}
+
+ll abss(ll a)
+{
+	if (a >= 0)
+		return a;
+	else
+		return -1 * (a);
+}
+
+long double get_angle(pii a, pii b, pii c)
+{
+	int x1 = a.first;
+	int y1 = a.second;
+	int x2 = b.first;
+	int y2 = b.second;
+	int x3 = c.first;
+	int y3 = c.second;
+	long double len1 = sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+	long double len2 = sqrt((x3 - x2) * (x3 - x2) + (y3 - y2) * (y3 - y2));
+	long double val = ((x1 - x2) * (x3 - x2) + (y1 - y2) * (y3 - y2)) / (len1 * len2);
+	return acos(val);
+}
+
+long double id4(pii point1, pii point2)
+{
+	long double temp_ans;
+	temp_ans = ((point1.first - point2.first) * (point1.first - point2.first));
+	temp_ans += ((point1.second - point2.second) * (point1.second - point2.second));
+	return sqrt(temp_ans);
+}
+
+int id5(pii p1, pii p2, pii p3)
+{
+	int x1 = p1.first;
+	int y1 = p1.second;
+	int x2 = p2.first;
+	int y2 = p2.second;
+	int x3 = p3.first;
+	int y3 = p3.second;
+
+	ll ans = (x3 - x1) * (y1 - y2) - (y3 - y1) * (x1 - x2);
+	if (ans >= 0)
+		return 1;
+	else
+		return -1;
+}
+
+ll cnt_div(ll n, ll k)
+{
+	ll cnt = 0;
+	while (n % k == 0)
+	{
+		cnt++;
+		n /= k;
+	}
+	return cnt;
+}
+
+ll gcd(ll a, ll b)
+{
+	if (a % b == 0)
+		return b;
+	return gcd(b, a % b);
+}
+
+ll lcm(ll a, ll b)
+{
+	ll g = gcd(a, b);
+	return (a * b) / g;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ll id3(ll n)
+{
+	ll sum = 0;
+	while (n)
+	{
+		sum += (n % 10);
+		n /= 10;
+	}
+	return sum;
+}
+
+ll count_digits(ll n)
+{
+	ll ans = 0;
+	while (n)
+	{
+		ans++;
+		n /= 10;
+	}
+	return ans;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+vll fact;
+
+void id7()
+{
+	fact.push_back(1);
+	ll factor = 1;
+	for (int i = 1; i <= 200000; i++)
+	{
+		factor *= i;
+		factor %= MOD;
+		fact.push_back(factor);
+	}
+}
+
+bool primechk[sz];
+
+vector<int> primes;
+
+void seive(ll n)
+{
+
+	for (ll i = 2; i * i <= n; i++)
+		if (primechk[i] == false)
+			for (ll j = i * i; j <= n; j += i)
+				primechk[j] = true;
+
+	for (int i = 2; i <= n; i++)
+		if (primechk[i] == false)
+			primes.push_back(i);
+}
+
+ll id2(ll x, ll p)
+{
+	ll cnt = 0;
+	while (x % p == 0)
+	{
+		cnt++;
+		x /= p;
+	}
+
+	return cnt;
+}
+
+vll id8;
+
+void factorization(ll n)
+{
+	id8.clear();
+	ll temp_n = n;
+	for (int i = 2; i * i <= temp_n; i++)
+		if (n % i == 0)
+		{
+			id8.push_back(i);
+
+			n /= i;
+		}
+
+	if (n > 1)
+		id8.push_back(n);
+}
+
+int calculate_digits(ll n)
+{
+
+	ll cnt = 0;
+	while (n)
+	{
+		n /= 10;
+		cnt++;
+	}
+
+	return cnt;
+}
+
+ll id6(vll v)
+{
+	ll sum = 0;
+	for (auto x : v)
+	{
+		sum *= 10;
+		sum += x;
+	}
+	return sum;
+}
+
+int id0(int n)
+{
+	int sum = 0;
+	while (n)
+	{
+		sum += (n % 10);
+		n /= 10;
+	}
+
+	return sum;
+}
+
+int id1(int a, int b, int &x, int &y)
+{
+
+	if (b == 0)
+	{
+		cout << "BAse case" << endl;
+		x = 1;
+		y = 0;
+		return a;
+	}
+
+	cout << "not base case" << endl;
+	int x1, y1;
+	int d = id1(b, a % b, x1, y1);
+	x = y1;
+	y = x1 - y1 * (a / b);
+	return d;
+}
+
+void solve()
+{
+	int cnt[100001][2];
+	memset(cnt, 0, sizeof cnt);
+
+	int n;
+	cin >> n;
+
+	vi v;
+	for (int i = 0; i < n; i++)
+	{
+		int x;
+		cin >> x;
+		v.push_back(x);
+		cnt[x][i % 2]++;
+	}
+
+	sort(all(v));
+
+	for (int i = 0; i < n; i++)
+		cnt[v[i]][i % 2]--;
+
+	for (int i = 0; i < n; i++)
+		if (cnt[v[i]][1] != 0 || cnt[v[i]][0] != 0)
+		{
+			cout << "NO" << endl;
+			return;
+		}
+
+	cout << "YES" << endl;
+}
+
+int main()
+{
+
+	
+
+	
+
+
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	int t;
+
+	
+
+
+	cin >> t;
+	for (int i = 1; i <= t; i++)
+		solve();
+}
+
+
+

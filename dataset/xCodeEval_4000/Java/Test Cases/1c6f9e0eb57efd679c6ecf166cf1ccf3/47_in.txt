@@ -1,0 +1,9 @@
+8 3
+ba
+bbb
+bb
+aba
+aab
+baa
+b
+a

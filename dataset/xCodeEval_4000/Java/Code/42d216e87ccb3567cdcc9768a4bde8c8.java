@@ -1,0 +1,753 @@
+import java.util.*;
+import java.util.Map.Entry;
+
+import javax.swing.ToolTipManager;
+
+import org.xml.sax.HandlerBase;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.math.*;
+import java.sql.Array;
+
+
+
+
+
+public class Simple{
+    public static class Node{
+        int v;
+        int val;
+        
+        public Node(int v,int val){
+            this.val = val;
+            this.v = v;
+        }
+
+    }
+    static final Random random=new Random();
+    static class FastReader{
+        BufferedReader br;
+        StringTokenizer st;
+        public FastReader(){
+            br=new BufferedReader(new InputStreamReader(System.in));
+        }
+        String next(){
+            while(st==null || !st.hasMoreTokens()){
+                try {
+                    st=new StringTokenizer(br.readLine());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+        int nextInt(){
+            return Integer.parseInt(next());
+        }
+        long nextLong(){
+            return Long.parseLong(next());
+        }
+        double nextDouble(){
+            return Double.parseDouble(next());
+        }
+        String nextLine(){
+            String str="";
+            try {
+                str=br.readLine().trim();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return str;
+        }
+    }
+    static class FastWriter {
+		private final BufferedWriter bw;
+
+		public FastWriter() {
+			this.bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		}
+
+		public void print(Object object) throws IOException {
+			bw.append("" + object);
+		}
+
+		public void println(Object object) throws IOException {
+			print(object);
+			bw.append("\n");
+		}
+
+		public void close() throws IOException {
+			bw.close();
+		}
+	}
+    static void ruffleSort(int[] a) {
+        int n=a.length;
+        for (int i=0; i<n; i++) {
+            int oi=random.nextInt(n), temp=a[oi];
+            a[oi]=a[i]; a[i]=temp;
+        }
+        Arrays.sort(a);
+    }
+    static void ruffleSort(long[] a) {
+        int n=a.length;
+        for (int i=0; i<n; i++) {
+            long oi=random.nextInt(n), temp=a[(int)oi];
+            a[(int)oi]=a[i]; a[i]=temp;
+        }
+        Arrays.sort(a);
+    }
+    
+    public static class Pair implements Comparable<Pair>{
+        int x;
+        int y;
+
+        public Pair(int x,int y){
+            this.x = x;
+            this.y = y;
+        }
+        public int compareTo(Pair other){
+            
+            return this.y - other.y;
+            
+        }
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + x;
+            result = prime * result + y;
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            if (obj == null)
+                return false;
+            if (getClass() != obj.getClass())
+                return false;
+            Pair other = (Pair) obj;
+
+            if (x != other.x)
+                return false;
+            if (y != other.y)
+                return false;
+            return true;
+        }
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+         
+    }
+    static long power(long x, long y, long p)
+    {
+ 
+        
+
+        long res = 1;
+ 
+        
+
+        
+
+        x = x % p;
+ 
+        while (y > 0) {
+ 
+            
+
+            
+
+            if (y % 2 == 1)
+                res = (res * x) % p;
+ 
+            
+
+            y = y >> 1; 
+
+            x = (x * x) % p;
+        }
+ 
+        return res;
+    }
+ 
+    
+
+    static long modInverse(long n, long p)
+    {
+        return power(n, p - 2, p);
+    }
+ 
+    
+
+    
+
+    static long nCrModPFermat(long n, long r,
+                             long p)
+    {
+ 
+          if (n<r)
+              return 0;
+      
+
+        if (r == 0)
+            return 1;
+ 
+        
+
+        
+
+        
+
+        long[] fac = new long[(int)n + 1];
+        fac[0] = 1;
+ 
+        for (int i = 1; i <= n; i++)
+            fac[i] = fac[i - 1] * i % p;
+ 
+        return (fac[(int)n] * modInverse(fac[(int)r], p)
+                % p * modInverse(fac[(int)n - (int)r], p)
+                % p)
+            % p;
+    }
+
+    static int nCrModp(int n, int r, int p)
+    {
+        if (r > n - r)
+            r = n - r;
+ 
+        
+
+        
+
+        
+
+        int C[] = new int[r + 1];
+ 
+        C[0] = 1; 
+
+ 
+        
+
+        
+
+        for (int i = 1; i <= n; i++) {
+ 
+            
+
+            
+
+            for (int j = Math.min(i, r); j > 0; j--)
+ 
+                
+
+                C[j] = (C[j] + C[j - 1]) % p;
+        }
+        return C[r];
+    }
+
+    
+    static int gcd(int a, int b)
+    {
+      if (b == 0)
+        return a;
+      return gcd(b, a % b);
+    }
+    static long gcd_long(long a, long b)
+    {
+        
+
+        if (a == 0)
+          return b;
+        if (b == 0)
+          return a;
+      
+        
+
+        if (a == b)
+            return a;
+      
+        
+
+        if (a > b)
+            return gcd_long(a-b, b);
+        return gcd_long(a, b-a);
+    }
+    
+
+    
+    
+
+    
+
+        
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+        
+    
+
+
+
+    public static long __gcd(long a, long b)
+    {
+        if (b == 0)
+            return a;
+        return __gcd(b, a % b);
+        
+    }
+ 
+    public static class DSU{
+        int n;
+        int par[];
+        int rank[];
+
+        public DSU(int n){
+            this.n = n;
+            par = new int[n+1];
+            rank = new int[n+1];
+
+            for(int i=1;i<=n;i++){
+                par[i] = i ;
+                rank[i] = 0;
+            }
+        }
+        public int findPar(int node){
+            if(node==par[node]){
+                return node;
+            }
+            return par[node] = findPar(par[node]);
+
+        }
+        public void union(int u,int v){
+            u = findPar(u);
+            v = findPar(v);
+            if(rank[u]<rank[v]){
+                par[u] = v;
+            }
+            else if(rank[u]>rank[v]){
+                par[v] = u;
+            }
+            else{
+                par[v] = u;
+                rank[u]++;
+            }
+        }
+    }  
+    public static boolean isPallindrome(char[] arr,int n,boolean vis[]){
+        int i=0;
+        int j= n-1;
+        while(i<j){
+            if(vis[i])i++;
+            else if(vis[j])j--;
+            else{
+                if(arr[i]!=arr[j])return false;
+                i++;
+                j--;
+            }
+        }
+        return true;
+    }
+    public static List<List<Integer>> permute(int[] nums) {
+        List<Integer> list = new ArrayList<>();
+        List<List<Integer>> ans = new ArrayList<>();
+        
+        helper(ans,list,nums,nums.length);
+        return ans;
+    }
+    
+    public static void  helper(List<List<Integer>> ans,List<Integer> list,int nums[],int n){
+        if(list.size()==n){
+            ans.add(new ArrayList<>(list));
+            return;
+        }
+        
+        for(int i=0;i<n;i++){
+            if(!list.contains(nums[i])){
+                list.add(nums[i]);
+                helper(ans,list,nums,n);
+                list.remove(list.size()-1);
+                
+            }
+            
+        }
+        
+        
+    }
+    static int level = 0;
+    static ArrayList<Integer> nodes;
+    public static int printShortestPath(Map<Integer,Integer> par, int s, int d)
+        {
+            level = 0;
+  
+            
+
+            if (par.get(s) == -1)
+            {
+                System.out.printf("Shortest Path between"+ 
+                                "%d and %d is %s ", s, d, s);
+                return level;
+            }
+  
+            printShortestPath(par, par.get(s), d);
+  
+            level++;
+            
+
+            
+
+  
+            return level;
+        }
+  
+        
+
+        
+
+  
+        
+
+        
+
+        
+
+    public static void swap(char arr[],int i){
+        char c = arr[i];
+        arr[i] = arr[i+1];
+        arr[i+1] = c;
+    }
+    public static String mul(String str,int n){
+        int carry = 0;
+        StringBuilder muli = new StringBuilder(); 
+        for(int i=n-1;i>=0;i--){
+            int val = str.charAt(i) - '0';
+            int ans = val*2 + carry;
+            carry = ans/10;
+            ans = ans%10;
+            char c = (char)(ans + '0');
+            muli.append(c);
+        }
+        if(carry!=0){
+            muli.append((char)(carry + '0'));
+
+        }
+        muli.reverse();
+        return muli.toString();
+    }
+    static boolean isSmaller(String str1, String str2)
+    {
+        
+
+        int n1 = str1.length(), n2 = str2.length();
+        if (n1 < n2)
+            return true;
+        if (n2 < n1)
+            return false;
+ 
+        for (int i = 0; i < n1; i++)
+            if (str1.charAt(i) < str2.charAt(i))
+                return true;
+            else if (str1.charAt(i) > str2.charAt(i))
+                return false;
+ 
+        return false;
+    }
+ 
+    
+
+    static String findDiff(String str1, String str2)
+    {
+        
+
+        
+
+        if (isSmaller(str1, str2)) {
+            String t = str1;
+            str1 = str2;
+            str2 = t;
+        }
+ 
+        
+
+        String str = "";
+ 
+        
+
+        int n1 = str1.length(), n2 = str2.length();
+ 
+        
+
+        str1 = new StringBuilder(str1).reverse().toString();
+        str2 = new StringBuilder(str2).reverse().toString();
+ 
+        int carry = 0;
+ 
+        
+
+        
+
+        for (int i = 0; i < n2; i++) {
+            
+
+            
+
+            int sub
+                = ((int)(str1.charAt(i) - '0')
+                   - (int)(str2.charAt(i) - '0') - carry);
+ 
+            
+
+            
+
+            
+
+            if (sub < 0) {
+                sub = sub + 10;
+                carry = 1;
+            }
+            else
+                carry = 0;
+ 
+            str += (char)(sub + '0');
+        }
+ 
+        
+
+        for (int i = n2; i < n1; i++) {
+            int sub = ((int)(str1.charAt(i) - '0') - carry);
+ 
+            
+
+            
+
+            if (sub < 0) {
+                sub = sub + 10;
+                carry = 1;
+            }
+            else
+                carry = 0;
+ 
+            str += (char)(sub + '0');
+        }
+        
+        
+
+        return new StringBuilder(str).reverse().toString();
+    }
+    public static double cal1(double x1,double x2,double y1,double y2){
+        double x = Math.abs(x1 - x2);
+        double y = Math.abs(y1 - y2);
+        double ans = x*x + y*y;
+        return Math.sqrt(ans);
+    }
+    
+    public static void main(String args[]){  
+        
+        try {
+            FastReader s=new FastReader();
+            FastWriter out = new FastWriter();
+            
+
+            int testCases=s.nextInt();
+            
+
+            int counter = 0;
+            
+
+            while(testCases-- > 0){
+                
+
+                int n = s.nextInt();
+                int m = s.nextInt();
+                int arr[] = new int[n];
+                long sum1 = 0;
+                for(int i=0;i<n;i++){
+                    arr[i] = s.nextInt();
+                    sum1+=(long)arr[i];
+                }
+                long sum2 = 0;
+                int k = s.nextInt();
+                int b[] = new int[k];
+                for(int i=0;i<k;i++){
+                    b[i] = s.nextInt();
+                    sum2+=(long)b[i];
+                }
+                if(sum1!=sum2){
+                    System.out.println("NO");
+                    continue;
+                }
+                if(m==1){
+                    System.out.println("YES");
+                    continue;
+                }
+                ArrayList<Integer> al1 = new ArrayList<>();
+                ArrayList<Integer> al2 = new ArrayList<>();
+
+
+                int i =0 ;
+                int j = 0;
+                sum1 = 0;
+                sum2 = 0;
+                long mc1 = 0;
+                long mc2 = 0;
+                long min1 = 0;
+                long min2 = 0;
+                boolean bool =true;
+                while(i<n && j<k){
+                    if(sum1==sum2){
+                        if(sum1==0){
+                            sum1+=arr[i];
+                            sum2+=b[j];
+                            while(arr[i]>0 && arr[i]%m==0){
+                                arr[i]/=m;
+                            }
+                            min1 = arr[i];
+                            while(b[j]>0 && b[j]%m==0){
+                                b[j]/=m;
+                            }
+                            min2 = b[j];
+                            if(min1!=min2){
+                                bool = false;
+                                break;
+                            }
+                            i++;
+                            j++;
+                        }
+                        else{
+                            if(min1!=min2){
+                                bool = false;
+                                break;
+                            }
+                            sum1 = 0;
+                            sum2=0;
+                            min1=0;
+                            min2=0;
+
+                        }
+                    }
+                    else{
+                        if(sum1>sum2){
+                            sum2+=b[j];
+                            while(b[j]>0 && b[j]%m==0){
+                                b[j]/=m;
+                            }
+                            if(b[j]!=min2){
+                                bool = false;
+                                break;
+                            }
+                            
+                            j++;
+                        }
+                        else{
+                            sum1+=arr[i];
+                            while(arr[i]>0 && arr[i]%m==0){
+                                arr[i]/=m;
+                            }
+                            if(arr[i]!=min1){
+                                bool = false;
+                                break;
+                            }
+                            
+                            i++;
+                        }
+                    }
+
+                }
+                while(i<n &&bool){
+                    sum1+=arr[i];
+                    while(arr[i]>0 && arr[i]%m==0){
+                        arr[i]/=m;
+                    }
+                    if(arr[i]!=min1){
+                        bool = false;
+                        break;
+                    }
+                    i++;
+                 }
+                 while(j<k && bool){
+                    sum2+=b[j];
+                    while(b[j]>0 && b[j]%m==0){
+                        b[j]/=m;
+                    }
+                    if(b[j]!=min2){
+                        bool = false;
+                        break;
+                    }
+                    
+                    j++;
+                }
+                if(sum1!=sum2){
+                    bool = false;
+                }
+                if(bool){
+                    System.out.println("YES");
+                }
+                else{
+                    System.out.println("NO");
+                }
+                
+            }
+               
+            
+        } 
+        catch (Exception e) {
+            System.out.println(e.toString());
+            
+
+            return;
+        }
+        
+    }
+    
+}    
+

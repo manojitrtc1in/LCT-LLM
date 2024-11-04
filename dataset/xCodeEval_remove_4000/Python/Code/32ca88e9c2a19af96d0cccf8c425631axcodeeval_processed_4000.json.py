@@ -1,0 +1,876 @@
+
+
+
+import os
+import sys
+import math
+from io import BytesIO, IOBase
+import io
+from fractions import Fraction
+import collections
+from itertools import permutations
+from collections import defaultdict
+from collections import deque
+from collections import Counter
+import threading
+
+
+
+
+id22 = 8192
+ 
+class FastIO(IOBase):
+    newlines = 0
+ 
+    def __init__(self, file):
+        self._fd = file.fileno()
+        self.buffer = BytesIO()
+        self.writable = "x" in file.mode or "r" not in file.mode
+        self.write = self.buffer.write if self.writable else None
+ 
+    def read(self):
+        while True:
+            b = os.read(self._fd, max(os.fstat(self._fd).st_size, id22))
+            if not b:
+                break
+            ptr = self.buffer.tell()
+            self.buffer.seek(0, 2), self.buffer.write(b), self.buffer.seek(ptr)
+        self.newlines = 0
+        return self.buffer.read()
+ 
+    def readline(self):
+        while self.newlines == 0:
+            b = os.read(self._fd, max(os.fstat(self._fd).st_size, id22))
+            self.newlines = b.count(b"\n") + (not b)
+            ptr = self.buffer.tell()
+            self.buffer.seek(0, 2), self.buffer.write(b), self.buffer.seek(ptr)
+        self.newlines -= 1
+        return self.buffer.readline()
+ 
+    def flush(self):
+        if self.writable:
+            os.write(self._fd, self.buffer.getvalue())
+            self.buffer.truncate(0), self.buffer.seek(0)
+ 
+ 
+class IOWrapper(IOBase):
+    def __init__(self, file):
+        self.buffer = FastIO(file)
+        self.flush = self.buffer.flush
+        self.writable = self.buffer.writable
+        self.write = lambda s: self.buffer.write(s.encode("ascii"))
+        self.read = lambda: self.buffer.read().decode("ascii")
+        self.readline = lambda: self.buffer.readline().decode("ascii")
+ 
+ 
+sys.stdin, sys.stdout = IOWrapper(sys.stdin), IOWrapper(sys.stdout)
+input = lambda: sys.stdin.readline().rstrip("\r\n")
+
+
+
+class SegmentTree:
+    def __init__(self, data, default=10**18, func=lambda a, b: min(a,b)):
+        
+        self._default = default
+        self._func = func
+        self._len = len(data)
+        self._size = _size = 1 << (self._len - 1).bit_length()
+ 
+        self.data = [default] * (2 * _size)
+        self.data[_size:_size + self._len] = data
+        for i in reversed(range(_size)):
+            self.data[i] = func(self.data[i + i], self.data[i + i + 1])
+ 
+    def id18(self, idx):
+        self[idx] = self._default
+ 
+    def id21(self, idx):
+        return self.data[idx + self._size]
+ 
+    def id15(self, idx, value):
+        idx += self._size
+        self.data[idx] = value
+        idx >>= 1
+        while idx:
+            self.data[idx] = self._func(self.data[2 * idx], self.data[2 * idx + 1])
+            idx >>= 1
+ 
+    def id14(self):
+        return self._len
+ 
+    def query(self, start, stop):
+        if start == stop:
+            return self.id21(start)
+        stop += 1
+        start += self._size
+        stop += self._size
+ 
+        res = self._default
+        while start < stop:
+            if start & 1:
+                res = self._func(res, self.data[start])
+                start += 1
+            if stop & 1:
+                stop -= 1
+                res = self._func(res, self.data[stop])
+            start >>= 1
+            stop >>= 1
+        return res
+ 
+    def id7(self):
+        return "SegmentTree({0})".format(self.data)
+    
+class id1:
+    def __init__(self, data, default=0, func=lambda a, b: a+b):
+        
+        self._default = default
+        self._func = func
+        self._len = len(data)
+        self._size = _size = 1 << (self._len - 1).bit_length()
+ 
+        self.data = [default] * (2 * _size)
+        self.data[_size:_size + self._len] = data
+        for i in reversed(range(_size)):
+            self.data[i] = func(self.data[i + i], self.data[i + i + 1])
+ 
+    def id18(self, idx):
+        self[idx] = self._default
+ 
+    def id21(self, idx):
+        return self.data[idx + self._size]
+ 
+    def id15(self, idx, value):
+        idx += self._size
+        self.data[idx] = value
+        idx >>= 1
+        while idx:
+            self.data[idx] = self._func(self.data[2 * idx], self.data[2 * idx + 1])
+            idx >>= 1
+ 
+    def id14(self):
+        return self._len
+ 
+    def query(self, start, stop):
+        if start == stop:
+            return self.id21(start)
+        stop += 1
+        start += self._size
+        stop += self._size
+ 
+        res = self._default
+        while start < stop:
+            if start & 1:
+                res = self._func(res, self.data[start])
+                start += 1
+            if stop & 1:
+                stop -= 1
+                res = self._func(res, self.data[stop])
+            start >>= 1
+            stop >>= 1
+        return res
+ 
+    def id7(self):
+        return "SegmentTree({0})".format(self.data)
+    
+MOD=10**9+7
+class Factorial:
+    def __init__(self, MOD):
+        self.MOD = MOD
+        self.factorials = [1, 1]
+        self.invModulos = [0, 1]
+        self.invFactorial_ = [1, 1]
+ 
+    def calc(self, n):
+        if n <= -1:
+            print("Invalid argument to calculate n!")
+            print("n must be non-negative value. But the argument was " + str(n))
+            exit()
+        if n < len(self.factorials):
+            return self.factorials[n]
+        nextArr = [0] * (n + 1 - len(self.factorials))
+        initialI = len(self.factorials)
+        prev = self.factorials[-1]
+        m = self.MOD
+        for i in range(initialI, n + 1):
+            prev = nextArr[i - initialI] = prev * i % m
+        self.factorials += nextArr
+        return self.factorials[n]
+ 
+    def inv(self, n):
+        if n <= -1:
+            print("Invalid argument to calculate n^(-1)")
+            print("n must be non-negative value. But the argument was " + str(n))
+            exit()
+        p = self.MOD
+        pi = n % p
+        if pi < len(self.invModulos):
+            return self.invModulos[pi]
+        nextArr = [0] * (n + 1 - len(self.invModulos))
+        initialI = len(self.invModulos)
+        for i in range(initialI, min(p, n + 1)):
+            next = -self.invModulos[p % i] * (p // i) % p
+            self.invModulos.append(next)
+        return self.invModulos[pi]
+ 
+    def id27(self, n):
+        if n <= -1:
+            print("Invalid argument to calculate (n^(-1))!")
+            print("n must be non-negative value. But the argument was " + str(n))
+            exit()
+        if n < len(self.invFactorial_):
+            return self.invFactorial_[n]
+        self.inv(n)  
+        nextArr = [0] * (n + 1 - len(self.invFactorial_))
+        initialI = len(self.invFactorial_)
+        prev = self.invFactorial_[-1]
+        p = self.MOD
+        for i in range(initialI, n + 1):
+            prev = nextArr[i - initialI] = (prev * self.invModulos[i % p]) % p
+        self.invFactorial_ += nextArr
+        return self.invFactorial_[n]
+ 
+ 
+class Combination:
+    def __init__(self, MOD):
+        self.MOD = MOD
+        self.factorial = Factorial(MOD)
+ 
+    def ncr(self, n, k):
+        if k < 0 or n < k:
+            return 0
+        k = min(k, n - k)
+        f = self.factorial
+        return f.calc(n) * f.id27(max(n - k, k)) * f.id27(min(k, n - k)) % self.MOD
+mod=10**9+7
+omod=998244353
+
+prime = [True for i in range(10001)] 
+prime[0]=prime[1]=False
+
+def id10(n=10000):
+    p = 2
+    c=0
+    while (p <= n): 
+          
+        if (prime[p] == True):
+            c+=1
+            for i in range(p*p, n+1, p): 
+                
+                prime[i] = False
+        p += 1
+
+class DSU:
+    def __init__(self, R, C):
+        
+        self.par = range(R*C + 1)
+        self.rnk = [0] * (R*C + 1)
+        self.sz = [1] * (R*C + 1)
+
+    def find(self, x):
+        if self.par[x] != x:
+            self.par[x] = self.find(self.par[x])
+        return self.par[x]
+
+    def union(self, x, y):
+        xr, yr = self.find(x), self.find(y)
+        if xr == yr: return
+        if self.rnk[xr] < self.rnk[yr]:
+            xr, yr = yr, xr
+        if self.rnk[xr] == self.rnk[yr]:
+            self.rnk[xr] += 1
+
+        self.par[yr] = xr
+        self.sz[xr] += self.sz[yr]
+
+    def size(self, x):
+        return self.sz[self.find(x)]
+
+    def top(self):
+        
+        
+        return self.size(len(self.sz) - 1) - 1
+
+
+class id13:
+    def __init__(self, _op, _e, _mapping, _composition, _id, v):
+        def set(p, x):
+            assert 0 <= p < _n
+            p += _size
+            for i in range(_log, 0, -1):
+                _push(p >> i)
+            _d[p] = x
+            for i in range(1, _log + 1):
+                _update(p >> i)
+ 
+        def get(p):
+            assert 0 <= p < _n
+            p += _size
+            for i in range(_log, 0, -1):
+                _push(p >> i)
+            return _d[p]
+ 
+        def prod(l, r):
+            assert 0 <= l <= r <= _n
+ 
+            if l == r:
+                return _e
+ 
+            l += _size
+            r += _size
+ 
+            for i in range(_log, 0, -1):
+                if ((l >> i) << i) != l:
+                    _push(l >> i)
+                if ((r >> i) << i) != r:
+                    _push(r >> i)
+ 
+            sml = _e
+            smr = _e
+            while l < r:
+                if l & 1:
+                    sml = _op(sml, _d[l])
+                    l += 1
+                if r & 1:
+                    r -= 1
+                    smr = _op(_d[r], smr)
+                l >>= 1
+                r >>= 1
+ 
+            return _op(sml, smr)
+ 
+        def apply(l, r, f):
+            assert 0 <= l <= r <= _n
+            if l == r:
+                return
+ 
+            l += _size
+            r += _size
+ 
+            for i in range(_log, 0, -1):
+                if ((l >> i) << i) != l:
+                    _push(l >> i)
+                if ((r >> i) << i) != r:
+                    _push((r - 1) >> i)
+ 
+            l2 = l
+            r2 = r
+            while l < r:
+                if l & 1:
+                    _all_apply(l, f)
+                    l += 1
+                if r & 1:
+                    r -= 1
+                    _all_apply(r, f)
+                l >>= 1
+                r >>= 1
+            l = l2
+            r = r2
+ 
+            for i in range(1, _log + 1):
+                if ((l >> i) << i) != l:
+                    _update(l >> i)
+                if ((r >> i) << i) != r:
+                    _update((r - 1) >> i)
+ 
+        def _update(k):
+            _d[k] = _op(_d[2 * k], _d[2 * k + 1])
+ 
+        def _all_apply(k, f):
+            _d[k] = _mapping(f, _d[k])
+            if k < _size:
+                _lz[k] = _composition(f, _lz[k])
+ 
+        def _push(k):
+            _all_apply(2 * k, _lz[k])
+            _all_apply(2 * k + 1, _lz[k])
+            _lz[k] = _id
+ 
+        _n = len(v)
+        _log = _n.bit_length()
+        _size = 1 << _log
+        _d = [_e] * (2 * _size)
+        _lz = [_id] * _size
+        for i in range(_n):
+            _d[_size + i] = v[i]
+        for i in range(_size - 1, 0, -1):
+            _update(i)
+ 
+        self.set = set
+        self.get = get
+        self.prod = prod
+        self.apply = apply
+ 
+ 
+MIL = 1 << 20
+ 
+ 
+def makeNode(total, count):
+    
+    return (total * MIL) + count
+ 
+ 
+def getTotal(node):
+    return math.floor(node / MIL)
+ 
+ 
+def getCount(node):
+    return node - getTotal(node) * MIL
+ 
+ 
+nodeIdentity = makeNode(0.0, 0.0)
+ 
+ 
+def nodeOp(node1, node2):
+    return node1 + node2
+    
+    return makeNode(
+        getTotal(node1) + getTotal(node2), getCount(node1) + getCount(node2)
+    )
+ 
+ 
+identityMapping = -1
+ 
+ 
+def mapping(tag, node):
+    if tag == identityMapping:
+        return node
+    
+    count = getCount(node)
+    return makeNode(tag * count, count)
+ 
+ 
+def composition(mapping1, mapping2):
+    
+    return mapping1 if mapping1 != identityMapping else mapping2
+
+class id4():
+    def __init__(self, N):
+        self.N = N
+        n = 4 * N
+        self.tree = [0] * n
+        self.lazy = [0] * n
+        
+    def queryHelper(self, index, s, e, l, r):
+        if self.lazy[index]:
+            
+            update = self.lazy[index]
+            self.lazy[index] = 0
+            self.tree[index] = max(self.tree[index], update)
+            
+            if s != e:
+                self.lazy[2 * index] = max(self.lazy[2 * index], update)
+                self.lazy[2 * index + 1] = max(self.lazy[2 * index + 1], update)
+                
+        if s > e or s > r or e < l:
+            return 0
+        if s >= l and e <= r:
+            return self.tree[index]
+        
+        mid = (s + e) // 2
+        return max(self.queryHelper(2 * index, s, mid, l, r), self.queryHelper(2 * index + 1, mid + 1, e, l, r))
+    
+    def updateHelper(self, index, s, e, l, r, h):
+        if self.lazy[index]:
+            
+            update = self.lazy[index]
+            self.lazy[index] = 0
+            self.tree[index] = max(self.tree[index], update)
+            
+            if s != e:
+                self.lazy[2 * index] = max(self.lazy[2 * index], update)
+                self.lazy[2 * index + 1] = max(self.lazy[2 * index + 1], update)
+                
+        if s > e or s > r or e < l:
+            return
+        if s >= l and e <= r:
+            self.tree[index] = max(self.tree[index], h)
+            if s != e:
+                self.lazy[2 * index] = max(self.lazy[2 * index], h)
+                self.lazy[2 * index + 1] = max(self.lazy[2 * index + 1], h)
+            return
+        
+        mid = (s + e) // 2
+        self.updateHelper(2 * index, s, mid, l, r, h)
+        self.updateHelper(2 * index + 1, mid + 1, e, l, r, h)
+        self.tree[index] = max(self.tree[2 * index], self.tree[2 * index + 1])
+        
+    def query(self, l, r):
+        return self.queryHelper(1, 0, self.N - 1, l, r - 1)
+    
+    def update(self, l, r, h):
+        self.updateHelper(1, 0, self.N - 1, l, r - 1, h)
+
+def id11(f):
+    
+    class id11(dict):
+        def id12(self, key):
+            ret = self[key] = f(key)
+            return ret
+ 
+    return id11().id21
+ 
+ 
+def id19(n):
+    
+    if n & 1 == 0:
+        return 2
+    if n % 3 == 0:
+        return 3
+ 
+    s = ((n - 1) & (1 - n)).bit_length() - 1
+    d = n >> s
+    for a in [2, 325, 9375, 28178, 450775, 9780504, 1795265022]:
+        p = pow(a, d, n)
+        if p == 1 or p == n - 1 or a % n == 0:
+            continue
+        for _ in range(s):
+            prev = p
+            p = (p * p) % n
+            if p == 1:
+                return math.gcd(prev - 1, n)
+            if p == n - 1:
+                break
+        else:
+            for i in range(2, n):
+                x, y = i, (i * i + 1) % n
+                f = math.gcd(abs(x - y), n)
+                while f == 1:
+                    x, y = (x * x + 1) % n, (y * y + 1) % n
+                    y = (y * y + 1) % n
+                    f = math.gcd(abs(x - y), n)
+                if f != n:
+                    return f
+    return n
+ 
+ 
+@id11
+def id17(n):
+    
+    if n <= 1:
+        return Counter()
+    f = id19(n)
+    return Counter([n]) if f == n else id17(f) + id17(n // f)
+ 
+ 
+def id16(n):
+    
+    factors = [1]
+    for p, exp in id17(n).items():
+        factors += [p**i * factor for factor in factors for i in range(1, exp + 1)]
+    return factors
+ 
+ 
+def id9(n):
+    
+    small, large = [], []
+    for i in range(1, int(n**0.5) + 1, 2 if n & 1 else 1):
+        if not n % i:
+            small.append(i)
+            large.append(n // i)
+    if small[-1] == large[-1]:
+        large.pop()
+    large.reverse()
+    small.extend(large)
+    return small
+
+class SortedList:
+    def __init__(self, iterable=[], _load=200):
+        
+        values = sorted(iterable)
+        self._len = _len = len(values)
+        self._load = _load
+        self._lists = _lists = [values[i:i + _load] for i in range(0, _len, _load)]
+        self.id25 = [len(_list) for _list in _lists]
+        self._mins = [_list[0] for _list in _lists]
+        self.id24 = []
+        self._rebuild = True
+ 
+    def id0(self):
+        
+        self.id24[:] = self.id25
+        id24 = self.id24
+        for i in range(len(id24)):
+            if i | i + 1 < len(id24):
+                id24[i | i + 1] += id24[i]
+        self._rebuild = False
+ 
+    def id2(self, index, value):
+        
+        if not self._rebuild:
+            id24 = self.id24
+            while index < len(id24):
+                id24[index] += value
+                index |= index + 1
+ 
+    def id6(self, end):
+        
+        if self._rebuild:
+            self.id0()
+ 
+        id24 = self.id24
+        x = 0
+        while end:
+            x += id24[end - 1]
+            end &= end - 1
+        return x
+ 
+    def id5(self, k):
+        
+        id25 = self.id25
+        if k < id25[0]:
+            return 0, k
+        if k >= self._len - id25[-1]:
+            return len(id25) - 1, k + id25[-1] - self._len
+        if self._rebuild:
+            self.id0()
+ 
+        id24 = self.id24
+        idx = -1
+        for d in reversed(range(len(id24).bit_length())):
+            right_idx = idx + (1 << d)
+            if right_idx < len(id24) and k >= id24[right_idx]:
+                idx = right_idx
+                k -= id24[idx]
+        return idx + 1, k
+ 
+    def _delete(self, pos, idx):
+        
+        _lists = self._lists
+        _mins = self._mins
+        id25 = self.id25
+ 
+        self._len -= 1
+        self.id2(pos, -1)
+        del _lists[pos][idx]
+        id25[pos] -= 1
+ 
+        if id25[pos]:
+            _mins[pos] = _lists[pos][0]
+        else:
+            del _lists[pos]
+            del id25[pos]
+            del _mins[pos]
+            self._rebuild = True
+ 
+    def _loc_left(self, value):
+        
+        if not self._len:
+            return 0, 0
+ 
+        _lists = self._lists
+        _mins = self._mins
+ 
+        lo, pos = -1, len(_lists) - 1
+        while lo + 1 < pos:
+            mi = (lo + pos) >> 1
+            if value <= _mins[mi]:
+                pos = mi
+            else:
+                lo = mi
+ 
+        if pos and value <= _lists[pos - 1][-1]:
+            pos -= 1
+ 
+        _list = _lists[pos]
+        lo, idx = -1, len(_list)
+        while lo + 1 < idx:
+            mi = (lo + idx) >> 1
+            if value <= _list[mi]:
+                idx = mi
+            else:
+                lo = mi
+ 
+        return pos, idx
+ 
+    def _loc_right(self, value):
+        
+        if not self._len:
+            return 0, 0
+ 
+        _lists = self._lists
+        _mins = self._mins
+ 
+        pos, hi = 0, len(_lists)
+        while pos + 1 < hi:
+            mi = (pos + hi) >> 1
+            if value < _mins[mi]:
+                hi = mi
+            else:
+                pos = mi
+ 
+        _list = _lists[pos]
+        lo, idx = -1, len(_list)
+        while lo + 1 < idx:
+            mi = (lo + idx) >> 1
+            if value < _list[mi]:
+                idx = mi
+            else:
+                lo = mi
+ 
+        return pos, idx
+ 
+    def add(self, value):
+        
+        _load = self._load
+        _lists = self._lists
+        _mins = self._mins
+        id25 = self.id25
+ 
+        self._len += 1
+        if _lists:
+            pos, idx = self._loc_right(value)
+            self.id2(pos, 1)
+            _list = _lists[pos]
+            _list.insert(idx, value)
+            id25[pos] += 1
+            _mins[pos] = _list[0]
+            if _load + _load < len(_list):
+                _lists.insert(pos + 1, _list[_load:])
+                id25.insert(pos + 1, len(_list) - _load)
+                _mins.insert(pos + 1, _list[_load])
+                id25[pos] = _load
+                del _list[_load:]
+                self._rebuild = True
+        else:
+            _lists.append([value])
+            _mins.append(value)
+            id25.append(1)
+            self._rebuild = True
+ 
+    def discard(self, value):
+        
+        _lists = self._lists
+        if _lists:
+            pos, idx = self._loc_right(value)
+            if idx and _lists[pos][idx - 1] == value:
+                self._delete(pos, idx - 1)
+ 
+    def remove(self, value):
+        
+        _len = self._len
+        self.discard(value)
+        if _len == self._len:
+            raise ValueError('{0!r} not in list'.format(value))
+ 
+    def pop(self, index=-1):
+        
+        pos, idx = self.id5(self._len + index if index < 0 else index)
+        value = self._lists[pos][idx]
+        self._delete(pos, idx)
+        return value
+ 
+    def id3(self, value):
+        
+        pos, idx = self._loc_left(value)
+        return self.id6(pos) + idx
+ 
+    def id20(self, value):
+        
+        pos, idx = self._loc_right(value)
+        return self.id6(pos) + idx
+ 
+    def count(self, value):
+        
+        return self.id20(value) - self.id3(value)
+ 
+    def id14(self):
+        
+        return self._len
+ 
+    def id21(self, index):
+        
+        pos, idx = self.id5(self._len + index if index < 0 else index)
+        return self._lists[pos][idx]
+ 
+    def id18(self, index):
+        
+        pos, idx = self.id5(self._len + index if index < 0 else index)
+        self._delete(pos, idx)
+ 
+    def id8(self, value):
+        
+        _lists = self._lists
+        if _lists:
+            pos, idx = self._loc_left(value)
+            return idx < len(_lists[pos]) and _lists[pos][idx] == value
+        return False
+ 
+    def id28(self):
+        
+        return (value for _list in self._lists for value in _list)
+ 
+    def id23(self):
+        
+        return (value for _list in reversed(self._lists) for value in reversed(_list))
+ 
+    def id7(self):
+        
+        return 'SortedList({0})'.format(list(self))
+
+def binarySearch(arr, n, key):
+    left = 0
+    right = n-1
+    mid = 0
+    res = n
+    while (left <= right):
+        mid = (right + left)//2
+        if (arr[mid] >= key):
+            res=mid
+            right = mid-1
+        else:
+            left = mid + 1
+    return res
+
+def id26(arr, n, key):
+    left = 0
+    right = n-1
+    mid = 0
+    res=-1
+    while (left <= right):
+        mid = (right + left)//2
+        if (arr[mid] > key):
+            right = mid-1
+        else:
+            res=mid
+            left = mid + 1
+    return res
+
+tt=1
+tt=int(input())
+for _ in range (tt):
+    
+    n=int(input())
+    
+    
+    
+    
+    
+    x,y=1,2
+    t=0
+    for i in range (4,n+1,2):
+        a,b,c,d=x,y,i-1,i
+        print("?",b,c,d, flush=True)
+        a1=int(input())
+        print("?",a,c,d, flush=True)
+        b1=int(input())
+        print("?",a,b,d, flush=True)
+        c1=int(input())
+        print("?",a,b,c, flush=True)
+        d1=int(input())
+        c=sorted([[a1,x],[b1,y],[c1,i-1],[d1,i]])
+        x,y=c[0][1],c[1][1]
+        t=c[2][1]
+    if n%2:
+        a,b,c,d=x,y,t,n
+        print("?",b,c,d, flush=True)
+        a1=int(input())
+        print("?",a,c,d, flush=True)
+        b1=int(input())
+        print("?",a,b,d, flush=True)
+        c1=int(input())
+        print("?",a,b,c, flush=True)
+        d1=int(input())
+        c=sorted([[a1,x],[b1,y],[c1,t],[d1,n]])
+        x,y=c[0][1],c[1][1]
+        t=c[2][1]
+    print("!",x,y,flush=True)
