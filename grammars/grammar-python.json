@@ -1,0 +1,25 @@
+{
+  "PARENT": [
+    "assignment",
+    "augmented_assigment",
+    "_left_hand_side",
+    "expression",
+    "pattern",
+    "_named_expression_lhs",
+    "function_definition",
+    "class_definition",
+    "decorated_definition",
+    "parameters",
+    "parameter",
+    "typed_default_parameter",
+    "default_parameter",
+    "typed_parameter",
+    "lambda_parameters",
+    "primary_expression"
+  ],
+  "NOT": [
+    "self",
+    "__init__",
+    "forward"
+  ]
+}

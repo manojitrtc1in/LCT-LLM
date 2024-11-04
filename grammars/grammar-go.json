@@ -1,0 +1,22 @@
+{
+  "PARENT": [
+    "assignment_statement",
+    "var_declaration",
+    "function_declaration",
+    "method_declaration",
+    "const_declaration",
+    "parameter_declaration",
+    "type_parameter_declaration",
+    "short_var_declaration",
+    "type_parameter_list",
+    "parameter_list",
+    "variadic_parameter_declaration",
+    "field_declaration",
+    "field_declaration_list",
+    "parameters",
+    "type_parameters",
+    "var_spec",
+    "expression_statement"
+  ],
+  "NOT": []
+}

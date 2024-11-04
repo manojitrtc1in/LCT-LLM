@@ -1,0 +1,36 @@
+{
+  "PARENT": [
+    "assignment_expression",
+    "_assignment_left_expression",
+    "assignment_expression_lhs",
+    "parenthesized_expression",
+    "class_specifier",
+    "_class_declaration",
+    "union_specifier",
+    "struct_specifier",
+    "declaration",
+    "_declarator",
+    "init_declarator",
+    "parameter_declaration",
+    "optional_parameter_declaration",
+    "type_parameter_declaration",
+    "variadic_parameter_declaration",
+    "variadic_type_parameter_declaration",
+    "variadic_optional_parameter_declaration",
+    "parameter_list",
+    "variadic_reference_declarator",
+    "reference_declarator",
+    "reference_field_declarator",
+    "reference_type_declarator",
+    "function_declarator",
+    "function_field_declarator",
+    "condition_declaration",
+    "field_initializer_list",
+    "field_initializer",
+    "init_statement",
+    "initializer_list"
+  ],
+  "NOT": [
+    "self"
+  ]
+}
