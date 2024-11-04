@@ -1,9 +1,0 @@
-8 10
-bac
-aa
-bbac
-bcc
-bbca
-aac
-abba
-bbba

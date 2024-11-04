@@ -1,9 +1,0 @@
-8 100
-aabab
-aaa
-aba
-bbaba
-a
-aa
-babba
-bba

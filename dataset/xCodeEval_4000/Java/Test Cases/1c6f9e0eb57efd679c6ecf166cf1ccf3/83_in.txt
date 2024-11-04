@@ -1,9 +1,0 @@
-8 805306367
-bbbb
-abbaa
-ababa
-aabba
-bbaab
-babab
-baabb
-bbbbb

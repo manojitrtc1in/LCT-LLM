@@ -1,9 +1,0 @@
-8 805306367
-aaaaa
-aaaab
-aaabb
-aabbb
-abbbb
-bbbbb
-aaaa
-bbbb
